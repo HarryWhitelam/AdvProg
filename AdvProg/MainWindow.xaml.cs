@@ -24,5 +24,14 @@ namespace AdvProg
         {
             InitializeComponent();
         }
+
+        private void ButtonAddVar_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(varName.Text) && !varList.Items.Contains(varName.Text))
+            {
+                varList.Items.Add(varName.Text);
+                varName.Clear();
+            }
+        }
     }
 }
