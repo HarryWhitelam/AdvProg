@@ -23,6 +23,7 @@ namespace AdvProg
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MyDataContext();
         }
 
         private void ButtonAddVar_Click(object sender, RoutedEventArgs e)
@@ -34,4 +35,6 @@ namespace AdvProg
             }
         }
     }
+
+    
 }

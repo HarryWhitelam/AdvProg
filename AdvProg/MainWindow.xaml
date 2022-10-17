@@ -6,10 +6,17 @@
         xmlns:local="clr-namespace:AdvProg"
         mc:Ignorable="d"
         Title="Baltam" Height="750" Width="800">
+
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding ReturnCommand}"
+                    CommandParameter="COMMAND!"
+                    Key="Enter" />
+    </Window.InputBindings>
+
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -23,5 +30,8 @@
             <TextBox x:Name="varName" />
             <Button x:Name="varAdd" Margin="0,5,0,0" Click="ButtonAddVar_Click">Add Variable</Button>
         </StackPanel>
+        
+        
     </Grid>
+
 </Window>
