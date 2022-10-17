@@ -1,14 +1,27 @@
-//<unexpr>  ::= -<expr> | <expr>
-//<expr>    ::= <term><expr'>
-//<expr'>   ::= +<term><expr'> | -<term><expr'> | Ø
-//<term>    ::= <index><term'>
-//<term'>   ::= *<index><term'> | /<index><term'> | Ø
-//<index>   ::= <factor><index'>
-//<index'>  ::= ^<factor><index'> | Ø
-//<factor>  ::= Number | Variable | (<unexpr>)
+// parser.fs
+//
+// Author:      Irie Railton
+// Description: 
 
-//<unexpr>  ::= -<expr> | <expr>
-//<expr>    ::= <term>  | <expr>+<term> | <expr>-<term>
-//<term>    ::= <index> | <term>*<index>| <term>/<index>
-//<index>   ::= <factor>| <index>^<factor>
-//<factor>  ::= Number  | Variable      | (<unexpr>)
+//*************************************************************************
+
+namespace interpreter
+
+//*************************************************************************
+
+//Grammar in standard BNF
+//<expr>    ::= <term>    | <expr>+<term>   | <expr>-<term>
+//<term>    ::= <unary>   | <term>*<unary>  | <term>/<unary>
+//<index>   ::= <unary>   | <index>^<unary>
+//<unary>   ::= -<factor> | <factor>
+//<factor>  ::= Number    | (<expr>)
+
+//Grammar in LL(1) BNF
+//<expr>    ::= <term><expr'>
+//<expr'>   ::= +<term><expr'> | -<term><expr'> | âˆ…
+//<term>    ::= <index><term'>
+//<term'>   ::= *<index><term'> | /<index><term'> | âˆ…
+//<index>   ::= <unary><index'>
+//<index'>  ::= ^<unary><index'> | âˆ…
+//<unary>   ::= -<factor> | <factor>
+//<factor>  ::= Number | Variable | (<expr>)
