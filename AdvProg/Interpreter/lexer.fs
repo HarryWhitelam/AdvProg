@@ -8,6 +8,7 @@
 namespace interpreter
 
 //*************************************************************************
+open System.Text.RegularExpressions
 
 type Token =
     | Plus = 0
@@ -22,6 +23,8 @@ type Token =
     | Equals = 9
     | Keyword = 10
 
+let rx = Regex "[0-9]+"
+
 let get_token character =
      match character with
      | "+" -> Token.Plus
@@ -31,8 +34,8 @@ let get_token character =
      | "(" -> Token.L_Bracket
      | ")" -> Token.R_Bracket
      | "^" -> Token.Indice
-    //  | :? int -> Token.Number
-    //  | :? char -> Token.Variable
+     | rx.IsMatch -> Token.Number
+    //  | Regex.Match(@"[a-zA-Z_]\w*") -> Token.Variable
      | _ -> Token.Keyword
 
 let lex input =
