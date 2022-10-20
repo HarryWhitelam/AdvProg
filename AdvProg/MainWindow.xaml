@@ -9,6 +9,7 @@
 
     <Window.InputBindings>
         <KeyBinding Command="{Binding ReturnCommand}" Key="Return" />
+        <KeyBinding Command="{Binding DelVarCommand}" Key="Delete" />
     </Window.InputBindings>
 
     <Grid Name="MainGrid" Margin="10">
@@ -22,7 +23,16 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <ListBox Grid.Column="1" x:Name="varList">Workstation</ListBox>
+        <Grid Grid.Column="1" Name="WorkstationGrid" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            <TextBlock Grid.Row="0">Workstation</TextBlock>
+            <Button Grid.Row="0" x:Name="varDel" Click="ButtonDelVar_Click" Margin="298,0,0,5">Delete</Button>
+            <ListBox Grid.Row="1" x:Name="varList"></ListBox>
+        </Grid>
 
         <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,0,0">
             <TextBox x:Name="varName" />

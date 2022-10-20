@@ -30,24 +30,51 @@ namespace AdvProg
         {
             get
             {
-                return returnCommand
-                    ?? (returnCommand = new ActionCommand(() =>
+                return returnCommand ??= new ActionCommand(() =>
+                {
+                    Object varList = Application.Current.MainWindow.FindName("varList");
+                    Object txt = Application.Current.MainWindow.FindName("varName");
+
+                    if ((varList is ListBox) && (txt is TextBox))
                     {
-                        Object varList = Application.Current.MainWindow.FindName("varList");
-                        Object txt = Application.Current.MainWindow.FindName("varName");
+                        ListBox lb = (ListBox)varList;
+                        TextBox tb = (TextBox)txt;
 
-                        if ((varList is ListBox) && (txt is TextBox))
+                        if (!string.IsNullOrWhiteSpace(tb.Text) && !lb.Items.Contains(tb.Text))
                         {
-                            ListBox lb = (ListBox)varList;
-                            TextBox tb = (TextBox)txt;
-
-                            if (!string.IsNullOrWhiteSpace(tb.Text) && !lb.Items.Contains(tb.Text))
-                            {
-                                lb.Items.Add(tb.Text);
-                                tb.Clear();
-                            }
+                            lb.Items.Add(tb.Text);
+                            tb.Clear();
                         }
-                    }));
+                    }
+                });
+            }
+        }
+
+        private ICommand delVarCommand;
+        public ICommand DelVarCommand
+        {
+            get
+            {
+                return delVarCommand ??= new ActionCommand(() =>
+                {
+                    ListBox varList = (ListBox) Application.Current.MainWindow.FindName("varList");
+
+                    if (varList.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("Error: please select a variable for deletion.");
+                    }
+                    else
+                    {
+                        if (varList.SelectedItems.Count > 1)
+                        {
+                            MessageBox.Show("Error: multi-deletion not implemented; please select one variable");
+                        }
+                        else
+                        {
+                            varList.Items.Remove(varList.SelectedItem);
+                        }
+                    }
+                });
             }
         }
     }

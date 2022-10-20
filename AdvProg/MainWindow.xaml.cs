@@ -31,5 +31,23 @@ namespace AdvProg
                 varName.Clear();
             }
         }
+        private void ButtonDelVar_Click(object sender, RoutedEventArgs e)
+        {
+            if (varList.SelectedIndex == -1)
+            {
+                MessageBox.Show("Error: please select a variable for deletion.");
+            }
+            else
+            {
+                if (varList.SelectedItems.Count > 1)
+                {
+                    MessageBox.Show("Error: multi-deletion not implemented; please select one variable");
+                }
+                else
+                {
+                    varList.Items.Remove(varList.SelectedItem);
+                }
+            }
+        }
     }
 }
