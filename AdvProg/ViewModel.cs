@@ -35,6 +35,10 @@ namespace AdvProg
         public void Execute(object parameter)
         {
             MessageBox.Show(Application.Current.MainWindow.FindName("varList").ToString());
+            Object varList = Application.Current.MainWindow.FindName("varList");
+            
+            if (varList is ListBox)
+
         }
         public bool CanExecute(object parameter)
         {

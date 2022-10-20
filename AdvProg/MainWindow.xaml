@@ -9,11 +9,10 @@
 
     <Window.InputBindings>
         <KeyBinding Command="{Binding ReturnCommand}"
-                    CommandParameter="COMMAND!"
                     Key="Enter" />
     </Window.InputBindings>
 
-    <Grid Margin="10">
+    <Grid Name="MainGrid" Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
