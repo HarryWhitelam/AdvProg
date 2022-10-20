@@ -5,56 +5,50 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace AdvProg
 {
-    class MessageCommand : ICommand
+    public class ViewModel
     {
-        public void Execute(object parameter)
+        private ICommand testCommand;
+        public ICommand TestCommand
         {
-            string message;
-
-            if (parameter == null)
-                message = "COMMAND!";
-            else
-                message = parameter.ToString();
-
-            MessageBox.Show(message);
-        }
-        public bool CanExecute(object parameter)
-        {
-            return true;
+            get
+            {
+                return testCommand
+                    ?? (testCommand = new ActionCommand(() =>
+                    {
+                        MessageBox.Show("TEST SUCCESS!");
+                    }));
+            }
         }
 
-        public event EventHandler CanExecuteChanged;
-    }
-
-    class ReturnCommand : ICommand
-    {
-        public void Execute(object parameter)
-        {
-            MessageBox.Show(Application.Current.MainWindow.FindName("varList").ToString());
-            Object varList = Application.Current.MainWindow.FindName("varList");
-            
-            if (varList is ListBox)
-
-        }
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public event EventHandler CanExecuteChanged;
-    }
-
-    public class MyDataContext
-    {
-        ICommand _returnCommand = new ReturnCommand();
-
+        private ICommand returnCommand;
         public ICommand ReturnCommand
         {
-            get { return _returnCommand; }
+            get
+            {
+                return returnCommand
+                    ?? (returnCommand = new ActionCommand(() =>
+                    {
+                        Object varList = Application.Current.MainWindow.FindName("varList");
+                        Object txt = Application.Current.MainWindow.FindName("varName");
+
+                        if ((varList is ListBox) && (txt is TextBox))
+                        {
+                            ListBox lb = (ListBox)varList;
+                            TextBox tb = (TextBox)txt;
+
+                            if (!string.IsNullOrWhiteSpace(tb.Text) && !lb.Items.Contains(tb.Text))
+                            {
+                                lb.Items.Add(tb.Text);
+                                tb.Clear();
+                            }
+                        }
+                    }));
+            }
         }
     }
 }

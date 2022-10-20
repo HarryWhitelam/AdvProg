@@ -8,8 +8,7 @@
         Title="Baltam" Height="750" Width="800">
 
     <Window.InputBindings>
-        <KeyBinding Command="{Binding ReturnCommand}"
-                    Key="Enter" />
+        <KeyBinding Command="{Binding ReturnCommand}" Key="Return" />
     </Window.InputBindings>
 
     <Grid Name="MainGrid" Margin="10">
