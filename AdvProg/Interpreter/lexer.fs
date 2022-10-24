@@ -8,7 +8,7 @@
 namespace interpreter
 
 //*************************************************************************
-open System.Text.RegularExpressions
+open System
 
 type Token =
     | Plus = 0
@@ -23,20 +23,32 @@ type Token =
     | Equals = 9
     | Keyword = 10
 
-let rx = Regex "[0-9]+"
+let lexerBroke = System.Exception("Lexer machine broke")
 
-let get_token character =
-     match character with
-     | "+" -> Token.Plus
-     | "-" -> Token.Minus
-     | "*" -> Token.Times     
-     | "/" -> Token.Divide
-     | "(" -> Token.L_Bracket
-     | ")" -> Token.R_Bracket
-     | "^" -> Token.Indice
-     | rx.IsMatch -> Token.Number
-    //  | Regex.Match(@"[a-zA-Z_]\w*") -> Token.Variable
-     | _ -> Token.Keyword
+let strToList str = [for s in str -> s]
 
-let lex input =
-    printfn "%O" <| get_token input
+//let rec catchNum input = 
+//    match input with
+//    | num :: rest ->
+
+//let rec catchVar
+
+let lexer input =
+    let rec lex input =
+        match input with
+        | [] -> []
+        | '+'::rest -> Token.Plus     :: lex rest
+        | '-'::rest -> Token.Minus    :: lex rest
+        | '*'::rest -> Token.Times    :: lex rest
+        | '/'::rest -> Token.Divide   :: lex rest
+        | '('::rest -> Token.L_Bracket:: lex rest
+        | ')'::rest -> Token.R_Bracket:: lex rest
+        | '^'::rest -> Token.Indice   :: lex rest
+        //| num::rest when System.Char.IsDigit num -> catchNum 
+        //| var::rest when 
+        | _ -> raise lexerBroke
+    lex (strToList input)
+
+
+let test input =
+    printfn "%O" <| lexer input
