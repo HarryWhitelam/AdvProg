@@ -17,21 +17,37 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0">Input Window</TextBlock>
+            <TextBox Grid.Row="1" Name="inputWindow"></TextBox>
+        </Grid>
+
+        <!--WORKSTATION-->
         <Grid Grid.Column="1" Name="WorkstationGrid" Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
             <TextBlock Grid.Row="0">Workstation</TextBlock>
-            <Button Grid.Row="0" x:Name="varDel" Click="ButtonDelVar_Click" Margin="298,0,0,5">Delete</Button>
-            <ListBox Grid.Row="1" x:Name="varList"></ListBox>
+            <Button Grid.Row="0" Grid.Column="1" x:Name="varDel" Click="ButtonDelVar_Click">Delete</Button>
+            
+            <ListBox Grid.Row="1" Grid.Column="0" x:Name="varNames"></ListBox>
+            <ListBox Grid.Row="1" Grid.Column="1" x:Name="varValues"></ListBox>
         </Grid>
 
         <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,0,0">

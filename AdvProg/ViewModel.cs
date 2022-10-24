@@ -32,18 +32,31 @@ namespace AdvProg
             {
                 return returnCommand ??= new ActionCommand(() =>
                 {
-                    Object varList = Application.Current.MainWindow.FindName("varList");
-                    Object txt = Application.Current.MainWindow.FindName("varName");
+                    Object varNames = Application.Current.MainWindow.FindName("varNames");
+                    Object varValues = Application.Current.MainWindow.FindName("varValues");
+                    Object inputWindow = Application.Current.MainWindow.FindName("inputWindow");
 
-                    if ((varList is ListBox) && (txt is TextBox))
+                    if ((varNames is ListBox) && (varValues is ListBox) && (inputWindow is TextBox))
                     {
-                        ListBox lb = (ListBox)varList;
-                        TextBox tb = (TextBox)txt;
+                        ListBox names = (ListBox)varNames;
+                        ListBox values = (ListBox)varValues;
+                        TextBox iw = (TextBox)inputWindow;
 
-                        if (!string.IsNullOrWhiteSpace(tb.Text) && !lb.Items.Contains(tb.Text))
+                        String txt = iw.GetLineText(0);
+
+                        if (txt.Contains("="))
                         {
-                            lb.Items.Add(tb.Text);
-                            tb.Clear();
+                            String[] txtSplit = txt.Split("=");
+                            if (!string.IsNullOrWhiteSpace(iw.Text) && !names.Items.Contains(txtSplit[0]))
+                            {
+                                names.Items.Add(txtSplit[0].Trim());
+                                values.Items.Add(txtSplit[1].Trim());
+                                iw.AppendText("\n");
+                            }
+                        }
+                        else
+                        {
+                            iw.AppendText("\n");
                         }
                     }
                 });
