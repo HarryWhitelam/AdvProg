@@ -56,7 +56,8 @@ namespace AdvProg
                         }
                         else
                         {
-                            iw.AppendText("\n");
+                            iw.AppendText(Environment.NewLine);
+                            iw.LineDown();
                         }
                     }
                 });
