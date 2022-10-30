@@ -42,22 +42,26 @@ namespace AdvProg
                         ListBox values = (ListBox)varValues;
                         TextBox iw = (TextBox)inputWindow;
 
-                        String txt = iw.GetLineText(0);
+                        String txt = iw.GetLineText(iw.LineCount-1);
 
                         if (txt.Contains("="))
                         {
                             String[] txtSplit = txt.Split("=");
                             if (!string.IsNullOrWhiteSpace(iw.Text) && !names.Items.Contains(txtSplit[0]))
                             {
-                                names.Items.Add(txtSplit[0].Trim());
+                                names.Items.Add(txtSplit[0].Substring(1).Trim());
                                 values.Items.Add(txtSplit[1].Trim());
-                                iw.AppendText("\n");
+
+                                iw.AppendText("\n>");
+                                iw.SelectionStart = iw.Text.Length;
+                                iw.SelectionLength = 0;
                             }
                         }
                         else
                         {
-                            iw.AppendText(Environment.NewLine);
-                            iw.LineDown();
+                            iw.AppendText("\n>");
+                            iw.SelectionStart = iw.Text.Length;
+                            iw.SelectionLength = 0;
                         }
                     }
                 });
@@ -71,22 +75,27 @@ namespace AdvProg
             {
                 return delVarCommand ??= new ActionCommand(() =>
                 {
-                    ListBox varList = (ListBox) Application.Current.MainWindow.FindName("varList");
+                    ListBox varNames = (ListBox) Application.Current.MainWindow.FindName("varNames");
+                    ListBox varValues = (ListBox) Application.Current.MainWindow.FindName("varValues");
 
-                    if (varList.SelectedIndex == -1)
+                    if ((varNames.SelectedIndex == -1) && (varValues.SelectedIndex == -1))
                     {
                         MessageBox.Show("Error: please select a variable for deletion.");
                     }
+                    else if ((varNames.SelectedItems.Count > 1) || (varValues.SelectedItems.Count > 1))
+                    {
+                        MessageBox.Show("Error: multi-deletion not implemented; please select one variable");
+                    }
                     else
                     {
-                        if (varList.SelectedItems.Count > 1)
+                        int index = varNames.SelectedIndex;
+                        // ensures vars can be deleted from either column
+                        if (index == -1)
                         {
-                            MessageBox.Show("Error: multi-deletion not implemented; please select one variable");
+                            index = varValues.SelectedIndex;
                         }
-                        else
-                        {
-                            varList.Items.Remove(varList.SelectedItem);
-                        }
+                        varNames.Items.Remove(varNames.Items.GetItemAt(index));
+                        varValues.Items.Remove(varValues.Items.GetItemAt(index));
                     }
                 });
             }

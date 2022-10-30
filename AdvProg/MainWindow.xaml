@@ -29,7 +29,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0">Input Window</TextBlock>
-            <TextBox Grid.Row="1" Name="inputWindow"></TextBox>
+            <TextBox Grid.Row="1" Name="inputWindow"> ></TextBox>
         </Grid>
 
         <!--WORKSTATION-->
