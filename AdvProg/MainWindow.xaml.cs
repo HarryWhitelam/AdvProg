@@ -25,28 +25,32 @@ namespace AdvProg
 
         private void ButtonAddVar_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(varName.Text) && !varList.Items.Contains(varName.Text))
+            if (!string.IsNullOrWhiteSpace(varName.Text) && !varNames.Items.Contains(varName.Text))
             {
-                varList.Items.Add(varName.Text);
+                varNames.Items.Add(varName.Text);
                 varName.Clear();
             }
         }
         private void ButtonDelVar_Click(object sender, RoutedEventArgs e)
         {
-            if (varList.SelectedIndex == -1)
+            if ((varNames.SelectedIndex == -1) && (varValues.SelectedIndex == -1))
             {
                 MessageBox.Show("Error: please select a variable for deletion.");
             }
+            else if ((varNames.SelectedItems.Count > 1) || (varValues.SelectedItems.Count > 1))
+            {
+                MessageBox.Show("Error: multi-deletion not implemented; please select one variable");
+            }
             else
             {
-                if (varList.SelectedItems.Count > 1)
+                int index = varNames.SelectedIndex;
+                // ensures vars can be deleted from either column
+                if (index == -1)
                 {
-                    MessageBox.Show("Error: multi-deletion not implemented; please select one variable");
+                    index = varValues.SelectedIndex;
                 }
-                else
-                {
-                    varList.Items.Remove(varList.SelectedItem);
-                }
+                varNames.Items.Remove(varNames.Items.GetItemAt(index));
+                varValues.Items.Remove(varValues.Items.GetItemAt(index));
             }
         }
     }
