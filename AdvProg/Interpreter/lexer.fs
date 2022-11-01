@@ -5,15 +5,15 @@
 
 //*************************************************************************
 
-//namespace interpreter
+// namespace interpreter
 
 //*************************************************************************
 open System
 
 type Token = 
-    Plus | Minus | Times | Divide | L_Bracket | R_Bracket | Indice | Equals | Number of int | Variable of string
+    Plus | Minus | Times | Divide | L_Bracket | R_Bracket | Indice | Equals | Assign | Number of int | Variable of string
 
-let lexerBroke = System.Exception("Lexer machine broke")
+let lexerBroke (reason:string) = System.Exception("Lexer machine broke: " + reason)
 
 let strToList str = [for s in str -> s]
 let intVal (c:char) = (int)((int)c - (int)'0')
@@ -41,10 +41,13 @@ let lexer input =
         | ')'::tail -> Token.R_Bracket:: lex tail
         | '^'::tail -> Token.Indice   :: lex tail
         | '='::tail -> Token.Equals   :: lex tail
+        | ':'::tail -> match tail with
+                        | '='::tail -> Token.Assign :: lex tail
+                        | _ -> raise (lexerBroke "Expected '=' after ':'")
         | num::tail when (System.Char.IsDigit num) ->   let (rest, finVal) = catchNum (tail, intVal num)
                                                         Token.Number finVal :: lex rest
         | var::tail when (System.Char.IsLetter var) ->  let (rest, finStr) = catchVar (tail, charToStr var)
                                                         Token.Variable finStr :: lex rest
         | spc::tail when (System.Char.IsWhiteSpace spc) -> lex tail
-        | _ -> raise lexerBroke
+        | _ -> raise (lexerBroke "Undefined character")
     lex (strToList input)
