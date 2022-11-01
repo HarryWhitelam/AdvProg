@@ -5,50 +5,46 @@
 
 //*************************************************************************
 
-namespace interpreter
+//namespace interpreter
 
 //*************************************************************************
 open System
 
-type Token =
-    | Plus = 0
-    | Minus = 1
-    | Times = 2
-    | Divide = 3
-    | L_Bracket = 4
-    | R_Bracket =5
-    | Indice = 6
-    | Number = 7
-    | Variable = 8
-    | Equals = 9
-    | Keyword = 10
+type Token = 
+    Plus | Minus | Times | Divide | L_Bracket | R_Bracket | Indice | Equals | Number of int | Variable of string
 
 let lexerBroke = System.Exception("Lexer machine broke")
 
 let strToList str = [for s in str -> s]
+let intVal (c:char) = (int)((int)c - (int)'0')
+let charToStr (c:char) = System.Char.ToString(c)
 
-//let rec catchNum input = 
-//    match input with
-//    | num :: rest ->
+let rec catchNum(rest, finVal) = 
+    match rest with
+    | num :: tail when (System.Char.IsDigit num) -> catchNum(tail, 10*finVal+(intVal num))
+    | _ -> (rest, finVal)
 
-//let rec catchVar
+let rec catchVar(rest, finStr) =
+    match rest with
+    | var :: tail when (System.Char.IsLetter var) -> catchVar(tail, finStr+(charToStr var))
+    | _ -> (rest, finStr)
 
 let lexer input =
     let rec lex input =
         match input with
         | [] -> []
-        | '+'::rest -> Token.Plus     :: lex rest
-        | '-'::rest -> Token.Minus    :: lex rest
-        | '*'::rest -> Token.Times    :: lex rest
-        | '/'::rest -> Token.Divide   :: lex rest
-        | '('::rest -> Token.L_Bracket:: lex rest
-        | ')'::rest -> Token.R_Bracket:: lex rest
-        | '^'::rest -> Token.Indice   :: lex rest
-        //| num::rest when System.Char.IsDigit num -> catchNum 
-        //| var::rest when 
+        | '+'::tail -> Token.Plus     :: lex tail
+        | '*'::tail -> Token.Times    :: lex tail
+        | '-'::tail -> Token.Minus    :: lex tail
+        | '/'::tail -> Token.Divide   :: lex tail
+        | '('::tail -> Token.L_Bracket:: lex tail
+        | ')'::tail -> Token.R_Bracket:: lex tail
+        | '^'::tail -> Token.Indice   :: lex tail
+        | '='::tail -> Token.Equals   :: lex tail
+        | num::tail when (System.Char.IsDigit num) ->   let (rest, finVal) = catchNum (tail, intVal num)
+                                                        Token.Number finVal :: lex rest
+        | var::tail when (System.Char.IsLetter var) ->  let (rest, finStr) = catchVar (tail, charToStr var)
+                                                        Token.Variable finStr :: lex rest
+        | spc::tail when (System.Char.IsWhiteSpace spc) -> lex tail
         | _ -> raise lexerBroke
     lex (strToList input)
-
-
-let test input =
-    printfn "%O" <| lexer input
