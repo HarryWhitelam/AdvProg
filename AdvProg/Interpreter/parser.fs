@@ -10,7 +10,7 @@
 //*************************************************************************
 
 
-let parserMachineBroke reason = System.Exception("Parser Machine Broke" + reason)
+let parserMachineBroke (reason:string) = System.Exception("Parser Machine Broke: " + reason)
 
 //Grammar in standard BNF
 //<expr>    ::= <term>    | <expr>+<term>   | <expr>-<term>
@@ -57,7 +57,6 @@ let parser tokens =
         | Token.Variable value :: tail -> tail
         | Token.L_Bracket ::tail -> match expr tail with
                                     | Token.R_Bracket :: tail -> tail
-                                    | _ -> raise parserError "Missing closing bracket"
-        | _ -> raise parserError "Expected number or variable but none supplied"
+                                    | _ -> raise (parserError "Missing closing bracket")
+        | _ -> raise (parserError "Expected number or variable but none supplied")
     expr tokens
-    
