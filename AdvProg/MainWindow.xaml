@@ -28,12 +28,12 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0">Input Window</TextBlock>
+            <TextBlock Grid.Row="0" Height="15pt">Input Window</TextBlock>
             <TextBox Grid.Row="1" Name="inputWindow"> ></TextBox>
         </Grid>
 
         <!--WORKSTATION-->
-        <Grid Grid.Column="1" Name="WorkstationGrid" Margin="10">
+        <Grid Grid.Column="1" Name="WorkstationGrid">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
@@ -44,18 +44,15 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0">Workstation</TextBlock>
-            <Button Grid.Row="0" Grid.Column="1" x:Name="varDel" Click="ButtonDelVar_Click">Delete</Button>
+            <Button Grid.Row="0" Grid.Column="1" x:Name="varDel" Height="auto" Click="ButtonDelVar_Click">Delete</Button>
             
             <ListBox Grid.Row="1" Grid.Column="0" x:Name="varNames"></ListBox>
             <ListBox Grid.Row="1" Grid.Column="1" x:Name="varValues"></ListBox>
         </Grid>
 
-        <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,0,0">
-            <TextBox x:Name="varName" />
-            <Button x:Name="varAdd" Margin="0,5,0,0" Click="ButtonAddVar_Click">Add Variable</Button>
-        </StackPanel>
-        
-        
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,0,0"/>
+
+
     </Grid>
 
 </Window>
