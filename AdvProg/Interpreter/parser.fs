@@ -10,7 +10,7 @@
 //*************************************************************************
 
 
-let parserMachineBroke (reason:string) = System.Exception("Parser Machine Broke: " + reason)
+let parserError (reason:string) = System.Exception("Parser Machine Broke: " + reason)
 
 //Grammar in standard BNF
 //<expr>    ::= <term>    | <expr>+<term>   | <expr>-<term>
