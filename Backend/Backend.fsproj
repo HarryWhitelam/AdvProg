@@ -1,19 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
-    <WarnOn>3390;$(WarnOn)</WarnOn>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Interpreter\executor.fs" />
-    <None Include="Interpreter\interpreter.fs" />
-    <None Include="Interpreter\lexer.fs" />
-    <None Include="Interpreter\parser.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="Executor.fs" />
+    <Compile Include="Lexer.fs" />
+    <Compile Include="Parser.fs" />
+    <Compile Include="Interpreter.fs" />
   </ItemGroup>
-
-  <ItemGroup />
 
 </Project>
