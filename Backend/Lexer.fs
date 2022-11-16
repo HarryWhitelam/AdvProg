@@ -10,8 +10,7 @@ namespace Backend
 //*************************************************************************
 
 type Token = 
-    Plus | Minus | Times | Divide | L_Bracket | R_Bracket | Indice | Assign | Number of int | Variable of string
-
+    Plus | Minus | Times | Divide | L_Bracket | R_Bracket | Indice | Assign | Number of float | Variable of string
 
 module Lexer =
 
