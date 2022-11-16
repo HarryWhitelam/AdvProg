@@ -10,7 +10,7 @@ namespace Backend
 //*************************************************************************
 
 type Token = 
-    Plus | Minus | Times | Divide | L_Bracket | R_Bracket | Indice | Equals | Assign | Number of int | Variable of string
+    Plus | Minus | Times | Divide | L_Bracket | R_Bracket | Indice | Assign | Number of int | Variable of string
 
 
 module Lexer =
@@ -42,7 +42,6 @@ module Lexer =
             | '('::tail -> Token.L_Bracket:: consume tail
             | ')'::tail -> Token.R_Bracket:: consume tail
             | '^'::tail -> Token.Indice   :: consume tail
-            | '='::tail -> Token.Equals   :: consume tail
             | ':'::tail -> match tail with
                             | '='::tail -> Token.Assign :: consume tail
                             | _ -> raise (lexerError "Expected '=' after ':'")
