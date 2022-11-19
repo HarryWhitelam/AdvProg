@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Backend;
 
 namespace AdvProg
 {
@@ -38,26 +39,37 @@ namespace AdvProg
                         TextBox iw = (TextBox)inputWindow;
 
                         String txt = iw.GetLineText(iw.LineCount-1);
+                        txt = txt.Substring(1);
 
-                        if (txt.Contains("="))
-                        {
-                            String[] txtSplit = txt.Split("=");
-                            if (!string.IsNullOrWhiteSpace(iw.Text) && !names.Items.Contains(txtSplit[0]))
-                            {
-                                names.Items.Add(txtSplit[0].Substring(1).Trim());
-                                values.Items.Add(txtSplit[1].Trim());
+                        Microsoft.FSharp.Collections.FSharpList<Token> tokens = Lexer.lex(txt);
+                        tokens = Parser.parse(tokens);
+                        MessageBox.Show(tokens.ToString());
 
-                                iw.AppendText("\n>");
-                                iw.SelectionStart = iw.Text.Length;
-                                iw.SelectionLength = 0;
-                            }
-                        }
-                        else
-                        {
-                            iw.AppendText("\n>");
-                            iw.SelectionStart = iw.Text.Length;
-                            iw.SelectionLength = 0;
-                        }
+                        
+                        
+                        
+                        //MessageBox.Show(Lexer.lex(txt).ToString());
+
+
+                        //if (txt.Contains("="))
+                        //{
+                        //    String[] txtSplit = txt.Split("=");
+                        //    if (!string.IsNullOrWhiteSpace(iw.Text) && !names.Items.Contains(txtSplit[0]))
+                        //    {
+                        //        names.Items.Add(txtSplit[0].Substring(1).Trim());
+                        //        values.Items.Add(txtSplit[1].Trim());
+
+                        //        iw.AppendText("\n>");
+                        //        iw.SelectionStart = iw.Text.Length;
+                        //        iw.SelectionLength = 0;
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    iw.AppendText("\n>");
+                        //    iw.SelectionStart = iw.Text.Length;
+                        //    iw.SelectionLength = 0;
+                        //}
                     }
                 });
             }
