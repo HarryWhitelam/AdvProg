@@ -3,7 +3,10 @@
 module Interpreter =
     open System
 
-    let interpret expression = Parser.parse <| Lexer.lex expression
+    let interpret expression = 
+        let tokens = Lexer.lex expression
+        if Parser.parse(tokens).IsEmpty then
+            Executor.shuntingYard tokens
 
     let getInputString : string = 
         Console.Write("Enter an expression: ")
