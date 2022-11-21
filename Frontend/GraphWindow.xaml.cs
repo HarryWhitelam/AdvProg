@@ -53,7 +53,7 @@ namespace Frontend
 
             var line1 = new InteractiveDataDisplay.WPF.LineGraph
             {
-                Stroke = new SolidColorBrush(Colors.Red),
+                Stroke = new SolidColorBrush(Colors.RoyalBlue),
                 Description = "Line 1",
                 StrokeThickness = 3
             };
@@ -62,7 +62,7 @@ namespace Frontend
             myGrid.Children.Clear();
             myGrid.Children.Add(line1);
 
-            myChart.Title = $"Line plot for y = 5x + 4 for a range of -10 -> 10";
+            myChart.Title = $"Line plot for y = 5x + 4 for a range of -100 -> 100";
             myChart.IsAutoFitEnabled = true;
             myChart.LegendVisibility = Visibility.Visible;
         }
