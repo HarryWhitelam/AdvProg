@@ -31,7 +31,7 @@
 
             <TextBlock Grid.Row="0" Height="15pt">Input Window</TextBlock>
 
-            <Border Grid.Row="1" BorderBrush="#FFABADB3">
+            <Border Grid.Row="1" BorderBrush="#FFABADB3" BorderThickness="1, 1, 1, 1">
                 <!--INPUT CURSOR AND FIELD-->
                 <Grid>
                     <Grid.ColumnDefinitions>
