@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Diagnostics;
 using Backend;
 
 namespace AdvProg
@@ -39,11 +40,15 @@ namespace AdvProg
                         TextBox iw = (TextBox)inputWindow;
 
                         String txt = iw.GetLineText(iw.LineCount-1);
-                        txt = txt.Substring(1);
 
                         Microsoft.FSharp.Collections.FSharpList<Token> tokens = Lexer.lex(txt);
                         tokens = Parser.parse(tokens);
-                        MessageBox.Show(tokens.ToString());
+                        
+                        foreach (Token token in tokens)
+                        {
+                            Debug.WriteLine(token.ToString() + "\n");
+                        }
+
 
                         
                         

@@ -28,8 +28,15 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Height="15pt">Input Window</TextBlock>
-            <TextBox Grid.Row="1" Name="inputWindow"> ></TextBox>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20pt" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Height="15pt">Input Window</TextBlock>
+
+            <TextBox Grid.Row="1" Grid.Column="0" Name="labelWindow" IsReadOnly="True">></TextBox>
+            <TextBox Grid.Row="1" Grid.Column="1" Name="inputWindow"></TextBox>
         </Grid>
 
         <!--WORKSTATION-->
