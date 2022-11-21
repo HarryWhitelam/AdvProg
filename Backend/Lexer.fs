@@ -1,4 +1,4 @@
-// lexer.fs
+// Lexer.fs
 //
 // Author:      Irie Railton
 // Description: 
