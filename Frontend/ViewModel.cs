@@ -50,31 +50,31 @@ namespace AdvProg
                         }
 
 
-                        
-                        
-                        
+
+
+
                         //MessageBox.Show(Lexer.lex(txt).ToString());
 
 
-                        //if (txt.Contains("="))
-                        //{
-                        //    String[] txtSplit = txt.Split("=");
-                        //    if (!string.IsNullOrWhiteSpace(iw.Text) && !names.Items.Contains(txtSplit[0]))
-                        //    {
-                        //        names.Items.Add(txtSplit[0].Substring(1).Trim());
-                        //        values.Items.Add(txtSplit[1].Trim());
+                        if (txt.Contains("="))
+                        {
+                            String[] txtSplit = txt.Split("=");
+                            if (!string.IsNullOrWhiteSpace(iw.Text) && !names.Items.Contains(txtSplit[0]))
+                            {
+                                names.Items.Add(txtSplit[0].Substring(1).Trim());
+                                values.Items.Add(txtSplit[1].Trim());
 
-                        //        iw.AppendText("\n>");
-                        //        iw.SelectionStart = iw.Text.Length;
-                        //        iw.SelectionLength = 0;
-                        //    }
-                        //}
-                        //else
-                        //{
-                        //    iw.AppendText("\n>");
-                        //    iw.SelectionStart = iw.Text.Length;
-                        //    iw.SelectionLength = 0;
-                        //}
+                                iw.AppendText("\n>");
+                                iw.SelectionStart = iw.Text.Length;
+                                iw.SelectionLength = 0;
+                            }
+                        }
+                        else
+                        {
+                            iw.AppendText("\n>");
+                            iw.SelectionStart = iw.Text.Length;
+                            iw.SelectionLength = 0;
+                        }
                     }
                 });
             }
