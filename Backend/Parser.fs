@@ -11,16 +11,18 @@ namespace Backend
 
 module Parser =
 
-    let parserError (reason:string) = System.Exception("Parser Machine Broke: " + reason)
+    let parserError (reason:string) = System.Exception ("Parser Machine Broke: " + reason)
 
     //Grammar in standard BNF
+    //<assign>  ::= <expr>    | Variable:=<expr>
     //<expr>    ::= <term>    | <expr>+<term>   | <expr>-<term>
-    //<term>    ::= <unary>   | <term>*<unary>  | <term>/<unary>
+    //<term>    ::= <index>   | <term>*<index>  | <term>/<index>
     //<index>   ::= <unary>   | <index>^<unary>
     //<unary>   ::= -<factor> | <factor>
-    //<factor>  ::= Number    | (<expr>)
+    //<factor>  ::= Number | Variable | (<expr>)
 
     //Grammar in LL(1) BNF
+    //<assign>  ::= <expr> | Variable:=<expr>
     //<expr>    ::= <term><expr'>
     //<expr'>   ::= +<term><expr'> | -<term><expr'> | ∅
     //<term>    ::= <index><term'>
@@ -30,8 +32,13 @@ module Parser =
     //<unary>   ::= -<factor> | <factor>
     //<factor>  ::= Number | Variable | (<expr>)
 
-    let parse tokens = 
-        let rec expr tokens = (term >> expr_pr) tokens
+    let parse tokens =
+        let rec assign tokens = 
+            match tokens with
+            | Token.Variable _value :: Token.Assign :: tail -> expr tail
+            | _ :: Token.Assign :: _tail -> raise (parserError "Expected variable before assignment")
+            | _ -> expr tokens
+        and expr tokens = (term >> expr_pr) tokens
         and expr_pr tokens =
             match tokens with
             | Token.Plus  :: tail -> (term >> expr_pr) tail
@@ -60,4 +67,4 @@ module Parser =
                                         | Token.R_Bracket :: tail -> tail
                                         | _ -> raise (parserError "Missing closing bracket")
             | _ -> raise (parserError "Expected number or variable but none supplied")
-        expr tokens
+        assign tokens
