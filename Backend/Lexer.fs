@@ -1,4 +1,4 @@
-// lexer.fs
+// Lexer.fs
 //
 // Author:      Irie Railton
 // Description: 
@@ -10,8 +10,7 @@ namespace Backend
 //*************************************************************************
 
 type Token = 
-    Plus | Minus | Times | Divide | L_Bracket | R_Bracket | Indice | Equals | Assign | Number of int | Variable of string
-
+    Plus | Minus | Times | Divide | L_Bracket | R_Bracket | Indice | Assign | Number of float | Variable of string
 
 module Lexer =
 
@@ -42,12 +41,11 @@ module Lexer =
             | '('::tail -> Token.L_Bracket:: consume tail
             | ')'::tail -> Token.R_Bracket:: consume tail
             | '^'::tail -> Token.Indice   :: consume tail
-            | '='::tail -> Token.Equals   :: consume tail
             | ':'::tail -> match tail with
                             | '='::tail -> Token.Assign :: consume tail
                             | _ -> raise (lexerError "Expected '=' after ':'")
             | num::tail when (System.Char.IsDigit num) ->   let (rest, finVal) = catchNum (tail, intVal num)
-                                                            Token.Number finVal :: consume rest
+                                                            Token.Number ((float)finVal) :: consume rest
             | var::tail when (System.Char.IsLetter var) ->  let (rest, finStr) = catchVar (tail, charToStr var)
                                                             Token.Variable finStr :: consume rest
             | spc::tail when (System.Char.IsWhiteSpace spc) -> consume tail

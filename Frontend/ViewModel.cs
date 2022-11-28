@@ -41,13 +41,7 @@ namespace AdvProg
 
                         String txt = iw.GetLineText(iw.LineCount-1);
 
-                        Microsoft.FSharp.Collections.FSharpList<Token> tokens = Lexer.lex(txt);
-                        tokens = Parser.parse(tokens);
-                        
-                        foreach (Token token in tokens)
-                        {
-                            Debug.WriteLine(token.ToString() + "\n");
-                        }
+                        Debug.WriteLine(Interpreter.interpret(txt));
 
 
 
