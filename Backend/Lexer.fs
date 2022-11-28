@@ -45,7 +45,7 @@ module Lexer =
                             | '='::tail -> Token.Assign :: consume tail
                             | _ -> raise (lexerError "Expected '=' after ':'")
             | num::tail when (System.Char.IsDigit num) ->   let (rest, finVal) = catchNum (tail, intVal num)
-                                                            Token.Number finVal :: consume rest
+                                                            Token.Number ((float)finVal) :: consume rest
             | var::tail when (System.Char.IsLetter var) ->  let (rest, finStr) = catchVar (tail, charToStr var)
                                                             Token.Variable finStr :: consume rest
             | spc::tail when (System.Char.IsWhiteSpace spc) -> consume tail
