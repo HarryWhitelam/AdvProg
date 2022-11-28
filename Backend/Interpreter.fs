@@ -9,10 +9,6 @@ module Interpreter =
             (string) (Executor.shuntingYard tokens)
         else null
 
-    let getInputString : string = 
-        Console.Write("Enter an expression: ")
-        Console.ReadLine()
-
     let rec printTList (lst:list<Token>) : list<string> = 
         match lst with
         head::tail ->   Console.Write("{0} ",head.ToString())

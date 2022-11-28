@@ -29,47 +29,44 @@ namespace AdvProg
             {
                 return returnCommand ??= new ActionCommand(() =>
                 {
-                    Object varNames = Application.Current.MainWindow.FindName("varNames");
-                    Object varValues = Application.Current.MainWindow.FindName("varValues");
-                    Object inputWindow = Application.Current.MainWindow.FindName("inputWindow");
+                    ListBox varNames = (ListBox) Application.Current.MainWindow.FindName("varNames");
+                    ListBox varValues = (ListBox) Application.Current.MainWindow.FindName("varValues");
+                    TextBox inputWindow = (TextBox) Application.Current.MainWindow.FindName("inputWindow");
+                    TextBox cursorWindow = (TextBox) Application.Current.MainWindow.FindName("cursorWindow");
 
-                    if ((varNames is ListBox) && (varValues is ListBox) && (inputWindow is TextBox))
-                    {
-                        ListBox names = (ListBox)varNames;
-                        ListBox values = (ListBox)varValues;
-                        TextBox iw = (TextBox)inputWindow;
+                    String input = inputWindow.GetLineText(inputWindow.LineCount-1);
+                    String answer = Interpreter.interpret(input);
 
-                        String txt = iw.GetLineText(iw.LineCount-1);
+                    inputWindow.AppendText("\n");
+                    inputWindow.AppendText("   " + answer + "\n\n");
+                    inputWindow.SelectionStart = inputWindow.Text.Length;
+                    inputWindow.SelectionLength = 0;
 
-                        Debug.WriteLine(Interpreter.interpret(txt));
-
-
-
-
-
-                        //MessageBox.Show(Lexer.lex(txt).ToString());
+                    cursorWindow.AppendText("\n\n\n>>");
+                    cursorWindow.ScrollToEnd();
 
 
-                        if (txt.Contains("="))
-                        {
-                            String[] txtSplit = txt.Split("=");
-                            if (!string.IsNullOrWhiteSpace(iw.Text) && !names.Items.Contains(txtSplit[0]))
-                            {
-                                names.Items.Add(txtSplit[0].Substring(1).Trim());
-                                values.Items.Add(txtSplit[1].Trim());
 
-                                iw.AppendText("\n>");
-                                iw.SelectionStart = iw.Text.Length;
-                                iw.SelectionLength = 0;
-                            }
-                        }
-                        else
-                        {
-                            iw.AppendText("\n>");
-                            iw.SelectionStart = iw.Text.Length;
-                            iw.SelectionLength = 0;
-                        }
-                    }
+                    //if (txt.Contains("="))
+                    //{
+                    //    String[] txtSplit = txt.Split("=");
+                    //    if (!string.IsNullOrWhiteSpace(inputWindow.Text) && !varNames.Items.Contains(txtSplit[0]))
+                    //    {
+                    //        varNames.Items.Add(txtSplit[0].Substring(1).Trim());
+                    //        varValues.Items.Add(txtSplit[1].Trim());
+
+                    //        inputWindow.AppendText("\n>");
+                    //        inputWindow.SelectionStart = inputWindow.Text.Length;
+                    //        inputWindow.SelectionLength = 0;
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    inputWindow.AppendText("\n>");
+                    //    inputWindow.SelectionStart = inputWindow.Text.Length;
+                    //    inputWindow.SelectionLength = 0;
+                    //}
+
                 });
             }
         }
