@@ -33,40 +33,25 @@ namespace AdvProg
                     ListBox varValues = (ListBox) Application.Current.MainWindow.FindName("varValues");
                     TextBox inputWindow = (TextBox) Application.Current.MainWindow.FindName("inputWindow");
                     TextBox cursorWindow = (TextBox) Application.Current.MainWindow.FindName("cursorWindow");
-
+                    
                     String input = inputWindow.GetLineText(inputWindow.LineCount-1);
-                    String answer = Interpreter.interpret(input);
 
-                    inputWindow.AppendText("\n");
-                    inputWindow.AppendText("   " + answer + "\n\n");
-                    inputWindow.SelectionStart = inputWindow.Text.Length;
-                    inputWindow.SelectionLength = 0;
+                    if (input.Contains("plot"))
+                    {
 
-                    cursorWindow.AppendText("\n\n\n>>");
-                    cursorWindow.ScrollToEnd();
+                    }
+                    else
+                    {
+                        String answer = Interpreter.interpret(input);
 
+                        inputWindow.AppendText("\n");
+                        inputWindow.AppendText("   " + answer + "\n\n");
+                        inputWindow.SelectionStart = inputWindow.Text.Length;
+                        inputWindow.SelectionLength = 0;
 
-
-                    //if (txt.Contains("="))
-                    //{
-                    //    String[] txtSplit = txt.Split("=");
-                    //    if (!string.IsNullOrWhiteSpace(inputWindow.Text) && !varNames.Items.Contains(txtSplit[0]))
-                    //    {
-                    //        varNames.Items.Add(txtSplit[0].Substring(1).Trim());
-                    //        varValues.Items.Add(txtSplit[1].Trim());
-
-                    //        inputWindow.AppendText("\n>");
-                    //        inputWindow.SelectionStart = inputWindow.Text.Length;
-                    //        inputWindow.SelectionLength = 0;
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    inputWindow.AppendText("\n>");
-                    //    inputWindow.SelectionStart = inputWindow.Text.Length;
-                    //    inputWindow.SelectionLength = 0;
-                    //}
-
+                        cursorWindow.AppendText("\n\n\n>>");
+                        cursorWindow.ScrollToEnd();
+                    }
                 });
             }
         }
