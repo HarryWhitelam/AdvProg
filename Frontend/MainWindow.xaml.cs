@@ -25,27 +25,27 @@ namespace AdvProg
 
         private void ButtonDelVar_Click(object sender, RoutedEventArgs e)
         {
-            Frontend.GraphWindow graphWindow = new Frontend.GraphWindow();
-            graphWindow.Show();
-            //if ((varNames.SelectedIndex == -1) && (varValues.SelectedIndex == -1))
-            //{
-            //    MessageBox.Show("Error: please select a variable for deletion.");
-            //}
-            //else if ((varNames.SelectedItems.Count > 1) || (varValues.SelectedItems.Count > 1))
-            //{
-            //    MessageBox.Show("Error: multi-deletion not implemented; please select one variable");
-            //}
-            //else
-            //{
-            //    int index = varNames.SelectedIndex;
-            //    // ensures vars can be deleted from either column
-            //    if (index == -1)
-            //    {
-            //        index = varValues.SelectedIndex;
-            //    }
-            //    varNames.Items.Remove(varNames.Items.GetItemAt(index));
-            //    varValues.Items.Remove(varValues.Items.GetItemAt(index));
-            //}
+            if ((varNames.SelectedIndex == -1) && (varValues.SelectedIndex == -1))
+            {
+                MessageBox.Show("Error: please select a variable for deletion.");
+            }
+            else if ((varNames.SelectedItems.Count > 1) || (varValues.SelectedItems.Count > 1))
+            {
+                MessageBox.Show("Error: multi-deletion not implemented; please select one variable");
+            }
+            else
+            {
+                int index = varNames.SelectedIndex;
+                // ensures vars can be deleted from either column
+                if (index == -1)
+                {
+                    index = varValues.SelectedIndex;
+                }
+                varNames.Items.Remove(varNames.Items.GetItemAt(index));
+                varValues.Items.Remove(varValues.Items.GetItemAt(index));
+            }
+//             Frontend.GraphWindow graphWindow = new Frontend.GraphWindow();
+//             graphWindow.Show();
         }
     }
 }
