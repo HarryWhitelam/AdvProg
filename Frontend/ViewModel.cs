@@ -29,8 +29,6 @@ namespace AdvProg
             {
                 return returnCommand ??= new ActionCommand(() =>
                 {
-                    MessageBox.Show("WORKING");
-
                     Object varNames = Application.Current.MainWindow.FindName("varNames");
                     Object varValues = Application.Current.MainWindow.FindName("varValues");
                     Object inputWindow = Application.Current.MainWindow.FindName("inputWindow");
@@ -43,17 +41,7 @@ namespace AdvProg
 
                         String txt = iw.GetLineText(iw.LineCount-1);
 
-                        Microsoft.FSharp.Collections.FSharpList<Token> tokens = Lexer.lex(txt);
-                        tokens = Parser.parse(tokens);
-
-                        MessageBox.Show(Interpreter.interpret(txt).ToString());
-
-                        
-                        
-                        foreach (Token token in tokens)
-                        {
-                            Debug.WriteLine(token.ToString() + "\n");
-                        }
+                        Debug.WriteLine(Interpreter.interpret(txt).ToString());
 
 
 
