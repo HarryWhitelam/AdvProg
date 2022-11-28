@@ -26,7 +26,7 @@ module Executor =
     let outputQueue = Queue()
     let operatorStack = Stack<Token>()
 
-    let calculate =
+    let calculate() =
         if outputQueue.Count <> 0 then
             let value = outputQueue.Dequeue()
             let value2 = outputQueue.Dequeue()
@@ -44,41 +44,41 @@ module Executor =
             match token with
             | Token.Number value -> 
                             outputQueue.Enqueue(value)
-                            System.Console.WriteLine("Number {0} added to queue", value)
+                            System.Diagnostics.Debug.WriteLine("Number {0} added to queue", value)
             | Token.Variable value -> 
                             if operatorStack.Count <> 0 && operatorStack.Peek() <> Token.Assign then
                                 outputQueue.Enqueue(getVar value)
-                                System.Console.WriteLine("Variable {0} added to queue", value)
+                                System.Diagnostics.Debug.WriteLine("Variable {0} added to queue", value)
             | Token.Plus -> 
                             //check this
                             while operatorStack.Count <> 0 && (operatorStack.Peek() <> Token.L_Bracket || operatorStack.Peek() <> Token.Assign) do
                                 //outputQueue.Enqueue(operatorStack.Pop())
                                 //(containsToken, top) <- operatorStack.TryPeek()
-                                calculate
+                                calculate()
                             operatorStack.Push(token)
-                            System.Console.WriteLine("+ added to stack")
+                            System.Diagnostics.Debug.WriteLine("+ added to stack")
             | Token.Minus -> failwith "Not Implemented"
             | Token.Times -> 
                             while operatorStack.Count <> 0 && (operatorStack.Peek() <> Token.L_Bracket || operatorStack.Peek() <> Token.Assign || operatorStack.Peek() <> Token.Plus) do
-                                calculate
+                                calculate()
                             operatorStack.Push(token)
-                            System.Console.WriteLine("* added to stack")
+                            System.Diagnostics.Debug.WriteLine("* added to stack")
             | Token.Divide ->
                             while operatorStack.Count <> 0 && (operatorStack.Peek() <> Token.L_Bracket || operatorStack.Peek() <> Token.Assign || operatorStack.Peek() <> Token.Plus) do
-                                calculate
+                                calculate()
                             operatorStack.Push(token)
-                            System.Console.WriteLine("/ added to stack")
+                            System.Diagnostics.Debug.WriteLine("/ added to stack")
             | Token.L_Bracket -> 
                             operatorStack.Push(token)
-                            System.Console.WriteLine("( added to stack")
+                            System.Diagnostics.Debug.WriteLine("( added to stack")
             | Token.R_Bracket -> 
                             while operatorStack.Count <> 0 && (operatorStack.Peek() <> Token.L_Bracket) do
-                                calculate
+                                calculate()
                             operatorStack.Pop() |> ignore
                             System.Console.WriteLine("( removed from stack")
             | Token.Indice -> failwith "Not Implemented"
             | Token.Assign -> failwith "Not Implemented"
         while operatorStack.Count <> 0 do
-            System.Console.WriteLine("{0}, {0}", operatorStack.Peek(), outputQueue.Peek())
-            calculate
+            System.Diagnostics.Debug.WriteLine("{0}, {1}", operatorStack.Peek(), outputQueue.Peek())
+            calculate()
         outputQueue.Dequeue()
