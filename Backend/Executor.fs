@@ -51,20 +51,19 @@ module Executor =
                                 System.Diagnostics.Debug.WriteLine("Variable {0} added to queue", value)
             | Token.Plus -> 
                             //check this
-                            while operatorStack.Count <> 0 && (operatorStack.Peek() <> Token.L_Bracket || operatorStack.Peek() <> Token.Assign) do
-                                //outputQueue.Enqueue(operatorStack.Pop())
-                                //(containsToken, top) <- operatorStack.TryPeek()
+                            while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket && operatorStack.Peek() <> Token.Assign do
+                                System.Diagnostics.Debug.WriteLine(operatorStack.Peek())
                                 calculate()
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine("+ added to stack")
             | Token.Minus -> failwith "Not Implemented"
             | Token.Times -> 
-                            while operatorStack.Count <> 0 && (operatorStack.Peek() <> Token.L_Bracket || operatorStack.Peek() <> Token.Assign || operatorStack.Peek() <> Token.Plus) do
+                            while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket && operatorStack.Peek() <> Token.Assign && operatorStack.Peek() <> Token.Plus do
                                 calculate()
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine("* added to stack")
             | Token.Divide ->
-                            while operatorStack.Count <> 0 && (operatorStack.Peek() <> Token.L_Bracket || operatorStack.Peek() <> Token.Assign || operatorStack.Peek() <> Token.Plus) do
+                            while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket && operatorStack.Peek() <> Token.Assign && operatorStack.Peek() <> Token.Plus do
                                 calculate()
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine("/ added to stack")
@@ -72,7 +71,7 @@ module Executor =
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine("( added to stack")
             | Token.R_Bracket -> 
-                            while operatorStack.Count <> 0 && (operatorStack.Peek() <> Token.L_Bracket) do
+                            while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket do
                                 calculate()
                             operatorStack.Pop() |> ignore
                             System.Console.WriteLine("( removed from stack")
