@@ -23,31 +23,33 @@ module Executor =
         with :? KeyNotFoundException -> 
             raise (execError ("Variable " + variable + " does not have an assigned value"))
 
-    let outputQueue = Queue()
+    let outputStack = Stack<float>()
     let operatorStack = Stack<Token>()
 
     let calculate() =
-        if outputQueue.Count <> 0 then
-            let value = outputQueue.Dequeue()
-            let value2 = outputQueue.Dequeue()
+        if outputStack.Count <> 0 then
+            let value = outputStack.Pop()
+            let value2 = outputStack.Pop()
+            System.Diagnostics.Debug.WriteLine("value = {0}, value2 = {1}", value, value2)
             match operatorStack.Pop() with
-            | Token.Plus ->     outputQueue.Enqueue(value + value2)
-            | Token.Minus -> failwith "Not Implemented"
-            | Token.Times ->    outputQueue.Enqueue(value * value2)
-            | Token.Divide ->   outputQueue.Enqueue(value / value2)
             | Token.Indice -> failwith "Not Implemented"
             | Token.Assign -> failwith "Not Implemented"
+            | Token.Times ->    outputStack.Push(value * value2)
+            | Token.Divide ->   outputStack.Push(value / value2)
+            | Token.Plus ->     outputStack.Push(value + value2)
+            | Token.Minus -> failwith "Not Implemented"
             | _ -> failwith "Invalid Token Here"
+            System.Diagnostics.Debug.WriteLine(outputStack.Peek())
 
     let shuntingYard (tokens: Token list) = 
         for token in tokens do
             match token with
             | Token.Number value -> 
-                            outputQueue.Enqueue(value)
+                            outputStack.Push(value)
                             System.Diagnostics.Debug.WriteLine("Number {0} added to queue", value)
             | Token.Variable value -> 
                             if operatorStack.Count <> 0 && operatorStack.Peek() <> Token.Assign then
-                                outputQueue.Enqueue(getVar value)
+                                outputStack.Push(getVar value)
                                 System.Diagnostics.Debug.WriteLine("Variable {0} added to queue", value)
             | Token.Plus -> 
                             //check this
@@ -73,11 +75,10 @@ module Executor =
             | Token.R_Bracket -> 
                             while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket do
                                 calculate()
-                            operatorStack.Pop() |> ignore
-                            System.Console.WriteLine("( removed from stack")
+                            System.Diagnostics.Debug.WriteLine("{0} removed from stack", operatorStack.Pop())
             | Token.Indice -> failwith "Not Implemented"
             | Token.Assign -> failwith "Not Implemented"
         while operatorStack.Count <> 0 do
-            System.Diagnostics.Debug.WriteLine("{0}, {1}", operatorStack.Peek(), outputQueue.Peek())
+            System.Diagnostics.Debug.WriteLine("{0}, {1}", operatorStack.Peek(), outputStack.Peek())
             calculate()
-        outputQueue.Dequeue()
+        outputStack.Pop()
