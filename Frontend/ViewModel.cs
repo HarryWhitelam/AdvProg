@@ -41,7 +41,7 @@ namespace AdvProg
 
                         String txt = iw.GetLineText(iw.LineCount-1);
 
-                        Debug.WriteLine(Interpreter.interpret(txt).ToString());
+                        Debug.WriteLine(Interpreter.interpret(txt));
 
 
 
