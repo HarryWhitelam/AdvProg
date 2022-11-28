@@ -22,14 +22,27 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
+        <!--INPUT WINDOW-->
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Height="15pt">Input Window</TextBlock>
-            <TextBox Grid.Row="1" Name="inputWindow"> ></TextBox>
+
+            <Border Grid.Row="1" BorderBrush="#FFABADB3" BorderThickness="1, 1, 1, 1">
+                <!--INPUT CURSOR AND FIELD-->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20pt" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0" Name="labelWindow" BorderBrush="{x:Null}" IsReadOnly="True" Background="{x:Null}">></TextBox>
+                    <TextBox Grid.Column="1" Name="inputWindow" BorderBrush="{x:Null}" Background="{x:Null}"></TextBox>
+                </Grid>
+            </Border>
         </Grid>
 
         <!--WORKSTATION-->
@@ -45,7 +58,7 @@
 
             <TextBlock Grid.Row="0">Workstation</TextBlock>
             <Button Grid.Row="0" Grid.Column="1" x:Name="varDel" Height="auto" Click="ButtonDelVar_Click">Delete</Button>
-            
+
             <ListBox Grid.Row="1" Grid.Column="0" x:Name="varNames"></ListBox>
             <ListBox Grid.Row="1" Grid.Column="1" x:Name="varValues"></ListBox>
         </Grid>

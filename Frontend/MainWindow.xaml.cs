@@ -44,6 +44,8 @@ namespace AdvProg
                 varNames.Items.Remove(varNames.Items.GetItemAt(index));
                 varValues.Items.Remove(varValues.Items.GetItemAt(index));
             }
+//             Frontend.GraphWindow graphWindow = new Frontend.GraphWindow();
+//             graphWindow.Show();
         }
     }
 }
