@@ -15,7 +15,7 @@ module Executor =
 
     let execError (reason:string) = System.Exception("Execution Error: " + reason)
 
-    let variableStore = Map.empty<string, float>
+    let variableStore = Map.empty<string, double>
 
     let storeVar variable value = variableStore.Add (variable, value)
     let getVar variable = 
@@ -23,24 +23,24 @@ module Executor =
         with :? KeyNotFoundException -> 
             raise (execError ("Variable " + variable + " does not have an assigned value"))
 
-    let outputStack = Stack<float>()
+    let outputStack = Stack<double>()
     let operatorStack = Stack<Token>()
 
     let calculate() =
         if outputStack.Count <> 0 then
-            System.Diagnostics.Debug.WriteLine(outputStack.Count)
+            System.Diagnostics.Debug.WriteLine("output stack count = " + (string)outputStack.Count)
             let operator = operatorStack.Pop()
             let value = outputStack.Pop()
             match operator with
             | Token.Indice ->   failwith "Not Implemented"
             | Token.Assign ->   failwith "Not Implemented"
-            | Token.Times ->    outputStack.Push(value * outputStack.Pop())
-            | Token.Divide ->   outputStack.Push(value / outputStack.Pop())
-            | Token.Plus ->     outputStack.Push(value + outputStack.Pop())
+            | Token.Times ->    outputStack.Push(outputStack.Pop() * value)
+            | Token.Divide ->   outputStack.Push(outputStack.Pop() / value)
+            | Token.Plus ->     outputStack.Push(outputStack.Pop() + value)
             | Token.Minus ->    if outputStack.Count = 0 then outputStack.Push(0.0 - value)
                                 else outputStack.Push(outputStack.Pop() - value)
             | _ ->              failwith "Invalid operator here"
-            System.Diagnostics.Debug.WriteLine(outputStack.Peek())
+            System.Diagnostics.Debug.WriteLine("outputStack.Peek = " + (string)(outputStack.Peek()))
 
     let shuntingYard (tokens: Token list) = 
         for token in tokens do
@@ -54,13 +54,11 @@ module Executor =
                                 System.Diagnostics.Debug.WriteLine("Variable {0} added to output stack", value)
             | Token.Plus -> 
                             while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket && operatorStack.Peek() <> Token.Assign do
-                                System.Diagnostics.Debug.WriteLine(operatorStack.Peek())
                                 calculate()
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine("+ added to operator stack")
             | Token.Minus -> 
                             while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket && operatorStack.Peek() <> Token.Assign do
-                                System.Diagnostics.Debug.WriteLine(operatorStack.Peek())
                                 calculate()
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine("- added to operator stack")
