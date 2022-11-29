@@ -15,7 +15,7 @@ module Executor =
 
     let execError (reason:string) = System.Exception("Execution Error: " + reason)
 
-    let variableStore = Map.empty<string, float>
+    let variableStore = Map.empty<string, double>
 
     let storeVar variable value = variableStore.Add (variable, value)
     let getVar variable = 
@@ -23,61 +23,64 @@ module Executor =
         with :? KeyNotFoundException -> 
             raise (execError ("Variable " + variable + " does not have an assigned value"))
 
-    let outputQueue = Queue()
+    let outputStack = Stack<double>()
     let operatorStack = Stack<Token>()
 
     let calculate() =
-        if outputQueue.Count <> 0 then
-            let value = outputQueue.Dequeue()
-            let value2 = outputQueue.Dequeue()
-            match operatorStack.Pop() with
-            | Token.Plus ->     outputQueue.Enqueue(value + value2)
-            | Token.Minus -> failwith "Not Implemented"
-            | Token.Times ->    outputQueue.Enqueue(value * value2)
-            | Token.Divide ->   outputQueue.Enqueue(value / value2)
-            | Token.Indice -> failwith "Not Implemented"
-            | Token.Assign -> failwith "Not Implemented"
-            | _ -> failwith "Invalid Token Here"
+        if outputStack.Count <> 0 then
+            System.Diagnostics.Debug.WriteLine("output stack count = " + (string)outputStack.Count)
+            let operator = operatorStack.Pop()
+            let value = outputStack.Pop()
+            match operator with
+            | Token.Indice ->   failwith "Not Implemented"
+            | Token.Assign ->   failwith "Not Implemented"
+            | Token.Times ->    outputStack.Push(outputStack.Pop() * value)
+            | Token.Divide ->   outputStack.Push(outputStack.Pop() / value)
+            | Token.Plus ->     outputStack.Push(outputStack.Pop() + value)
+            | Token.Minus ->    if outputStack.Count = 0 then outputStack.Push(0.0 - value)
+                                else outputStack.Push(outputStack.Pop() - value)
+            | _ ->              failwith "Invalid operator here"
+            System.Diagnostics.Debug.WriteLine("outputStack.Peek = " + (string)(outputStack.Peek()))
 
     let shuntingYard (tokens: Token list) = 
         for token in tokens do
             match token with
             | Token.Number value -> 
-                            outputQueue.Enqueue(value)
-                            System.Diagnostics.Debug.WriteLine("Number {0} added to queue", value)
+                            outputStack.Push(value)
+                            System.Diagnostics.Debug.WriteLine("Number {0} added to output stack", value)
             | Token.Variable value -> 
                             if operatorStack.Count <> 0 && operatorStack.Peek() <> Token.Assign then
-                                outputQueue.Enqueue(getVar value)
-                                System.Diagnostics.Debug.WriteLine("Variable {0} added to queue", value)
+                                outputStack.Push(getVar value)
+                                System.Diagnostics.Debug.WriteLine("Variable {0} added to output stack", value)
             | Token.Plus -> 
-                            //check this
                             while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket && operatorStack.Peek() <> Token.Assign do
-                                System.Diagnostics.Debug.WriteLine(operatorStack.Peek())
                                 calculate()
                             operatorStack.Push(token)
-                            System.Diagnostics.Debug.WriteLine("+ added to stack")
-            | Token.Minus -> failwith "Not Implemented"
+                            System.Diagnostics.Debug.WriteLine("+ added to operator stack")
+            | Token.Minus -> 
+                            while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket && operatorStack.Peek() <> Token.Assign do
+                                calculate()
+                            operatorStack.Push(token)
+                            System.Diagnostics.Debug.WriteLine("- added to operator stack")
             | Token.Times -> 
                             while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket && operatorStack.Peek() <> Token.Assign && operatorStack.Peek() <> Token.Plus do
                                 calculate()
                             operatorStack.Push(token)
-                            System.Diagnostics.Debug.WriteLine("* added to stack")
+                            System.Diagnostics.Debug.WriteLine("* added to operator stack")
             | Token.Divide ->
                             while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket && operatorStack.Peek() <> Token.Assign && operatorStack.Peek() <> Token.Plus do
                                 calculate()
                             operatorStack.Push(token)
-                            System.Diagnostics.Debug.WriteLine("/ added to stack")
+                            System.Diagnostics.Debug.WriteLine("/ added to operator stack")
             | Token.L_Bracket -> 
                             operatorStack.Push(token)
-                            System.Diagnostics.Debug.WriteLine("( added to stack")
+                            System.Diagnostics.Debug.WriteLine("( added to operator stack")
             | Token.R_Bracket -> 
                             while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket do
                                 calculate()
-                            operatorStack.Pop() |> ignore
-                            System.Console.WriteLine("( removed from stack")
+                            System.Diagnostics.Debug.WriteLine("{0} removed from operator stack", operatorStack.Pop())
             | Token.Indice -> failwith "Not Implemented"
             | Token.Assign -> failwith "Not Implemented"
         while operatorStack.Count <> 0 do
-            System.Diagnostics.Debug.WriteLine("{0}, {1}", operatorStack.Peek(), outputQueue.Peek())
             calculate()
-        outputQueue.Dequeue()
+        outputStack.Pop()
