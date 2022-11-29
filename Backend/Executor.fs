@@ -32,8 +32,8 @@ module Executor =
             let operator = operatorStack.Pop()
             let value = outputStack.Pop()
             match operator with
-            | Token.Indice ->   failwith "Not Implemented"
             | Token.Assign ->   failwith "Not Implemented"
+            | Token.Indice ->   outputStack.Push(outputStack.Pop() ** value)
             | Token.Times ->    outputStack.Push(outputStack.Pop() * value)
             | Token.Divide ->   outputStack.Push(outputStack.Pop() / value)
             | Token.Plus ->     outputStack.Push(outputStack.Pop() + value)
@@ -79,7 +79,11 @@ module Executor =
                             while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket do
                                 calculate()
                             System.Diagnostics.Debug.WriteLine("{0} removed from operator stack", operatorStack.Pop())
-            | Token.Indice -> failwith "Not Implemented"
+            | Token.Indice -> 
+                            while operatorStack.Count <> 0 && (operatorStack.Peek() = Token.R_Bracket || operatorStack.Peek() = Token.Indice) do
+                                calculate()
+                            operatorStack.Push(token)
+                            System.Diagnostics.Debug.WriteLine("^ added to operator stack")
             | Token.Assign -> failwith "Not Implemented"
         while operatorStack.Count <> 0 do
             calculate()
