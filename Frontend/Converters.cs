@@ -34,7 +34,7 @@ namespace Frontend
         }
     }
 
-    public partial class TenthSideConverter : IValueConverter
+    public partial class FifthSideConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

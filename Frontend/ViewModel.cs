@@ -88,5 +88,10 @@ namespace AdvProg
                 });
             }
         }
+
+        public void ProcessShortcut(int type, double[] values)
+        {
+            
+        }
     }
 }

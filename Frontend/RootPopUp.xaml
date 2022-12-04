@@ -6,12 +6,12 @@
         xmlns:local="clr-namespace:AdvProg"
         xmlns:frontend="clr-namespace:Frontend"
         mc:Ignorable="d"
-        Title="RootPopUp" Height="300" Width="350">
+        Title="RootPopUp" SizeToContent="WidthAndHeight">
 
     <Window.Resources>
         <frontend:HalfSideConverter x:Key="halfConverter" />
         <frontend:ThirdSideConverter x:Key="thirdConverter" />
-        <frontend:TenthSideConverter x:Key="tenthConverter" />
+        <frontend:FifthSideConverter x:Key="fifthConverter" />
     </Window.Resources>
 
     <Grid>
@@ -22,10 +22,11 @@
 
         <TextBlock Grid.Row="0" Name="TextRow">Square Root Function:</TextBlock>
 
-        <Image Grid.Row="1" Source="resources/root.png" Height="{Binding ActualWidth, Converter={StaticResource tenthConverter}, ElementName=TextRow}"></Image>
-        <TextBox Grid.Row="1" Height="20" Width="40" Margin="126,96,184,148"></TextBox>
-        <TextBox Grid.Row="1" Margin="191,116,77,116"/>
+        <Image Grid.Row="1" Source="resources/root.png" Height="{Binding ActualWidth, Converter={StaticResource fifthConverter}, ElementName=TextRow}"/>
+        <TextBox Name="input2" Grid.Row="1" Width="50pt" Height="15pt" Margin="89,102,186,142"/>
+        <TextBox Name="input1" Grid.Row="1" Width="75pt" Height="22pt" Margin="193,117,57,117"/>
+        <TextBlock Grid.Row="1" Width="50pt" Height="15pt" Margin="281,224,2,20" TextAlignment="Right" Foreground="Red" Visibility="Hidden" Name="InputWarning">Input invalid!</TextBlock>
 
-        <Button Grid.Row="1" Height="15pt" Width="50pt" Margin="273,219,10,25" Click="ShortCutSubmit_Click">Submit</Button>
+        <Button Grid.Row="1" Height="15pt" Width="50pt" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="ShortCutSubmit_Click">Submit</Button>
     </Grid>
 </Window>
