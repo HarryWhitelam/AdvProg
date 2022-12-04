@@ -24,4 +24,8 @@
     <ProjectReference Include="..\Backend\Backend.fsproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="resources\" />
+  </ItemGroup>
+
 </Project>

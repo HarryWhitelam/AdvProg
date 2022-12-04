@@ -45,5 +45,11 @@ namespace AdvProg
                 varValues.Items.Remove(varValues.Items.GetItemAt(index));
             }
         }
+
+        private void RootShortcut_Click(object sender, RoutedEventArgs e)
+        {
+            RootPopUp rootPopUp = new RootPopUp();
+            rootPopUp.Show();
+        }
     }
 }

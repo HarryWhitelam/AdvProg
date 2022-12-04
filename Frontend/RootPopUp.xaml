@@ -1,0 +1,31 @@
+﻿<Window x:Class="AdvProg.RootPopUp"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AdvProg"
+        xmlns:frontend="clr-namespace:Frontend"
+        mc:Ignorable="d"
+        Title="RootPopUp" Height="300" Width="350">
+
+    <Window.Resources>
+        <frontend:HalfSideConverter x:Key="halfConverter" />
+        <frontend:ThirdSideConverter x:Key="thirdConverter" />
+        <frontend:TenthSideConverter x:Key="tenthConverter" />
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15pt"></RowDefinition>
+            <RowDefinition Height="*" Name="imgRow"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Name="TextRow">Square Root Function:</TextBlock>
+
+        <Image Grid.Row="1" Source="resources/root.png" Height="{Binding ActualWidth, Converter={StaticResource tenthConverter}, ElementName=TextRow}"></Image>
+        <TextBox Grid.Row="1" Height="20" Width="40" Margin="126,96,184,148"></TextBox>
+        <TextBox Grid.Row="1" Margin="191,116,77,116"/>
+
+        <Button Grid.Row="1" Height="15pt" Width="50pt" Margin="273,219,10,25" Click="ShortCutSubmit_Click">Submit</Button>
+    </Grid>
+</Window>
