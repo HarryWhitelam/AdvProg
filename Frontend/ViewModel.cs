@@ -35,15 +35,21 @@ namespace AdvProg
                     TextBox cursorWindow = (TextBox) Application.Current.MainWindow.FindName("cursorWindow");
                     
                     String input = inputWindow.GetLineText(inputWindow.LineCount-1);
-
                     if (input.Contains("plot"))
                     {
 
                     }
                     else
                     {
-                        String answer = Interpreter.interpret(input);
-
+                        String answer;
+                        try
+                        {
+                            answer = Interpreter.interpret(input);
+                        }
+                        catch (Exception ex)
+                        {
+                            answer = ex.Message;
+                        }
                         inputWindow.AppendText("\n");
                         inputWindow.AppendText("   " + answer + "\n\n");
                         inputWindow.SelectionStart = inputWindow.Text.Length;

@@ -50,7 +50,7 @@ namespace AdvProg
 
         private void RootShortcut_Click(object sender, RoutedEventArgs e)
         {
-            RootPopUp rootPopUp = new RootPopUp();
+            RootPopUp rootPopUp = new RootPopUp(1);
             rootPopUp.Show();
         }
     }
