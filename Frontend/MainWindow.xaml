@@ -11,6 +11,7 @@
     <Window.Resources>
         <frontend:HalfSideConverter x:Key="halfConverter" />
         <frontend:ThirdSideConverter x:Key="thirdConverter" />
+        <frontend:FifthSideConverter x:Key="fifthConverter" />
     </Window.Resources>
 
     <Window.InputBindings>
