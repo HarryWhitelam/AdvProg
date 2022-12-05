@@ -16,6 +16,7 @@ namespace AdvProg
         public RootPopUp(int type)
         {
             InitializeComponent();
+            DataContext = new ViewModel();
             this.type = type;
         }
 
@@ -28,6 +29,21 @@ namespace AdvProg
                 if (child == null) continue;
                 if (child is T t) yield return t;
                 foreach (T childOfChild in FindInputs<T>(child)) yield return childOfChild;
+            }
+        }
+
+        public void ProcessShortcut(int type, double[] values)
+        {
+            TextBox inputWindow = (TextBox) Application.Current.MainWindow.FindName("inputWindow");
+
+            switch (type)
+            {
+                // ROOT
+                case 1:
+                    inputWindow.AppendText("root(" + values[1] + ", " + values[0] + ")");
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -57,7 +73,7 @@ namespace AdvProg
             }
             else
             {
-
+                ProcessShortcut(1, inputs);
                 this.Close();
             }
         }
