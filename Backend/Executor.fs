@@ -31,6 +31,7 @@ module Executor =
             let operator = operatorStack.Pop()
             let mutable value = outputStack.Pop()
             match operator with
+            //TODO: add check for value being a var not a number if it cant be found in varStore
             | Token.Assign ->   let value2 = outputStack.Pop()
                                 variableStore.TryGetValue(value, &value) |> ignore
                                 variableStore <- variableStore.Add(value2, value)
@@ -61,6 +62,7 @@ module Executor =
                                 calculate()
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine("+ added to operator stack")
+            //TODO: Fix -- issue
             | Token.Minus -> 
                             while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket && operatorStack.Peek() <> Token.Assign do
                                 calculate()
