@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Diagnostics;
 using Backend;
+using System.Collections.Generic;
 
 namespace AdvProg
 {
@@ -41,10 +42,11 @@ namespace AdvProg
                     }
                     else
                     {
-                        String answer;
+                        string answer;
                         try
                         {
                             answer = Interpreter.interpret(input);
+                            var variableStore = Interpreter.updateVarStore;
                         }
                         catch (Exception ex)
                         {
