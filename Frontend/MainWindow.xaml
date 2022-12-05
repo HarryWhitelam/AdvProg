@@ -4,8 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AdvProg"
+        xmlns:frontend="clr-namespace:Frontend"
         mc:Ignorable="d"
         Title="Baltam" Height="750" Width="800">
+
+    <Window.Resources>
+        <frontend:HalfSideConverter x:Key="halfConverter" />
+        <frontend:ThirdSideConverter x:Key="thirdConverter" />
+    </Window.Resources>
 
     <Window.InputBindings>
         <KeyBinding Command="{Binding ReturnCommand}" Key="Return" />
@@ -25,11 +31,11 @@
         <!--INPUT WINDOW-->
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
+                <RowDefinition Height="18pt" />
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Height="15pt">Input Window</TextBlock>
+            <TextBlock Grid.Row="0" Height="15pt" Name="iwTextBlock">Input Window</TextBlock>
 
             <Border Grid.Row="1" BorderBrush="#FFABADB3" BorderThickness="1, 1, 1, 1">
                 <!--INPUT CURSOR AND FIELD-->
@@ -44,11 +50,16 @@
                 </Grid>
             </Border>
         </Grid>
+        <Expander Background="#FFEFEFEF" Header="Function Shortcuts" Width="{Binding ActualWidth, Converter={StaticResource halfConverter}, ElementName=iwTextBlock}" VerticalAlignment="Top" HorizontalAlignment="Right">
+            <StackPanel Grid.Row="0" Height="15pt">
+                <Button Content="ROOT" Click="RootShortcut_Click"/>
+            </StackPanel>
+        </Expander>
 
         <!--WORKSTATION-->
         <Grid Grid.Column="1" Name="WorkstationGrid">
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
+                <RowDefinition Height="18pt" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -57,7 +68,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0">Workstation</TextBlock>
-            <Button Grid.Row="0" Grid.Column="1" x:Name="varDel" Height="auto" Click="ButtonDelVar_Click">Delete</Button>
+            <Button Grid.Row="0" Grid.Column="1" x:Name="varDel" Height="15pt" Click="ButtonDelVar_Click">Delete</Button>
 
             <ListBox Grid.Row="1" Grid.Column="0" x:Name="varNames"></ListBox>
             <ListBox Grid.Row="1" Grid.Column="1" x:Name="varValues"></ListBox>

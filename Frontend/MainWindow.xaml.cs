@@ -47,5 +47,11 @@ namespace AdvProg
 //             Frontend.GraphWindow graphWindow = new Frontend.GraphWindow();
 //             graphWindow.Show();
         }
+
+        private void RootShortcut_Click(object sender, RoutedEventArgs e)
+        {
+            RootPopUp rootPopUp = new RootPopUp(1);
+            rootPopUp.Show();
+        }
     }
 }

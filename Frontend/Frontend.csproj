@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="resources\root.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <COMReference Include="{bee4bfec-6683-3e67-9167-3c0cbc68f40a}">
       <WrapperTool>tlbimp</WrapperTool>
       <VersionMinor>4</VersionMinor>
@@ -23,6 +27,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Backend\Backend.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="resources\root.png" />
   </ItemGroup>
 
 </Project>
