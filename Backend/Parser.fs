@@ -11,7 +11,7 @@ namespace Backend
 
 module Parser =
 
-    let parserError (reason:string) = System.Exception ("Parser Machine Broke: " + reason)
+    exception ParseError of string
 
     //Grammar in standard BNF
     //<assign>  ::= <expr>    | Variable:=<expr>
@@ -36,7 +36,7 @@ module Parser =
         let rec assign tokens = 
             match tokens with
             | Token.Variable _value :: Token.Assign :: tail -> expr tail
-            | _ :: Token.Assign :: _tail -> raise (parserError "Expected variable before assignment")
+            | _ :: Token.Assign :: _tail -> raise (ParseError "Expected variable before assignment")
             | _ -> expr tokens
         and expr tokens = (term >> expr_pr) tokens
         and expr_pr tokens =
@@ -65,6 +65,6 @@ module Parser =
             | Token.Variable value :: tail -> tail
             | Token.L_Bracket ::tail -> match expr tail with
                                         | Token.R_Bracket :: tail -> tail
-                                        | _ -> raise (parserError "Missing closing bracket")
-            | _ -> raise (parserError "Expected number or variable but none supplied")
+                                        | _ -> raise (ParseError "Missing closing bracket")
+            | _ -> raise (ParseError "Expected number or variable but none supplied")
         assign tokens

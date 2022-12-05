@@ -10,24 +10,23 @@ namespace Backend
 //*************************************************************************
 
 type Token = 
-    Plus | Minus | Times | Divide | L_Bracket | R_Bracket | Indice | Assign | Number of float | Variable of string
+    Plus | Minus | Times | Divide | L_Bracket | R_Bracket | Indice | Assign | Number of string | Variable of string | Reserved of string
 
 module Lexer =
-
-    let lexerError (reason:string) = System.Exception("Lexer machine broke: " + reason)
+    
+    exception LexerError of string
 
     let strToList str = [for s in str -> s]
-    let intVal (c:char) = (int)((int)c - (int)'0')
-    let charToStr (c:char) = System.Char.ToString(c)
 
     let rec catchNum(rest, finVal) = 
         match rest with
-        | num :: tail when (System.Char.IsDigit num) -> catchNum(tail, 10*finVal+(intVal num))
+        | num :: tail when (System.Char.IsDigit num) -> catchNum(tail, finVal+(string)num)
+        | '.' :: tail -> catchNum(tail, finVal+".")
         | _ -> (rest, finVal)
 
     let rec catchVar(rest, finStr) =
         match rest with
-        | var :: tail when (System.Char.IsLetter var) -> catchVar(tail, finStr+(charToStr var))
+        | var :: tail when (System.Char.IsLetter var) -> catchVar(tail, finStr+(string)var)
         | _ -> (rest, finStr)
 
     let lex input =
@@ -43,11 +42,13 @@ module Lexer =
             | '^'::tail -> Token.Indice   :: consume tail
             | ':'::tail -> match tail with
                             | '='::tail -> Token.Assign :: consume tail
-                            | _ -> raise (lexerError "Expected '=' after ':'")
-            | num::tail when (System.Char.IsDigit num) ->   let (rest, finVal) = catchNum (tail, intVal num)
-                                                            Token.Number ((float)finVal) :: consume rest
-            | var::tail when (System.Char.IsLetter var) ->  let (rest, finStr) = catchVar (tail, charToStr var)
-                                                            Token.Variable finStr :: consume rest
+                            | _ -> raise (LexerError "Expected '=' after ':'")
+            | num::tail when (System.Char.IsDigit num) ->   let (rest, finVal) = catchNum (tail, (string)num)
+                                                            Token.Number finVal :: consume rest
+            | var::tail when (System.Char.IsLetter var) ->  let (rest, finStr) = catchVar (tail, (string)var)
+                                                            match finStr with
+                                                            | "sqr" ->  Token.Reserved finStr :: consume rest
+                                                            | _ ->      Token.Variable finStr :: consume rest
             | spc::tail when (System.Char.IsWhiteSpace spc) -> consume tail
-            | _ -> raise (lexerError "Undefined character")
+            | _ -> raise (LexerError "Undefined character")
         consume (strToList input)
