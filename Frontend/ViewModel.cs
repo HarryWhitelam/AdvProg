@@ -4,11 +4,28 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Diagnostics;
 using Backend;
+using System.Windows.Media;
 
 namespace AdvProg
 {
     public class ViewModel
     {
+        public void PrintResult(string result)
+        {
+            TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+            TextBox cursorWindow = (TextBox)Application.Current.MainWindow.FindName("cursorWindow");
+            RichTextBox printWindow = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
+
+
+            printWindow.AppendText("\n   " + result + "\n\n");
+            inputWindow.AppendText("\n\n\n    ");
+            inputWindow.SelectionStart = inputWindow.Text.Length;
+            inputWindow.SelectionLength = 0;
+
+            cursorWindow.AppendText("\n\n\n>>");
+            cursorWindow.ScrollToEnd();
+        }
+
         private ICommand testCommand;
         public ICommand TestCommand
         {
@@ -32,31 +49,37 @@ namespace AdvProg
                     ListBox varNames = (ListBox) Application.Current.MainWindow.FindName("varNames");
                     ListBox varValues = (ListBox) Application.Current.MainWindow.FindName("varValues");
                     TextBox inputWindow = (TextBox) Application.Current.MainWindow.FindName("inputWindow");
-                    TextBox cursorWindow = (TextBox) Application.Current.MainWindow.FindName("cursorWindow");
                     
+
                     String input = inputWindow.GetLineText(inputWindow.LineCount-1);
                     if (input.Contains("plot"))
                     {
 
+                    }
+                    else if (input.Contains("error"))
+                    {
+                        inputWindow.Foreground = Brushes.Red;
+                        inputWindow.AppendText("TEST ERROR!");
+                        inputWindow.Foreground = Brushes.Black;
                     }
                     else
                     {
                         String answer;
                         try
                         {
-                            answer = Interpreter.interpret(input);
+                            PrintResult(Interpreter.interpret(input));
                         }
                         catch (Exception ex)
                         {
-                            answer = ex.Message;
+                            PrintResult(ex.Message);
                         }
-                        inputWindow.AppendText("\n");
-                        inputWindow.AppendText("   " + answer + "\n\n");
-                        inputWindow.SelectionStart = inputWindow.Text.Length;
-                        inputWindow.SelectionLength = 0;
+                        //printWindow.AppendText("\n   " + answer + "\n\n");
+                        //inputWindow.AppendText("\n\n\n    ");
+                        //inputWindow.SelectionStart = inputWindow.Text.Length;
+                        //inputWindow.SelectionLength = 0;
 
-                        cursorWindow.AppendText("\n\n\n>>");
-                        cursorWindow.ScrollToEnd();
+                        //cursorWindow.AppendText("\n\n\n>>");
+                        //cursorWindow.ScrollToEnd();
                     }
                 });
             }
