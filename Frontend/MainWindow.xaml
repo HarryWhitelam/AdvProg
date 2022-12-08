@@ -48,7 +48,11 @@
 
                     <TextBox Grid.Column="0" Name="cursorWindow" BorderBrush="{x:Null}" IsReadOnly="True" Background="{x:Null}">>></TextBox>
 
-                    <RichTextBox Grid.Column="1" Height ="auto" Name="printWindow" VerticalAlignment="Top" BorderBrush="{x:Null}" IsReadOnly="True" Background="{x:Null}" />
+                    <RichTextBox Grid.Column="1" Height ="auto" Name="printWindow" VerticalAlignment="Top" BorderBrush="{x:Null}" IsReadOnly="True" Background="{x:Null}">
+                        <FlowDocument>
+                            <Paragraph/>
+                        </FlowDocument>
+                    </RichTextBox>
                     <TextBox Grid.Column="1" Height="auto" Name="inputWindow" BorderBrush="{x:Null}" Background="{x:Null}"></TextBox>
                 </Grid>
             </Border>
