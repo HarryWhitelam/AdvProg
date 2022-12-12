@@ -2,9 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Diagnostics;
 using Backend;
-using System.Collections.Generic;
 
 namespace AdvProg
 {
@@ -50,14 +48,15 @@ namespace AdvProg
                         }
                         catch (Exception ex)
                         {
-                            answer = ex.Message;
+                            answer = ex.Message[(ex.Message.IndexOf("\"")+1)..(ex.Message.Length-1)];
                         }
                         inputWindow.AppendText("\n");
-                        inputWindow.AppendText("   " + answer + "\n\n");
+                        inputWindow.AppendText("   " + answer + "\n");
                         inputWindow.SelectionStart = inputWindow.Text.Length;
                         inputWindow.SelectionLength = 0;
+                        int numLines = answer == null ? 2 : answer.Split('\n').Length + 1;
 
-                        cursorWindow.AppendText("\n\n\n>>");
+                        cursorWindow.AppendText(new string('\n', numLines) + ">>");
                         cursorWindow.ScrollToEnd();
                     }
                 });

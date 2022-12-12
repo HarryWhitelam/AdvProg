@@ -11,12 +11,32 @@ namespace Backend
 
 type Token = 
     Plus | Minus | Times | Divide | L_Bracket | R_Bracket | Indice | Assign | Number of string | Variable of string | Reserved of string | Comma
+    
+    override this.ToString() = 
+            match this with
+            | Plus -> "+"
+            | Minus -> "-"
+            | Times -> "*"
+            | Divide -> "/"
+            | L_Bracket -> "("
+            | R_Bracket -> ")"
+            | Indice -> "^"
+            | Assign -> ":="
+            | Number value -> value
+            | Variable value -> value
+            | Reserved value -> value
+            | Comma -> ","
+
+    static member printTokens tokens =
+        let mutable out = ""
+        for t in tokens do
+            out <- out + t.ToString()
+        out
+
 
 module Lexer =
     
     exception LexerError of string
-
-    let strToList str = [for s in str -> s]
 
     let rec catchNum(rest, finVal) = 
         match rest with
@@ -51,5 +71,6 @@ module Lexer =
                                                             | "root" ->  Token.Reserved finStr :: consume rest
                                                             | _ ->      Token.Variable finStr :: consume rest
             | spc::tail when (System.Char.IsWhiteSpace spc) -> consume tail
-            | _ -> raise (LexerError "Undefined character")
-        consume (strToList input)
+            | _ -> raise (LexerError $"Undefined character: {input[0]}")
+            
+        consume (Seq.toList input)

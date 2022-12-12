@@ -25,32 +25,32 @@ module Executor =
     let outputStack = Stack<string>()
     let operatorStack = Stack<Token>()
 
-    let calculate() =
-        if outputStack.Count <> 0 then
-            //System.Diagnostics.Debug.WriteLine("output stack count = " + (string)outputStack.Count)
-            let operator = operatorStack.Pop()
-            let mutable value = outputStack.Pop()
-            match operator with
-            //TODO: add check for value being a var not a number if it cant be found in varStore
-            | Token.Assign ->   let value2 = outputStack.Pop()
-                                variableStore.TryGetValue(value, &value) |> ignore
-                                variableStore <- variableStore.Add(value2, value)
+    let rec calculate() =
+        //System.Diagnostics.Debug.WriteLine("output stack count = " + (string)outputStack.Count)
+        let operator = operatorStack.Pop()
+        let mutable value = outputStack.Pop()
+        match operator with
+        //TODO: add check for value being a var not a number if it cant be found in varStore
+        | Token.Assign ->   let value2 = outputStack.Pop()
+                            variableStore.TryGetValue(value, &value) |> ignore
+                            variableStore <- variableStore.Add(value2, value)
 
-                                System.Diagnostics.Debug.WriteLine("varStore = " + (string)variableStore)
-                                outputStack.Push(value2 + ":=" + value)
-            | Token.Indice ->   outputStack.Push(string (double (outputStack.Pop()) ** double value))
-            | Token.Times ->    outputStack.Push(string (double (outputStack.Pop()) * double value))
-            | Token.Divide ->   outputStack.Push(string (double (outputStack.Pop()) / double value))
-            | Token.Plus ->     outputStack.Push(string (double (outputStack.Pop()) + double value))
-            | Token.Minus ->    if outputStack.Count = 0 then outputStack.Push(string (0.0 - double value))
-                                else outputStack.Push(string (double (outputStack.Pop()) - double value))
-            | _ ->              failwith "Invalid operator here"
-            System.Diagnostics.Debug.WriteLine("outputStack.Peek = " + (string)(outputStack.Peek()))
+                            System.Diagnostics.Debug.WriteLine("varStore = " + (string)variableStore)
+                            outputStack.Push(value2 + ":=" + value)
+        | Token.Indice ->   outputStack.Push(string (double (outputStack.Pop()) ** double value))
+        | Token.Times ->    outputStack.Push(string (double (outputStack.Pop()) * double value))
+        | Token.Divide ->   outputStack.Push(string (double (outputStack.Pop()) / double value))
+        | Token.Plus ->     outputStack.Push(string (double (outputStack.Pop()) + double value))
+        | Token.Minus ->    if outputStack.Count = 0 || (operatorStack.Count <> 0 && operatorStack.Peek() = Token.L_Bracket) then 
+                                outputStack.Push(string (0.0 - double value))
+                            else outputStack.Push(string (double (outputStack.Pop()) - double value))
+        | _ ->              failwith "Invalid operator here"
+        System.Diagnostics.Debug.WriteLine("outputStack.Peek = " + (string)(outputStack.Peek()))
 
     let shuntingYard (tokens: Token list) = 
         for token in tokens do
             match token with
-            Token.Number value -> 
+            | Token.Number value -> 
                             outputStack.Push(value)
                             System.Diagnostics.Debug.WriteLine("Number " + value + " added to output stack")
             | Token.Variable value -> 
@@ -62,7 +62,6 @@ module Executor =
                                 calculate()
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine("+ added to operator stack")
-            //TODO: Fix -- issue
             | Token.Minus -> 
                             while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket && operatorStack.Peek() <> Token.Assign do
                                 calculate()
