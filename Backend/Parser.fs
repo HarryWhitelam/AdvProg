@@ -83,4 +83,8 @@ module Parser =
                                         | _ -> raise (ParseError $"Missing closing bracket: {showExceptionPosition(ogTokens, tail.Length)}")
             | _ ->         
                 raise (ParseError $"Expected number or variable here: {showExceptionPosition(ogTokens, ogTokens.Length - tokens.Length)}")
-        assign tokens
+        let out = assign tokens
+        if out.IsEmpty then
+            out
+        else
+            raise (ParseError $"Unexpected token here: {showExceptionPosition(tokens, tokens.Length - out.Length)}")
