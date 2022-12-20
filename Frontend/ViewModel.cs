@@ -10,7 +10,8 @@ using System.Windows.Media;
 namespace AdvProg
 {
     public class ViewModel
-    {        
+    {
+        string[] inputHistory = new string[10];
         public int CountRichLines(String resultString)
         {
             string[] splitLines = resultString.Split(new[] {'\r'}, StringSplitOptions.None);
@@ -156,6 +157,18 @@ namespace AdvProg
                         varNames.Items.Remove(varNames.Items.GetItemAt(index));
                         varValues.Items.Remove(varValues.Items.GetItemAt(index));
                     }
+                });
+            }
+        }
+
+        private ICommand upHistoryCommand;
+        public ICommand UpHistoryCommand
+        {
+            get
+            {
+                return upHistoryCommand ??= new ActionCommand(() =>
+                {
+
                 });
             }
         }
