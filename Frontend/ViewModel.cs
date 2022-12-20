@@ -3,18 +3,17 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Backend;
-using System.Windows.Media;
 using System.Windows.Documents;
+using System.Diagnostics;
+using System.Windows.Media;
 
 namespace AdvProg
 {
     public class ViewModel
-    {
-        public int CountRichLines(RichTextBox box)
+    {        
+        public int CountRichLines(String resultString)
         {
-            TextRange boxText = new TextRange(box.Document.ContentStart, box.Document.ContentEnd);
-
-            string[] splitLines = boxText.Text.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+            string[] splitLines = resultString.Split(new[] {'\r'}, StringSplitOptions.None);
             return splitLines.Length;
         }
 
@@ -24,50 +23,59 @@ namespace AdvProg
             TextBox cursorWindow = (TextBox)Application.Current.MainWindow.FindName("cursorWindow");
             RichTextBox printWindow = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
 
-            string resultString = new string(new TextRange(printWindow.Document.ContentStart, printWindow.Document.ContentEnd).Text + prompt + "\n    " + result);
-            Console.Write("PRINT STARTS HERE: " + resultString);
+            string resultString = prompt + '\r' + "    " + result + Environment.NewLine;
             printWindow.AppendText(resultString);
 
-            int lineCount = CountRichLines(printWindow);
-            inputWindow.Text = "";
+            int nlIndex = inputWindow.Text.LastIndexOf('\n');
+            if (nlIndex < 0)
+            {
+                nlIndex = 0;
+            }
+            inputWindow.Text = inputWindow.Text.Remove(nlIndex);
+
+            int lineCount = CountRichLines(resultString);
             for (int i = 0; i < lineCount; i++)
             {
-                inputWindow.AppendText("\n");
+                inputWindow.AppendText(Environment.NewLine);
+                cursorWindow.AppendText(Environment.NewLine);
             }
             inputWindow.SelectionStart = inputWindow.Text.Length;
             inputWindow.SelectionLength = 0;
 
-            cursorWindow.AppendText("\n\n\n>>");
+            cursorWindow.AppendText(">>");
             cursorWindow.ScrollToEnd();
         }
 
-        public void PrintError(string error)
+        public void PrintError(string error, string prompt)
         {
             TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
             TextBox cursorWindow = (TextBox)Application.Current.MainWindow.FindName("cursorWindow");
             RichTextBox printWindow = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
 
-
-            FlowDocument flowDoc = new FlowDocument();
-            Run resRun = new Run(new TextRange(printWindow.Document.ContentStart, printWindow.Document.ContentEnd).Text + inputWindow.Text);
-            Run errRun = new Run("\n   " + error + "\n\n");
-            Paragraph resPara = new Paragraph();
-            errRun.Foreground = Brushes.Red;
-            resPara.Inlines.Add(resRun);
-            resPara.Inlines.Add(errRun);
-            flowDoc.Blocks.Add(resPara);
-            printWindow.Document = flowDoc;
-
-            int lineCount = CountRichLines(printWindow);
-            inputWindow.Text = "";
-            for (int i = 0; i <= lineCount; i++)
+            string resultString = prompt + '\r';
+            string errorString = "    " + error + Environment.NewLine;
+            printWindow.AppendText(resultString);
+            TextRange errorRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
+            errorRange.Text = errorString;
+            errorRange.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);
+            
+            int nlIndex = inputWindow.Text.LastIndexOf('\n');
+            if (nlIndex < 0)
             {
-                inputWindow.AppendText("\n");
+                nlIndex = 0;
+            }
+            inputWindow.Text = inputWindow.Text.Remove(nlIndex);
+
+            int lineCount = CountRichLines(resultString + errorString);
+            for (int i = 0; i < lineCount; i++)
+            {
+                inputWindow.AppendText(Environment.NewLine);
+                cursorWindow.AppendText(Environment.NewLine);
             }
             inputWindow.SelectionStart = inputWindow.Text.Length;
             inputWindow.SelectionLength = 0;
 
-            cursorWindow.AppendText("\n\n\n>>");
+            cursorWindow.AppendText(">>");
             cursorWindow.ScrollToEnd();
         }
 
@@ -102,7 +110,7 @@ namespace AdvProg
                     }
                     else if (input.Contains("error"))
                     {
-                        PrintError(input);
+                        PrintError("THIS IS AN ERROR BTW", input);
                     }
                     else
                     {
@@ -112,7 +120,7 @@ namespace AdvProg
                         }
                         catch (Exception ex)
                         {
-                            PrintError(ex.Message);
+                            PrintError(ex.Message, input);
                         }
                     }
                 });
