@@ -94,9 +94,10 @@ namespace AdvProg
                     TextBox inputWindow = (TextBox) Application.Current.MainWindow.FindName("inputWindow");
                     
                     String input = inputWindow.GetLineText(inputWindow.LineCount-1);
-                    
-                    inputHistory = inputHistory.Prepend(input).ToArray();
-                    
+                    if (inputHistory[0] != input)
+                    {
+                        inputHistory = inputHistory.Prepend(input).ToArray();
+                    }
 
                     if (input.Contains("plot"))
                     {
