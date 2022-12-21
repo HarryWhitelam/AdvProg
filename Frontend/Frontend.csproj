@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="resources\log.PNG" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="InteractiveDataDisplay.WPF" Version="1.0.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="WPFToolkit.DataVisualization" Version="3.5.50211.1" />
@@ -25,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="resources\log.png" />
     <Resource Include="resources\root.png" />
   </ItemGroup>
 

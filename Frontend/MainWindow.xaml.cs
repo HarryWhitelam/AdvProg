@@ -31,8 +31,8 @@ namespace AdvProg
                 varNames.Items.Remove(varNames.Items.GetItemAt(index));
                 varValues.Items.Remove(varValues.Items.GetItemAt(index));
             }
-//             Frontend.GraphWindow graphWindow = new Frontend.GraphWindow();
-//             graphWindow.Show();
+            //             Frontend.GraphWindow graphWindow = new Frontend.GraphWindow();
+            //             graphWindow.Show();
         }
 
         private void RootShortcut_Click(object sender, RoutedEventArgs e)
@@ -45,6 +45,10 @@ namespace AdvProg
             else if (sender == powerButton)
             {
                 type = 2;
+            }
+            else if (sender == logButton)
+            {
+                type = 3;
             }
             RootPopUp rootPopUp = new RootPopUp(type);
             rootPopUp.Show();

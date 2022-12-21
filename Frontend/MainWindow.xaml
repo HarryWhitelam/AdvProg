@@ -52,7 +52,12 @@
                             <Paragraph></Paragraph>
                         </FlowDocument>
                     </RichTextBox>
-                    <TextBox Grid.Column="1" Name="inputWindow" BorderBrush="{x:Null}" Background="{x:Null}" TextWrapping="Wrap" Height="auto"/>
+                    <TextBox Grid.Column="1" Name="inputWindow" BorderBrush="{x:Null}" Background="{x:Null}" TextWrapping="Wrap" Height="auto" KeyboardNavigation.ControlTabNavigation="None">
+                        <TextBox.InputBindings>
+                            <KeyBinding Command="{Binding UpHistoryCommand}" Key="Up" />
+                            <KeyBinding Command="{Binding DownHistoryCommand}" Key="Down" />
+                        </TextBox.InputBindings>
+                    </TextBox>
                 </Grid>
             </Border>
         </Grid>
