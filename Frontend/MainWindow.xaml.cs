@@ -37,7 +37,16 @@ namespace AdvProg
 
         private void RootShortcut_Click(object sender, RoutedEventArgs e)
         {
-            RootPopUp rootPopUp = new RootPopUp(1);
+            int type = 0;
+            if (sender == rootButton)
+            {
+                type = 1;
+            }
+            else if (sender == powerButton)
+            {
+                type = 2;
+            }
+            RootPopUp rootPopUp = new RootPopUp(type);
             rootPopUp.Show();
         }
     }

@@ -57,8 +57,10 @@
             </Border>
         </Grid>
         <Expander Background="#FFEFEFEF" Header="Function Shortcuts" Width="{Binding ActualWidth, Converter={StaticResource halfConverter}, ElementName=iwTextBlock}" VerticalAlignment="Top" HorizontalAlignment="Right">
-            <StackPanel Grid.Row="0" Height="15pt">
-                <Button Content="ROOT" Click="RootShortcut_Click"/>
+            <StackPanel Grid.Row="0" Height="60pt">
+                <Button Name="rootButton" Content="ROOT" Click="RootShortcut_Click"/>
+                <Button Name="powerButton" Content="POWER" Click="RootShortcut_Click"/>
+                <Button Name="logButton" Content="LOGARITHM" Click="RootShortcut_Click"/>
             </StackPanel>
         </Expander>
 
