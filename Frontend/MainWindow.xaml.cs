@@ -13,8 +13,22 @@ namespace AdvProg
             DataContext = new ViewModel();
         }
 
+        public Theme Theme { get; set; }
+
+        public void ChangeTheme(Theme newTheme)
+        {
+            this.Theme = newTheme;
+            this.Resources.MergedDictionaries[0].Source =
+                new Uri($"/resources/themes/{Theme}.xaml", UriKind.Relative);
+        }
+
         private void ButtonDelVar_Click(object sender, RoutedEventArgs e)
         {
+            if (Theme is Theme.Dark)
+                ChangeTheme(Theme.Light);
+            else if (Theme is Theme.Light)
+                ChangeTheme(Theme.Dark);
+
             if ((varNames.SelectedIndex == -1) && (varValues.SelectedIndex == -1))
             {
                 MessageBox.Show("Error: please select a variable for deletion.");

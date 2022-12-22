@@ -10,6 +10,9 @@
 
     <Window.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="resources/themes/highContrast.xaml" />
+            </ResourceDictionary.MergedDictionaries>
             <frontend:HalfSideConverter x:Key="halfConverter" />
             <frontend:ThirdSideConverter x:Key="thirdConverter" />
             <frontend:FifthSideConverter x:Key="fifthConverter" />
@@ -21,7 +24,7 @@
         <KeyBinding Command="{Binding DelVarCommand}" Key="Delete" />
     </Window.InputBindings>
 
-    <Grid Name="MainGrid" Margin="10">
+    <Grid Name="MainGrid" Margin="10" Background="{DynamicResource ResourceKey=BackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
