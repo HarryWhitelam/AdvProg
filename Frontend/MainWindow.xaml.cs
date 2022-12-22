@@ -2,8 +2,11 @@
 
 namespace AdvProg
 {
+    public enum Theme { Light, Dark }
+
     public partial class MainWindow : Window
     {
+        public static Theme Theme { get; set; } = Theme.Light;
         public MainWindow()
         {
             InitializeComponent();
@@ -52,6 +55,11 @@ namespace AdvProg
             }
             RootPopUp rootPopUp = new RootPopUp(type);
             rootPopUp.Show();
+        }
+
+        public void ChangeTheme()
+        {
+
         }
     }
 }

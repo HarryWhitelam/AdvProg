@@ -9,6 +9,12 @@
         Title="Baltam" Height="750" Width="800">
 
     <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <frontend:ThemeArray LightTheme="LightTheme.xaml"
+                                     DarkTheme ="DarkTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
         <frontend:HalfSideConverter x:Key="halfConverter" />
         <frontend:ThirdSideConverter x:Key="thirdConverter" />
         <frontend:FifthSideConverter x:Key="fifthConverter" />
