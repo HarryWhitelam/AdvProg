@@ -10,14 +10,10 @@
 
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <frontend:ThemeArray LightTheme="LightTheme.xaml"
-                                     DarkTheme ="DarkTheme.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
+            <frontend:HalfSideConverter x:Key="halfConverter" />
+            <frontend:ThirdSideConverter x:Key="thirdConverter" />
+            <frontend:FifthSideConverter x:Key="fifthConverter" />
         </ResourceDictionary>
-        <frontend:HalfSideConverter x:Key="halfConverter" />
-        <frontend:ThirdSideConverter x:Key="thirdConverter" />
-        <frontend:FifthSideConverter x:Key="fifthConverter" />
     </Window.Resources>
 
     <Window.InputBindings>

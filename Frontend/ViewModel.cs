@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Windows.Media;
 using System.Collections.Generic;
 using System.Linq;
+using Frontend;
 
 namespace AdvProg
 {

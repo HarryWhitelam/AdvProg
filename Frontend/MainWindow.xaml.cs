@@ -1,12 +1,12 @@
-﻿using System.Windows;
+﻿using Frontend;
+using System;
+using System.Windows;
+using System.Windows.Navigation;
 
 namespace AdvProg
 {
-    public enum Theme { Light, Dark }
-
     public partial class MainWindow : Window
     {
-        public static Theme Theme { get; set; } = Theme.Light;
         public MainWindow()
         {
             InitializeComponent();
@@ -34,8 +34,6 @@ namespace AdvProg
                 varNames.Items.Remove(varNames.Items.GetItemAt(index));
                 varValues.Items.Remove(varValues.Items.GetItemAt(index));
             }
-            //             Frontend.GraphWindow graphWindow = new Frontend.GraphWindow();
-            //             graphWindow.Show();
         }
 
         private void RootShortcut_Click(object sender, RoutedEventArgs e)
@@ -55,11 +53,6 @@ namespace AdvProg
             }
             RootPopUp rootPopUp = new RootPopUp(type);
             rootPopUp.Show();
-        }
-
-        public void ChangeTheme()
-        {
-
         }
     }
 }
