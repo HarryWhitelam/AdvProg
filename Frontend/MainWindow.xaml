@@ -52,7 +52,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBox Grid.Column="0" Name="cursorWindow" BorderBrush="{x:Null}" IsReadOnly="True" Background="{x:Null}" FontFamily="Consolas">>></TextBox>
-                    <RichTextBox Grid.Column="1" Height ="auto" Name="printWindow" VerticalAlignment="Top" BorderBrush="{x:Null}" IsReadOnly="True" Background="{x:Null}" FontFamily="Consolas" Panel.ZIndex="1">
+                    <RichTextBox Grid.Column="1" Height ="auto" Name="printWindow" VerticalAlignment="Top" BorderBrush="{x:Null}" IsReadOnly="True" Background="{x:Null}" FontFamily="Consolas" IsHitTestVisible="False">
                         <FlowDocument>
                             <Paragraph></Paragraph>
                         </FlowDocument>

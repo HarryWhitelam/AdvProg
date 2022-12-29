@@ -30,7 +30,7 @@ namespace AdvProg
                 case 1:
                     // root
                     TextRow.Text = "Root Function:";
-                    popUpImg.Source = new BitmapImage(new Uri("resources/images/root.png", UriKind.Relative));
+                    popUpImg.Source = new BitmapImage(new Uri("resources/root.png", UriKind.Relative));
                     input2.Width = 50;
                     input2.Height = 22;
                     input2.Margin = new Thickness(89, 102, 186, 142);
@@ -48,7 +48,7 @@ namespace AdvProg
                 case 3:
                     // log
                     TextRow.Text = "Logarithm Function:";
-                    popUpImg.Source = new BitmapImage(new Uri("resources/images/log.png", UriKind.Relative));
+                    popUpImg.Source = new BitmapImage(new Uri("resources/log.png", UriKind.Relative));
                     popUpImg.Margin = new Thickness(-93, 97, 93, 97);
                     input2.Margin = new Thickness(185, 107, 75, 127);
                     input1.Margin = new Thickness(135, 142, 165, 90);

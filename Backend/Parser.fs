@@ -11,7 +11,7 @@ namespace Backend
 
 module Parser =
 
-    exception ParseError of string
+    type ParseError (message:string) = inherit System.Exception(message)
 
     //Grammar in standard BNF
     //<assign>  ::= <expr>    | Variable:=<expr>
@@ -43,7 +43,7 @@ module Parser =
                           | Token.Assign -> 2
                           | _ -> 1
                 buffer <- buffer + String.replicate len " "
-        "\n   " + Token.printTokens(tokens) + "\n   " + buffer + "^"
+        "\r   " + Token.printTokens(tokens) + "\r   " + buffer + "^"
 
     let parse (tokens: Token list) =
         let ogTokens = tokens
@@ -81,7 +81,7 @@ module Parser =
             | Token.L_Bracket ::tail -> match expr tail with
                                         | Token.R_Bracket :: tail -> tail
                                         | _ -> raise (ParseError $"Missing closing bracket: {showExceptionPosition(ogTokens, tail.Length)}")
-            | _ ->         
+            | _ -> 
                 raise (ParseError $"Expected number or variable here: {showExceptionPosition(ogTokens, ogTokens.Length - tokens.Length)}")
         let out = assign tokens
         if out.IsEmpty then

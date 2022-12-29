@@ -6,9 +6,8 @@ using Backend;
 using System.Windows.Documents;
 using System.Diagnostics;
 using System.Windows.Media;
-using System.Collections.Generic;
 using System.Linq;
-using Frontend;
+using ExtensionMethods;
 
 namespace AdvProg
 {
@@ -20,8 +19,21 @@ namespace AdvProg
 
         public int CountRichLines(String resultString)
         {
-            string[] splitLines = resultString.Split(new[] {'\r'}, StringSplitOptions.None);
+            string[] splitLines = resultString.Split(new[] {'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries);
             return splitLines.Length;
+        }
+
+        public static long Lines(RichTextBox rtb)
+        {
+            string str = new TextRange(rtb.Document.ContentStart, rtb.Document.ContentEnd).Text;
+            long count = 1;
+            int position = 0;
+            while ((position = str.IndexOf('\n', position)) != -1)
+            {
+                count++;
+                position++;
+            }
+            return count;
         }
 
         public void RemoveCurrentLineText(TextBox window)
@@ -44,11 +56,12 @@ namespace AdvProg
             RemoveCurrentLineText(inputWindow);
 
             int lineCount = CountRichLines(resultString);
-            for (int i = 0; i < lineCount; i++)
+            for (int i = 0; i <= lineCount; i++)
             {
                 inputWindow.AppendText(Environment.NewLine);
                 cursorWindow.AppendText(Environment.NewLine);
             }
+            
             inputWindow.ScrollToLine(inputWindow.LineCount-1);
             inputWindow.Select(inputWindow.Text.Length, 0);
 
@@ -63,7 +76,7 @@ namespace AdvProg
             RichTextBox printWindow = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
 
             string resultString = prompt + '\r';
-            string errorString = "    " + error + Environment.NewLine;
+            string errorString = error + Environment.NewLine;
             printWindow.AppendText(resultString);
             TextRange errorRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
             errorRange.Text = errorString;
@@ -72,12 +85,13 @@ namespace AdvProg
             RemoveCurrentLineText(inputWindow);
 
             int lineCount = CountRichLines(resultString + errorString);
-            for (int i = 0; i < lineCount; i++)
+            for (int i = 0; i <= lineCount; i++)
             {
                 inputWindow.AppendText(Environment.NewLine);
                 cursorWindow.AppendText(Environment.NewLine);
             }
             inputWindow.ScrollToEnd();
+            inputWindow.Select(inputWindow.Text.Length, 0);
 
             cursorWindow.AppendText(">>");
             cursorWindow.ScrollToEnd();
@@ -113,9 +127,11 @@ namespace AdvProg
                         try
                         {
                             PrintResult(Interpreter.interpret(input), input);
+                            var variableStore = Interpreter.updateVarStore;
                         }
                         catch (Exception ex)
                         {
+                            //PrintError(ex.Message[(ex.Message.IndexOf("\"") + 1)..(ex.Message.Length - 1)], input);
                             PrintError(ex.Message, input);
                         }
                     }
