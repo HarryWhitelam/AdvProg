@@ -7,7 +7,7 @@ using System.Windows.Documents;
 using System.Diagnostics;
 using System.Windows.Media;
 using System.Linq;
-using ExtensionMethods;
+using System.Collections;
 
 namespace AdvProg
 {
@@ -21,19 +21,6 @@ namespace AdvProg
         {
             string[] splitLines = resultString.Split(new[] {'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries);
             return splitLines.Length;
-        }
-
-        public static long Lines(RichTextBox rtb)
-        {
-            string str = new TextRange(rtb.Document.ContentStart, rtb.Document.ContentEnd).Text;
-            long count = 1;
-            int position = 0;
-            while ((position = str.IndexOf('\n', position)) != -1)
-            {
-                count++;
-                position++;
-            }
-            return count;
         }
 
         public void RemoveCurrentLineText(TextBox window)
@@ -80,7 +67,7 @@ namespace AdvProg
             printWindow.AppendText(resultString);
             TextRange errorRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
             errorRange.Text = errorString;
-            errorRange.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);
+            errorRange.ApplyPropertyValue(TextElement.ForegroundProperty, (SolidColorBrush)Application.Current.MainWindow.Resources.MergedDictionaries[0]["ErrorBrush"]);
 
             RemoveCurrentLineText(inputWindow);
 

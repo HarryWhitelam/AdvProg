@@ -17,7 +17,10 @@ namespace AdvProg
 
         public void ChangeTheme(Theme newTheme)
         {
+            this.Resources.MergedDictionaries.Clear();
+
             this.Theme = newTheme;
+            this.Resources.MergedDictionaries.Add(new ResourceDictionary());
             this.Resources.MergedDictionaries[0].Source =
                 new Uri($"/resources/themes/{Theme}.xaml", UriKind.Relative);
         }

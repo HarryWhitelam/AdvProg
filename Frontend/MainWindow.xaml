@@ -13,7 +13,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="resources/themes/light.xaml" />
+                <ResourceDictionary Source="resources/themes/highContrast.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <frontend:HalfSideConverter x:Key="halfConverter" />
             <frontend:ThirdSideConverter x:Key="thirdConverter" />
