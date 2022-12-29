@@ -76,7 +76,7 @@ namespace AdvProg
             RichTextBox printWindow = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
 
             string resultString = prompt + '\r';
-            string errorString = error + Environment.NewLine;
+            string errorString = "Error: " + error + Environment.NewLine;
             printWindow.AppendText(resultString);
             TextRange errorRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
             errorRange.Text = errorString;
