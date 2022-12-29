@@ -17,7 +17,10 @@ namespace AdvProg
 
         public void ChangeTheme(Theme newTheme)
         {
+            this.Resources.MergedDictionaries.Clear();
+
             this.Theme = newTheme;
+            this.Resources.MergedDictionaries.Add(new ResourceDictionary());
             this.Resources.MergedDictionaries[0].Source =
                 new Uri($"/resources/themes/{Theme}.xaml", UriKind.Relative);
         }
@@ -27,6 +30,8 @@ namespace AdvProg
             if (Theme is Theme.Dark)
                 ChangeTheme(Theme.Light);
             else if (Theme is Theme.Light)
+                ChangeTheme(Theme.HighContrast);
+            else if (Theme is Theme.HighContrast)
                 ChangeTheme(Theme.Dark);
 
             if ((varNames.SelectedIndex == -1) && (varValues.SelectedIndex == -1))
