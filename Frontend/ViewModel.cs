@@ -3,22 +3,84 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Backend;
+using System.Windows.Documents;
+using System.Diagnostics;
+using System.Windows.Media;
+using System.Collections.Generic;
+using System.Linq;
+using Frontend;
 
 namespace AdvProg
 {
     public class ViewModel
     {
-        private ICommand testCommand;
-        public ICommand TestCommand
+        public string[] inputHistory = new string[1];
+        public int historyIndex = -1;
+        public string inputSave = "";
+
+        public int CountRichLines(String resultString)
         {
-            get
+            string[] splitLines = resultString.Split(new[] {'\r'}, StringSplitOptions.None);
+            return splitLines.Length;
+        }
+
+        public void RemoveCurrentLineText(TextBox window)
+        {
+            if (window.GetLineText(window.LineCount - 1) != "")
             {
-                return testCommand
-                    ?? (testCommand = new ActionCommand(() =>
-                    {
-                        MessageBox.Show("TEST SUCCESS!");
-                    }));
+                window.Text = window.Text.Remove(window.Text.IndexOf(window.GetLineText(window.LineCount - 1)));
             }
+        }
+
+        public void PrintResult(string result, string prompt)
+        {
+            TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+            TextBox cursorWindow = (TextBox)Application.Current.MainWindow.FindName("cursorWindow");
+            RichTextBox printWindow = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
+
+            string resultString = prompt + '\r' + "    " + result + Environment.NewLine;
+            printWindow.AppendText(resultString);
+
+            RemoveCurrentLineText(inputWindow);
+
+            int lineCount = CountRichLines(resultString);
+            for (int i = 0; i < lineCount; i++)
+            {
+                inputWindow.AppendText(Environment.NewLine);
+                cursorWindow.AppendText(Environment.NewLine);
+            }
+            inputWindow.ScrollToLine(inputWindow.LineCount-1);
+            inputWindow.Select(inputWindow.Text.Length, 0);
+
+            cursorWindow.AppendText(">>");
+            cursorWindow.ScrollToEnd();
+        }
+
+        public void PrintError(string error, string prompt)
+        {
+            TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+            TextBox cursorWindow = (TextBox)Application.Current.MainWindow.FindName("cursorWindow");
+            RichTextBox printWindow = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
+
+            string resultString = prompt + '\r';
+            string errorString = "    " + error + Environment.NewLine;
+            printWindow.AppendText(resultString);
+            TextRange errorRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
+            errorRange.Text = errorString;
+            errorRange.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);
+
+            RemoveCurrentLineText(inputWindow);
+
+            int lineCount = CountRichLines(resultString + errorString);
+            for (int i = 0; i < lineCount; i++)
+            {
+                inputWindow.AppendText(Environment.NewLine);
+                cursorWindow.AppendText(Environment.NewLine);
+            }
+            inputWindow.ScrollToEnd();
+
+            cursorWindow.AppendText(">>");
+            cursorWindow.ScrollToEnd();
         }
 
         private ICommand returnCommand;
@@ -31,34 +93,34 @@ namespace AdvProg
                     ListBox varNames = (ListBox) Application.Current.MainWindow.FindName("varNames");
                     ListBox varValues = (ListBox) Application.Current.MainWindow.FindName("varValues");
                     TextBox inputWindow = (TextBox) Application.Current.MainWindow.FindName("inputWindow");
-                    TextBox cursorWindow = (TextBox) Application.Current.MainWindow.FindName("cursorWindow");
                     
                     String input = inputWindow.GetLineText(inputWindow.LineCount-1);
+                    if (inputHistory[0] != input)
+                    {
+                        inputHistory = inputHistory.Prepend(input).ToArray();
+                    }
+
                     if (input.Contains("plot"))
                     {
 
                     }
+                    else if (input.Contains("error"))
+                    {
+                        PrintError("ERROR TEST <-- this text should display in red", input);
+                    }
                     else
                     {
-                        string answer;
                         try
                         {
-                            answer = Interpreter.interpret(input);
-                            var variableStore = Interpreter.updateVarStore;
+                            PrintResult(Interpreter.interpret(input), input);
                         }
                         catch (Exception ex)
                         {
-                            answer = ex.Message[(ex.Message.IndexOf("\"")+1)..(ex.Message.Length-1)];
+                            PrintError(ex.Message, input);
                         }
-                        inputWindow.AppendText("\n");
-                        inputWindow.AppendText("   " + answer + "\n");
-                        inputWindow.SelectionStart = inputWindow.Text.Length;
-                        inputWindow.SelectionLength = 0;
-                        int numLines = answer == null ? 2 : answer.Split('\n').Length + 1;
-
-                        cursorWindow.AppendText(new string('\n', numLines) + ">>");
-                        cursorWindow.ScrollToEnd();
                     }
+                    inputSave = "";
+                    historyIndex = -1;
                 });
             }
         }
@@ -91,6 +153,68 @@ namespace AdvProg
                         }
                         varNames.Items.Remove(varNames.Items.GetItemAt(index));
                         varValues.Items.Remove(varValues.Items.GetItemAt(index));
+                    }
+                });
+            }
+        }
+
+        private ICommand upHistoryCommand;
+        public ICommand UpHistoryCommand
+        {
+            get
+            {
+                return upHistoryCommand ??= new ActionCommand(() =>
+                {
+                    TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+                    if (inputSave == "")
+                    {
+                        inputSave = inputWindow.GetLineText(inputWindow.LineCount - 1);
+                    }
+                        if (inputHistory.Length > 0)
+                        {
+                            if (historyIndex < 9 && historyIndex < inputHistory.Count())
+                            {
+                                RemoveCurrentLineText(inputWindow);
+                                historyIndex++;
+                                inputWindow.AppendText(inputHistory[historyIndex]);
+                            }
+                        
+                            inputWindow.SelectionStart = inputWindow.Text.Length;
+                            inputWindow.SelectionLength = 0;
+                        }
+                });
+            }
+        }
+
+        private ICommand downHistoryCommand;
+        public ICommand DownHistoryCommand
+        {
+            get
+            {
+                return downHistoryCommand ??= new ActionCommand(() =>
+                {
+                    TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+                    if (inputHistory.Length > 0)
+                    {
+                        if (historyIndex == 0)
+                        {
+                            RemoveCurrentLineText(inputWindow);
+                            historyIndex--;
+                            inputWindow.AppendText(inputSave);
+                        }
+                        else if (historyIndex == -1)
+                        {
+                            RemoveCurrentLineText(inputWindow);
+                        }
+                        else if (historyIndex <= 9)
+                        {
+                            RemoveCurrentLineText(inputWindow);
+                            historyIndex--;
+                            inputWindow.AppendText(inputHistory[historyIndex]);
+                        }
+                        
+                        inputWindow.SelectionStart = inputWindow.Text.Length;
+                        inputWindow.SelectionLength = 0;
                     }
                 });
             }

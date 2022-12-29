@@ -9,9 +9,14 @@
         Title="Baltam" Height="750" Width="800">
 
     <Window.Resources>
-        <frontend:HalfSideConverter x:Key="halfConverter" />
-        <frontend:ThirdSideConverter x:Key="thirdConverter" />
-        <frontend:FifthSideConverter x:Key="fifthConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="resources/themes/highContrast.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <frontend:HalfSideConverter x:Key="halfConverter" />
+            <frontend:ThirdSideConverter x:Key="thirdConverter" />
+            <frontend:FifthSideConverter x:Key="fifthConverter" />
+        </ResourceDictionary>
     </Window.Resources>
 
     <Window.InputBindings>
@@ -19,7 +24,7 @@
         <KeyBinding Command="{Binding DelVarCommand}" Key="Delete" />
     </Window.InputBindings>
 
-    <Grid Name="MainGrid" Margin="10">
+    <Grid Name="MainGrid" Margin="10" Background="{DynamicResource ResourceKey=BackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
@@ -47,13 +52,25 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBox Grid.Column="0" Name="cursorWindow" BorderBrush="{x:Null}" IsReadOnly="True" Background="{x:Null}" FontFamily="Consolas">>></TextBox>
-                    <TextBox Grid.Column="1" Name="inputWindow" BorderBrush="{x:Null}" Background="{x:Null}" FontFamily="Consolas"></TextBox>
+                    <RichTextBox Grid.Column="1" Height ="auto" Name="printWindow" VerticalAlignment="Top" BorderBrush="{x:Null}" IsReadOnly="True" Background="{x:Null}" FontFamily="Consolas" Panel.ZIndex="1">
+                        <FlowDocument>
+                            <Paragraph></Paragraph>
+                        </FlowDocument>
+                    </RichTextBox>
+                    <TextBox Grid.Column="1" Name="inputWindow" BorderBrush="{x:Null}" Background="{x:Null}" TextWrapping="Wrap" Height="auto" KeyboardNavigation.ControlTabNavigation="None">
+                        <TextBox.InputBindings>
+                            <KeyBinding Command="{Binding UpHistoryCommand}" Key="Up" />
+                            <KeyBinding Command="{Binding DownHistoryCommand}" Key="Down" />
+                        </TextBox.InputBindings>
+                    </TextBox>
                 </Grid>
             </Border>
         </Grid>
         <Expander Background="#FFEFEFEF" Header="Function Shortcuts" Width="{Binding ActualWidth, Converter={StaticResource halfConverter}, ElementName=iwTextBlock}" VerticalAlignment="Top" HorizontalAlignment="Right">
-            <StackPanel Grid.Row="0" Height="15pt">
-                <Button Content="ROOT" Click="RootShortcut_Click"/>
+            <StackPanel Grid.Row="0" Height="60pt">
+                <Button Name="rootButton" Content="ROOT" Click="RootShortcut_Click"/>
+                <Button Name="powerButton" Content="POWER" Click="RootShortcut_Click"/>
+                <Button Name="logButton" Content="LOGARITHM" Click="RootShortcut_Click"/>
             </StackPanel>
         </Expander>
 

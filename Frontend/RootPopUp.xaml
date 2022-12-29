@@ -20,11 +20,12 @@
             <RowDefinition Height="*" Name="imgRow"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Name="TextRow">Square Root Function:</TextBlock>
+        <TextBlock Grid.Row="0" Name="TextRow"></TextBlock>
 
-        <Image Grid.Row="1" Source="resources/root.png" Height="{Binding ActualWidth, Converter={StaticResource fifthConverter}, ElementName=TextRow}"/>
-        <TextBox Name="input2" Grid.Row="1" Width="50pt" Height="15pt" Margin="89,102,186,142"/>
-        <TextBox Name="input1" Grid.Row="1" Width="75pt" Height="22pt" Margin="193,117,57,117"/>
+
+        <Image Grid.Row="1" Name="popUpImg" Height="{Binding ActualWidth, Converter={StaticResource fifthConverter}, ElementName=TextRow}"/>
+        <TextBox Name="input2" Grid.Row="1" Margin="185,107,75,127"/>
+        <TextBox Name="input1" Grid.Row="1" Margin="135,142,165,90"/>
         <TextBlock Grid.Row="1" Width="50pt" Height="15pt" Margin="281,224,2,20" TextAlignment="Right" Foreground="Red" Visibility="Hidden" Name="InputWarning">Input invalid!</TextBlock>
 
         <Button Grid.Row="1" Height="15pt" Width="50pt" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="ShortCutSubmit_Click">Submit</Button>
