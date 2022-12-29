@@ -35,7 +35,8 @@ module Parser =
     let showExceptionPosition((tokens: Token list), position) =
         let mutable buffer = ""
         if position > 0 then
-            for t in tokens[..position-1] do
+            for t in tokens.[..position-1] do
+                System.Diagnostics.Debug.WriteLine("t = " + (string)t)
                 let len = match t with
                           | Token.Number value -> value.Length
                           | Token.Variable value -> value.Length
