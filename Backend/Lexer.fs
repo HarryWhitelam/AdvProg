@@ -10,13 +10,33 @@ namespace Backend
 //*************************************************************************
 
 type Token = 
-    Plus | Minus | Times | Divide | L_Bracket | R_Bracket | Indice | Assign | Number of string | Variable of string | Reserved of string
+    Plus | Minus | Times | Divide | L_Bracket | R_Bracket | Indice | Assign | Number of string | Variable of string | Reserved of string | Comma
+    
+    override this.ToString() = 
+            match this with
+            | Plus -> "+"
+            | Minus -> "-"
+            | Times -> "*"
+            | Divide -> "/"
+            | L_Bracket -> "("
+            | R_Bracket -> ")"
+            | Indice -> "^"
+            | Assign -> ":="
+            | Number value -> value
+            | Variable value -> value
+            | Reserved value -> value
+            | Comma -> ","
+
+    static member printTokens tokens =
+        let mutable out = ""
+        for t in tokens do
+            out <- out + t.ToString()
+        out
+
 
 module Lexer =
     
     exception LexerError of string
-
-    let strToList str = [for s in str -> s]
 
     let rec catchNum(rest, finVal) = 
         match rest with
@@ -43,12 +63,14 @@ module Lexer =
             | ':'::tail -> match tail with
                             | '='::tail -> Token.Assign :: consume tail
                             | _ -> raise (LexerError "Expected '=' after ':'")
+            | ','::tail -> Token.Comma    :: consume tail
             | num::tail when (System.Char.IsDigit num) ->   let (rest, finVal) = catchNum (tail, (string)num)
                                                             Token.Number finVal :: consume rest
             | var::tail when (System.Char.IsLetter var) ->  let (rest, finStr) = catchVar (tail, (string)var)
                                                             match finStr with
-                                                            | "sqr" ->  Token.Reserved finStr :: consume rest
+                                                            | "root" ->  Token.Reserved finStr :: consume rest
                                                             | _ ->      Token.Variable finStr :: consume rest
             | spc::tail when (System.Char.IsWhiteSpace spc) -> consume tail
-            | _ -> raise (LexerError "Undefined character")
-        consume (strToList input)
+            | _ -> raise (LexerError $"Undefined character: {input[0]}")
+            
+        consume (Seq.toList input)
