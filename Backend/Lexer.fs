@@ -71,6 +71,6 @@ module Lexer =
                                                             | "root" ->  Token.Reserved finStr :: consume rest
                                                             | _ ->      Token.Variable finStr :: consume rest
             | spc::tail when (System.Char.IsWhiteSpace spc) -> consume tail
-            | _ -> raise (LexerError $"Undefined character: {input[0]}")
+            | _ -> raise (LexerError $"Undefined character: {input.[0]}")
             
         consume (Seq.toList input)

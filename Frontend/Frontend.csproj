@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="resources\images\**" />
+    <EmbeddedResource Remove="resources\images\**" />
+    <None Remove="resources\images\**" />
+    <Page Remove="resources\images\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="InteractiveDataDisplay.WPF" Version="1.0.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="WPFToolkit.DataVisualization" Version="3.5.50211.1" />
@@ -19,7 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="resources\images\" />
     <Folder Include="resources\themes\" />
   </ItemGroup>
 

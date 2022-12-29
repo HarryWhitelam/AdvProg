@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AdvProg"
         xmlns:frontend="clr-namespace:Frontend"
         mc:Ignorable="d"
-        Title="Baltam" Height="750" Width="800">
+        Title="Baltam" Height="750" Width="1000">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -57,7 +57,7 @@
                             <Paragraph></Paragraph>
                         </FlowDocument>
                     </RichTextBox>
-                    <TextBox Grid.Column="1" Name="inputWindow" BorderBrush="{x:Null}" Background="{x:Null}" TextWrapping="Wrap" Height="auto" KeyboardNavigation.ControlTabNavigation="None">
+                    <TextBox Grid.Column="1" Name="inputWindow" BorderBrush="{x:Null}" Background="{x:Null}" TextWrapping="Wrap" Height="auto" KeyboardNavigation.ControlTabNavigation="None" FontFamily="Consolas">
                         <TextBox.InputBindings>
                             <KeyBinding Command="{Binding UpHistoryCommand}" Key="Up" />
                             <KeyBinding Command="{Binding DownHistoryCommand}" Key="Down" />
