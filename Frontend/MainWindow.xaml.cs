@@ -1,4 +1,5 @@
-﻿using Frontend;
+﻿using Backend;
+using Frontend;
 using System;
 using System.Windows;
 using System.Windows.Navigation;
@@ -50,6 +51,7 @@ namespace AdvProg
                 {
                     index = varValues.SelectedIndex;
                 }
+                Interpreter.removeVarStore((string)varNames.Items[index]);
                 varNames.Items.Remove(varNames.Items.GetItemAt(index));
                 varValues.Items.Remove(varValues.Items.GetItemAt(index));
             }
