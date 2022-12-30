@@ -14,12 +14,13 @@ module Parser =
     exception ParseError of string
 
     //Grammar in standard BNF
-    //<assign>  ::= <expr>    | Variable:=<expr>
-    //<expr>    ::= <unary>   | <expr>+<unary>   | <expr>-<term>
-    //<unary>   ::= -<term>   | <term>
-    //<term>    ::= <index>   | <term>*<index>  | <term>/<index>
-    //<index>   ::= <func>  | <index>^<func>
-    //<func>    ::= <final>  | Function(<final>, <final>)
+    //<assign>  ::= <expr>      | Variable:=<expr>
+    //<expr>    ::= <unary>     | <expr>+<unary>      | <expr>-<term>
+    //<unary>   ::= -<term>     | <term>
+    //<term>    ::= <index>     | <term>*<index>      | <term>/<index>
+    //<index>   ::= <funcall>   | <index>^<funcall>
+    //<funcall> ::= <final>     | Function(<funArgs>) | Function()
+    //<args>    ::= <final>     | <final> , <funargs> | ∅
     //<final>   ::= Number | Variable | (<expr>)
 
     //Grammar in LL(1) BNF
@@ -29,10 +30,12 @@ module Parser =
     //<unary>   ::= -<term> | <term>
     //<term>    ::= <index><term'>
     //<term'>   ::= *<index><term'> | /<index><term'> | ∅
-    //<index>   ::= <final><index'>
-    //<index'>  ::= ^<final><index'> | ∅
-    //<func>    ::= <final> | Function(<final>, <final>)
-    //<final>   ::= Number | Variable | (<expr>)
+    //<index>   ::= <funcall><index'>
+    //<index'>  ::= ^<funcall><index'> | ∅
+    //<funcall> ::= <final> | Function(<funArgs>) | Function()
+    //<args>    ::= <final><args'>
+    //<args'>   ::= ,<final><args'> | ∅
+    //<final>   ::= Number | Variable | (<expr>) | <funcall>
 
     let showExceptionPosition((tokens: Token list), position) =
         let mutable buffer = ""
@@ -72,20 +75,24 @@ module Parser =
             | Token.Times  :: tail -> (index >> term_pr) tail
             | Token.Divide :: tail -> (index >> term_pr) tail
             | _ -> tokens
-        and index tokens = (func >> index_pr) tokens
+        and index tokens = (funcall >> index_pr) tokens
         and index_pr tokens =
             match tokens with
-            | Token.Indice :: tail -> (func >> index_pr) tail
+            | Token.Indice :: tail -> (funcall >> index_pr) tail
             | _ -> tokens
-        and func tokens =
+        and funcall tokens =
             match tokens with
-            | Token.Function _value :: Token.L_Bracket :: tail -> match final tail with
-                                                                  | Token.Comma :: tail2 -> match final tail2 with
-                                                                                            | Token.R_Bracket :: tail3 -> tail3
-                                                                                            | _ -> raise (ParseError $"Missing closing bracket: {showExceptionPosition(ogTokens, tail.Length + tail2.Length)}")
+            | Token.Function _value :: Token.L_Bracket :: tail -> match tail with
                                                                   | Token.R_Bracket :: tail2 -> tail2
-                                                                  | _ -> raise (ParseError $"Missing comma in function: {showExceptionPosition(ogTokens, (ogTokens.Length-tail.Length)+1)}")
+                                                                  | _ -> match args tail with
+                                                                         | Token.R_Bracket :: tail3 -> tail3
+                                                                         | _ -> raise (ParseError $"Missing closing bracket: {showExceptionPosition(ogTokens, tail.Length+1)}")
             | _ -> final tokens
+        and args tokens = (final >> args_pr) tokens
+        and args_pr tokens =
+            match tokens with
+            | Token.Comma :: tail -> (final >> args_pr) tail
+            | _ -> tokens
         and final tokens =
             match tokens with
             | Token.Number _value   :: tail -> tail
@@ -93,6 +100,7 @@ module Parser =
             | Token.L_Bracket :: tail -> match expr tail with
                                          | Token.R_Bracket :: tail2 -> tail2
                                          | _ -> raise (ParseError $"Missing closing bracket: {showExceptionPosition(ogTokens, tail.Length+1)}")
+            | Token.Function value :: tail -> funcall (Token.Function value::tail)
             | _ ->         
                 raise (ParseError $"Expected number or variable here: {showExceptionPosition(ogTokens, ogTokens.Length - tokens.Length)}")
         let out = assign tokens

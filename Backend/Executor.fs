@@ -15,6 +15,9 @@ module Executor =
 
     exception ExecError of string
 
+    let funcException(funcName, noArgs) =
+        $"No function, {funcName} with {noArgs} arguments"
+
     let mutable variableStore = Map.empty<string, string>
     let outputStack = Stack<string>()
     let operatorStack = Stack<Token>()
@@ -23,50 +26,70 @@ module Executor =
         try double var |> ignore
         with :? System.FormatException -> 
             if variableStore.TryGetValue(var, &var) = false then
-                raise (ExecError ($"{var} does not have an assigned value"))
+                raise (ExecError $"{var} does not have an assigned value")
 
-    let handleFunc(func, value) =
-        if func = "log" then log(value)
-        else 
-            let mutable value2 = outputStack.Pop()
-            replaceVar &value2
-            match func with
-            | "nroot" -> double (value2) ** (1.0/value)
-            | "logn" -> System.Math.Log(double (value2), value)
-            | _ -> raise (ExecError $"{func} is not a valid function")
+    let handleFunc(funcName) =
+        if outputStack.Count = 0 then
+             match funcName with
+                | "PI" -> double(System.Math.PI)
+                | "E" -> double(System.Math.E)
+                | _ -> raise (ExecError (funcException(funcName, 0)))
+        else
+            let mutable value = outputStack.Pop()
+            replaceVar &value
+            let args = value.Split(",")
+            match args.Length with 
+            | 1 ->  match funcName with
+                    | "LOG" -> log(double (args[0]))
+                    | _ -> raise (ExecError (funcException(funcName, 1)))
+            | 2 ->  match funcName with
+                    | "NROOT" -> double (args[1]) ** (1.0/ double (args[0]))
+                    | "LOGN" -> System.Math.Log(double (args[1]), double (args[0]))
+                    | _ -> raise (ExecError (funcException(funcName, 2)))
+            | any -> raise (ExecError (funcException(funcName, any)))
 
     let handleAssign(value:byref<string>, value2:byref<string>) =
         try double value |> ignore
             variableStore <- variableStore.Add(value2, value)
         with :? System.FormatException ->
             if variableStore.TryGetValue(value, &value) then variableStore <- variableStore.Add(value2, value)
-            else raise (ExecError ($"{value} is not a number or a stored variable"))
+            else raise (ExecError $"{value} is not a number or a stored variable")
         System.Diagnostics.Debug.WriteLine("varStore = " + (string)variableStore)
 
-    let rec calculate() =
-        let operator = operatorStack.Pop()
-        let mutable value = outputStack.Pop()
-        match operator with 
-        | Token.Function func -> replaceVar &value
-                                 outputStack.Push(string (handleFunc(func, (double value))))
-        | Token.Assign ->   let mutable value2 = outputStack.Pop()
-                            handleAssign(&value, &value2)
-                            outputStack.Push(value2 + ":=" + value)
-        | _ ->  if operator = Token.Minus && (outputStack.Count = 0 || (operatorStack.Count <> 0 && operatorStack.Peek() = Token.L_Bracket)) then 
-                    replaceVar &value
-                    outputStack.Push(string (0.0 - double value)) 
-                else
-                    let mutable value2 = outputStack.Pop()
-                    replaceVar &value
-                    replaceVar &value2
-                    match operator with
-                    | Token.Indice ->   outputStack.Push(string (double value2 ** double value))
-                    | Token.Times ->    outputStack.Push(string (double value2 * double value))
-                    | Token.Divide ->   outputStack.Push(string (double value2 / double value))
-                    | Token.Plus ->     outputStack.Push(string (double value2 + double value))
-                    | Token.Minus ->    outputStack.Push(string (double value2 - double value))
-                    | _ ->              failwith "Invalid operator here"
+    let handleArgs value =
+        let mutable out = value
+        while operatorStack.Count <> 0 && operatorStack.Peek() = Token.Comma do
+            operatorStack.Pop() |> ignore
+            out <- out + "," + outputStack.Pop()
+        out
+
+    let calculate() =
         //System.Diagnostics.Debug.WriteLine("outputStack.Peek = " + (string)(outputStack.Peek()))
+        let operator = operatorStack.Pop()
+        match operator with 
+        | Token.Function funcName -> outputStack.Push(string (handleFunc(funcName)))
+        | _ ->  let mutable value = outputStack.Pop()
+                match operator with
+                | Token.Comma -> replaceVar &value
+                                 outputStack.Push(handleArgs value)                 
+                | Token.Assign ->   let mutable value2 = outputStack.Pop()
+                                    handleAssign(&value, &value2)
+                                    outputStack.Push(value2 + ":=" + value)
+                | _ ->  if operator = Token.Minus && (outputStack.Count = 0 || (operatorStack.Count <> 0 && operatorStack.Peek() = Token.L_Bracket)) then 
+                            replaceVar &value
+                            outputStack.Push(string (0.0 - double value)) 
+                        else
+                            let mutable value2 = outputStack.Pop()
+                            replaceVar &value
+                            replaceVar &value2
+                            match operator with
+                            | Token.Indice ->   outputStack.Push(string (double value2 ** double value))
+                            | Token.Times ->    outputStack.Push(string (double value2 * double value))
+                            | Token.Divide ->   outputStack.Push(string (double value2 / double value))
+                            | Token.Plus ->     outputStack.Push(string (double value2 + double value))
+                            | Token.Minus ->    outputStack.Push(string (double value2 - double value))
+                            | _ ->              failwith "Invalid operator here"
+        System.Diagnostics.Debug.WriteLine("outputStack.Peek = " + (string)(outputStack.Peek()))
 
     let shuntingYard (tokens: Token list) =
         for token in tokens do
@@ -124,7 +147,9 @@ module Executor =
                                 calculate()
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine(":= added to operator stack")
-            | Token.Comma -> System.Diagnostics.Debug.WriteLine("comma encountered")
+            | Token.Comma -> 
+                            operatorStack.Push(token)
+                            System.Diagnostics.Debug.WriteLine("comma encountered")
         while operatorStack.Count <> 0 do
             calculate()
         outputStack.Pop()

@@ -67,10 +67,13 @@ module Lexer =
             | num::tail when (System.Char.IsDigit num) ->   let (rest, finVal) = catchNum (tail, (string)num)
                                                             Token.Number finVal :: consume rest
             | var::tail when (System.Char.IsLetter var) ->  let (rest, finStr) = catchVar (tail, (string)var)
-                                                            match finStr with
-                                                            | "nroot" -> Token.Function finStr :: consume rest
-                                                            | "log"  -> Token.Function finStr :: consume rest
-                                                            | "logn" -> Token.Function finStr :: consume rest
+                                                            let finStrUp = finStr.ToUpper()
+                                                            match finStrUp with
+                                                            | "NROOT" ->Token.Function finStrUp :: consume rest
+                                                            | "LOG" ->  Token.Function finStrUp :: consume rest
+                                                            | "LOGN" -> Token.Function finStrUp :: consume rest
+                                                            | "E" ->    Token.Function finStrUp :: consume rest
+                                                            | "PI" ->   Token.Function finStrUp :: consume rest
                                                             | _ ->      Token.Variable finStr :: consume rest
             | spc::tail when (System.Char.IsWhiteSpace spc) -> consume tail
             | _ -> raise (LexerError $"Undefined character: {input[0]}")
