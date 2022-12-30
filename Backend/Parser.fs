@@ -82,11 +82,15 @@ module Parser =
             | _ -> tokens
         and funcall tokens =
             match tokens with
-            | Token.Function _value :: Token.L_Bracket :: tail -> match tail with
-                                                                  | Token.R_Bracket :: tail2 -> tail2
-                                                                  | _ -> match args tail with
-                                                                         | Token.R_Bracket :: tail3 -> tail3
-                                                                         | _ -> raise (ParseError $"Missing closing bracket: {showExceptionPosition(ogTokens, tail.Length+1)}")
+            | Token.Function _value :: tail ->  match tail with 
+                                                | Token.L_Bracket :: tail2->match tail2 with
+                                                                            | Token.R_Bracket :: tail3 -> tail3
+                                                                            | _ ->  match args tail2 with
+                                                                                    | Token.R_Bracket :: tail3 -> tail3
+                                                                                    | _ -> raise (ParseError $"Missing closing bracket: {showExceptionPosition(ogTokens, tail.Length+1)}")
+                                                | _ -> raise (ParseError $"Missing opening bracket: {showExceptionPosition(ogTokens, tail.Length+1)}")
+
+
             | _ -> final tokens
         and args tokens = (final >> args_pr) tokens
         and args_pr tokens =
@@ -101,8 +105,7 @@ module Parser =
                                          | Token.R_Bracket :: tail2 -> tail2
                                          | _ -> raise (ParseError $"Missing closing bracket: {showExceptionPosition(ogTokens, tail.Length+1)}")
             | Token.Function value :: tail -> funcall (Token.Function value::tail)
-            | _ ->         
-                raise (ParseError $"Expected number or variable here: {showExceptionPosition(ogTokens, ogTokens.Length - tokens.Length)}")
+            | _ -> raise (ParseError $"Expected number, variable, or closing bracket here: {showExceptionPosition(ogTokens, ogTokens.Length - tokens.Length)}")
         let out = assign tokens
         if out.IsEmpty then
             out

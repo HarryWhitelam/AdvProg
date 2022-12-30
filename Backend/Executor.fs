@@ -16,7 +16,7 @@ module Executor =
     exception ExecError of string
 
     let funcException(funcName, noArgs) =
-        $"No function, {funcName} with {noArgs} arguments"
+        $"No function, {funcName}() with {noArgs} arguments"
 
     let mutable variableStore = Map.empty<string, string>
     let outputStack = Stack<string>()
@@ -40,10 +40,11 @@ module Executor =
             let args = value.Split(",")
             match args.Length with 
             | 1 ->  match funcName with
-                    | "LOG" -> log(double (args[0]))
+                    | "LOG" ->  log(double (args[0]))
+                    | "SQRT" -> sqrt(double (args[0]))
                     | _ -> raise (ExecError (funcException(funcName, 1)))
             | 2 ->  match funcName with
-                    | "NROOT" -> double (args[1]) ** (1.0/ double (args[0]))
+                    | "NROOT"-> double (args[1]) ** (1.0/ double (args[0]))
                     | "LOGN" -> System.Math.Log(double (args[1]), double (args[0]))
                     | _ -> raise (ExecError (funcException(funcName, 2)))
             | any -> raise (ExecError (funcException(funcName, any)))

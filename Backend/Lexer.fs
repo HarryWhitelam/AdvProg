@@ -69,6 +69,7 @@ module Lexer =
             | var::tail when (System.Char.IsLetter var) ->  let (rest, finStr) = catchVar (tail, (string)var)
                                                             let finStrUp = finStr.ToUpper()
                                                             match finStrUp with
+                                                            | "SQRT"->Token.Function finStrUp :: consume rest
                                                             | "NROOT" ->Token.Function finStrUp :: consume rest
                                                             | "LOG" ->  Token.Function finStrUp :: consume rest
                                                             | "LOGN" -> Token.Function finStrUp :: consume rest
