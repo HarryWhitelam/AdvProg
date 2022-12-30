@@ -10,7 +10,7 @@ namespace Backend
 //*************************************************************************
 
 type Token = 
-    Plus | Minus | Times | Divide | L_Bracket | R_Bracket | Indice | Assign | Number of string | Variable of string | Function of string | Comma
+    Plus | Minus | Times | Divide | L_Parenth | R_Parenth | Indice | Assign | Comma | L_Bracket | R_Bracket | Number of string | Variable of string | Function of string 
     
     override this.ToString() = 
             match this with
@@ -18,14 +18,16 @@ type Token =
             | Minus -> "-"
             | Times -> "*"
             | Divide -> "/"
-            | L_Bracket -> "("
-            | R_Bracket -> ")"
+            | L_Parenth -> "("
+            | R_Parenth -> ")"
             | Indice -> "^"
             | Assign -> ":="
             | Number value -> value
             | Variable value -> value
             | Function value -> value
             | Comma -> ","
+            | L_Bracket -> "["
+            | R_Bracket -> "]"
 
     static member printTokens tokens =
         let mutable out = ""
@@ -33,10 +35,29 @@ type Token =
             out <- out + t.ToString()
         out
 
+    static member pointToToken((tokens: list<Token>), position) =
+        let mutable buffer = ""
+        if position > 0 then
+            for t in tokens.[..position-1] do
+                let len = match t with
+                          | Number value -> value.Length
+                          | Variable value -> value.Length
+                          | Function value -> value.Length
+                          | Assign -> 2
+                          | _ -> 1
+                buffer <- buffer + String.replicate len " "
+        "\n   " + Token.printTokens(tokens) + "\n   " + buffer + "^"
+
 
 module Lexer =
     
     exception LexerError of string
+
+    let showExceptionPosition((input: string), position) =
+        let mutable buffer = ""
+        if position > 0 then
+            buffer <- buffer + String.replicate position " "
+        "\n   " + input + "\n   " + buffer + "^"
 
     let rec catchNum(rest, finVal) = 
         match rest with
@@ -50,6 +71,7 @@ module Lexer =
         | _ -> (rest, finStr)
 
     let lex input =
+        let ogInput = input
         let rec consume input =
             match input with
             | [] -> []
@@ -57,12 +79,14 @@ module Lexer =
             | '*'::tail -> Token.Times    :: consume tail
             | '-'::tail -> Token.Minus    :: consume tail
             | '/'::tail -> Token.Divide   :: consume tail
-            | '('::tail -> Token.L_Bracket:: consume tail
-            | ')'::tail -> Token.R_Bracket:: consume tail
             | '^'::tail -> Token.Indice   :: consume tail
+            | '('::tail -> Token.L_Parenth:: consume tail
+            | ')'::tail -> Token.R_Parenth:: consume tail
+            | '['::tail -> Token.L_Bracket:: consume tail
+            | ']'::tail -> Token.R_Bracket:: consume tail
             | ':'::tail -> match tail with
                             | '='::tail -> Token.Assign :: consume tail
-                            | _ -> raise (LexerError "Expected '=' after ':'")
+                            | _ -> raise (LexerError $"Expected '=' after ':': {showExceptionPosition(ogInput, ogInput.Length-input.Length+1)}")
             | ','::tail -> Token.Comma    :: consume tail
             | num::tail when (System.Char.IsDigit num) ->   let (rest, finVal) = catchNum (tail, (string)num)
                                                             Token.Number finVal :: consume rest
@@ -77,6 +101,6 @@ module Lexer =
                                                             | "PI" ->   Token.Function finStrUp :: consume rest
                                                             | _ ->      Token.Variable finStr :: consume rest
             | spc::tail when (System.Char.IsWhiteSpace spc) -> consume tail
-            | _ -> raise (LexerError $"Undefined character: {input[0]}")
+            | _ -> raise (LexerError $"Undefined character: {showExceptionPosition(ogInput, ogInput.Length-input.Length)}")
             
         consume (Seq.toList input)

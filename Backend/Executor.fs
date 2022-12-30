@@ -30,13 +30,12 @@ module Executor =
 
     let handleFunc(funcName) =
         if outputStack.Count = 0 then
-             match funcName with
-                | "PI" -> double(System.Math.PI)
-                | "E" -> double(System.Math.E)
-                | _ -> raise (ExecError (funcException(funcName, 0)))
+            match funcName with
+            | "PI" -> double(System.Math.PI)
+            | "E" -> double(System.Math.E)
+            | _ -> raise (ExecError (funcException(funcName, 0)))
         else
             let mutable value = outputStack.Pop()
-            replaceVar &value
             let args = value.Split(",")
             match args.Length with 
             | 1 ->  match funcName with
@@ -44,8 +43,8 @@ module Executor =
                     | "SQRT" -> sqrt(double (args[0]))
                     | _ -> raise (ExecError (funcException(funcName, 1)))
             | 2 ->  match funcName with
-                    | "NROOT"-> double (args[1]) ** (1.0/ double (args[0]))
-                    | "LOGN" -> System.Math.Log(double (args[1]), double (args[0]))
+                    | "NROOT"-> double (args[0]) ** (1.0/ double (args[1]))
+                    | "LOGN" -> System.Math.Log(double (args[0]), double (args[1]))
                     | _ -> raise (ExecError (funcException(funcName, 2)))
             | any -> raise (ExecError (funcException(funcName, any)))
 
@@ -55,17 +54,17 @@ module Executor =
         with :? System.FormatException ->
             if variableStore.TryGetValue(value, &value) then variableStore <- variableStore.Add(value2, value)
             else raise (ExecError $"{value} is not a number or a stored variable")
-        System.Diagnostics.Debug.WriteLine("varStore = " + (string)variableStore)
 
     let handleArgs value =
-        let mutable out = value
+        let mutable out = outputStack.Pop() + "," + value 
         while operatorStack.Count <> 0 && operatorStack.Peek() = Token.Comma do
             operatorStack.Pop() |> ignore
-            out <- out + "," + outputStack.Pop()
+            let mutable newVal = outputStack.Pop()
+            replaceVar &newVal
+            out <- newVal + "," + out
         out
 
     let calculate() =
-        //System.Diagnostics.Debug.WriteLine("outputStack.Peek = " + (string)(outputStack.Peek()))
         let operator = operatorStack.Pop()
         match operator with 
         | Token.Function funcName -> outputStack.Push(string (handleFunc(funcName)))
@@ -76,7 +75,7 @@ module Executor =
                 | Token.Assign ->   let mutable value2 = outputStack.Pop()
                                     handleAssign(&value, &value2)
                                     outputStack.Push(value2 + ":=" + value)
-                | _ ->  if operator = Token.Minus && (outputStack.Count = 0 || (operatorStack.Count <> 0 && operatorStack.Peek() = Token.L_Bracket)) then 
+                | _ ->  if operator = Token.Minus && (outputStack.Count = 0 || (operatorStack.Count <> 0 && operatorStack.Peek() = Token.L_Parenth)) then 
                             replaceVar &value
                             outputStack.Push(string (0.0 - double value)) 
                         else
@@ -90,7 +89,6 @@ module Executor =
                             | Token.Plus ->     outputStack.Push(string (double value2 + double value))
                             | Token.Minus ->    outputStack.Push(string (double value2 - double value))
                             | _ ->              failwith "Invalid operator here"
-        System.Diagnostics.Debug.WriteLine("outputStack.Peek = " + (string)(outputStack.Peek()))
 
     let shuntingYard (tokens: Token list) =
         for token in tokens do
@@ -112,45 +110,52 @@ module Executor =
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine(value + " added to operator stack")
             | Token.Plus -> 
-                            while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket && operatorStack.Peek() <> Token.Assign do
+                            while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Parenth && operatorStack.Peek() <> Token.Assign do
                                 calculate()
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine("+ added to operator stack")
             | Token.Minus -> 
-                            while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket && operatorStack.Peek() <> Token.Assign do
+                            while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Parenth && operatorStack.Peek() <> Token.Assign do
                                 calculate()
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine("- added to operator stack")
             | Token.Times -> 
-                            while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket && operatorStack.Peek() <> Token.Assign && operatorStack.Peek() <> Token.Plus && operatorStack.Peek() <> Token.Minus do
+                            while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Parenth && operatorStack.Peek() <> Token.Assign && operatorStack.Peek() <> Token.Plus && operatorStack.Peek() <> Token.Minus do
                                 calculate()
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine("* added to operator stack")
             | Token.Divide ->
-                            while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket && operatorStack.Peek() <> Token.Assign && operatorStack.Peek() <> Token.Plus && operatorStack.Peek() <> Token.Minus do
+                            while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Parenth && operatorStack.Peek() <> Token.Assign && operatorStack.Peek() <> Token.Plus && operatorStack.Peek() <> Token.Minus do
                                 calculate()
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine("/ added to operator stack")
-            | Token.L_Bracket -> 
+            | Token.L_Parenth -> 
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine("( added to operator stack")
-            | Token.R_Bracket -> 
-                            while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket do
+            | Token.R_Parenth -> 
+                            while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Parenth do
+                                calculate()
+                            System.Diagnostics.Debug.WriteLine("{0} removed from operator stack", operatorStack.Pop())
+            | Token.L_Bracket ->
+                            operatorStack.Push(token)
+                            System.Diagnostics.Debug.WriteLine("[ added to operator stack")
+            | Token.R_Bracket ->
+                            while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Parenth do
                                 calculate()
                             System.Diagnostics.Debug.WriteLine("{0} removed from operator stack", operatorStack.Pop())
             | Token.Indice -> 
-                            while operatorStack.Count <> 0 && (operatorStack.Peek() = Token.R_Bracket || operatorStack.Peek() = Token.Indice) do
+                            while operatorStack.Count <> 0 && (operatorStack.Peek() = Token.R_Parenth || operatorStack.Peek() = Token.Indice) do
                                 calculate()
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine("^ added to operator stack")
             | Token.Assign -> 
-                            while operatorStack.Count <> 0 && operatorStack.Peek() = Token.R_Bracket do
+                            while operatorStack.Count <> 0 && operatorStack.Peek() = Token.R_Parenth do
                                 calculate()
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine(":= added to operator stack")
             | Token.Comma -> 
                             operatorStack.Push(token)
-                            System.Diagnostics.Debug.WriteLine("comma encountered")
+                            System.Diagnostics.Debug.WriteLine(", added to operator stack")
         while operatorStack.Count <> 0 do
             calculate()
         outputStack.Pop()

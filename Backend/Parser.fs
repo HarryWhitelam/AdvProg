@@ -19,9 +19,9 @@ module Parser =
     //<unary>   ::= -<term>     | <term>
     //<term>    ::= <index>     | <term>*<index>      | <term>/<index>
     //<index>   ::= <funcall>   | <index>^<funcall>
-    //<funcall> ::= <final>     | Function(<funArgs>) | Function()
-    //<args>    ::= <final>     | <final> , <funargs> | ∅
-    //<final>   ::= Number | Variable | (<expr>)
+    //<funcall> ::= <final>     | Function(<args>) | Function()
+    //<args>    ::= <final>     | <final> , <args> | ∅
+    //<final>   ::= Number | Variable | (<expr>) | <funcall> | [<args>]
 
     //Grammar in LL(1) BNF
     //<assign>  ::= <expr> | Variable:=<expr>
@@ -32,24 +32,10 @@ module Parser =
     //<term'>   ::= *<index><term'> | /<index><term'> | ∅
     //<index>   ::= <funcall><index'>
     //<index'>  ::= ^<funcall><index'> | ∅
-    //<funcall> ::= <final> | Function(<funArgs>) | Function()
+    //<funcall> ::= <final> | Function(<args>) | Function()
     //<args>    ::= <final><args'>
     //<args'>   ::= ,<final><args'> | ∅
-    //<final>   ::= Number | Variable | (<expr>) | <funcall>
-
-    let showExceptionPosition((tokens: Token list), position) =
-        let mutable buffer = ""
-        if position > 0 then
-            for t in tokens.[..position-1] do
-                System.Diagnostics.Debug.WriteLine("t = " + (string)t)
-                let len = match t with
-                          | Token.Number value -> value.Length
-                          | Token.Variable value -> value.Length
-                          | Token.Function value -> value.Length
-                          | Token.Assign -> 2
-                          | _ -> 1
-                buffer <- buffer + String.replicate len " "
-        "\n   " + Token.printTokens(tokens) + "\n   " + buffer + "^"
+    //<final>   ::= Number | Variable | (<expr>) | <funcall> | [<args>]
 
     let parse (tokens: Token list) =
         let ogTokens = tokens
@@ -57,7 +43,7 @@ module Parser =
             match tokens with
             | Token.Variable _value :: Token.Assign :: tail -> expr tail
             | _ :: Token.Assign :: _tail -> 
-                raise (ParseError $"Expected variable before assignment: {showExceptionPosition(ogTokens, 0)}")
+                raise (ParseError $"Expected variable before assignment: {Token.pointToToken(ogTokens, 0)}")
             | _ -> expr tokens
         and expr tokens = (unary >> expr_pr) tokens
         and expr_pr tokens =
@@ -83,14 +69,12 @@ module Parser =
         and funcall tokens =
             match tokens with
             | Token.Function _value :: tail ->  match tail with 
-                                                | Token.L_Bracket :: tail2->match tail2 with
-                                                                            | Token.R_Bracket :: tail3 -> tail3
+                                                | Token.L_Parenth :: tail2->match tail2 with
+                                                                            | Token.R_Parenth :: tail3 -> tail3
                                                                             | _ ->  match args tail2 with
-                                                                                    | Token.R_Bracket :: tail3 -> tail3
-                                                                                    | _ -> raise (ParseError $"Missing closing bracket: {showExceptionPosition(ogTokens, tail.Length+1)}")
-                                                | _ -> raise (ParseError $"Missing opening bracket: {showExceptionPosition(ogTokens, tail.Length+1)}")
-
-
+                                                                                    | Token.R_Parenth :: tail3 -> tail3
+                                                                                    | _ -> raise (ParseError $"Missing closing parenthesis: {Token.pointToToken(ogTokens, tail.Length+1)}")
+                                                | _ -> raise (ParseError $"Missing opening parenthesis: {Token.pointToToken(ogTokens, tail.Length+1)}")
             | _ -> final tokens
         and args tokens = (final >> args_pr) tokens
         and args_pr tokens =
@@ -101,13 +85,17 @@ module Parser =
             match tokens with
             | Token.Number _value   :: tail -> tail
             | Token.Variable _value :: tail -> tail
-            | Token.L_Bracket :: tail -> match expr tail with
-                                         | Token.R_Bracket :: tail2 -> tail2
-                                         | _ -> raise (ParseError $"Missing closing bracket: {showExceptionPosition(ogTokens, tail.Length+1)}")
+            | Token.L_Parenth :: tail ->match expr tail with
+                                        | Token.R_Parenth :: tail2 -> tail2
+                                        | Token.Comma :: tail2 -> raise (ParseError $"Unexpected comma here: {Token.pointToToken(ogTokens, ogTokens.Length-tail2.Length-1)}")
+                                        | toks -> raise (ParseError $"Missing closing parenthesis: {Token.pointToToken(ogTokens, tail.Length+1)} \n toks = {Token.printTokens(toks)}")
             | Token.Function value :: tail -> funcall (Token.Function value::tail)
-            | _ -> raise (ParseError $"Expected number, variable, or closing bracket here: {showExceptionPosition(ogTokens, ogTokens.Length - tokens.Length)}")
+            | Token.L_Bracket :: tail ->match args tail with
+                                        | Token.R_Bracket :: tail2 -> tail2
+                                        | toks -> raise (ParseError $"Missing closing bracket: {Token.pointToToken(ogTokens, tail.Length+1)} \n toks = {Token.printTokens(toks)}")
+            | _ -> raise (ParseError $"Expected number, variable, or closing bracket here: {Token.pointToToken(ogTokens, ogTokens.Length - tokens.Length)}")
         let out = assign tokens
         if out.IsEmpty then
             out
         else
-            raise (ParseError $"Unexpected token here: {showExceptionPosition(tokens, tokens.Length - out.Length)}")
+            raise (ParseError $"Unexpected token here: {Token.pointToToken(tokens, tokens.Length - out.Length)}")
