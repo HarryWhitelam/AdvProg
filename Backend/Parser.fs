@@ -18,8 +18,9 @@ module Parser =
     //<expr>    ::= <unary>   | <expr>+<unary>   | <expr>-<term>
     //<unary>   ::= -<term>   | <term>
     //<term>    ::= <index>   | <term>*<index>  | <term>/<index>
-    //<index>   ::= <factor>  | <index>^<factor>
-    //<factor>  ::= Number | Variable | (<expr>)
+    //<index>   ::= <func>  | <index>^<func>
+    //<func>    ::= <final>  | Function(<final>, <final>)
+    //<final>   ::= Number | Variable | (<expr>)
 
     //Grammar in LL(1) BNF
     //<assign>  ::= <expr> | Variable:=<expr>
@@ -28,9 +29,10 @@ module Parser =
     //<unary>   ::= -<term> | <term>
     //<term>    ::= <index><term'>
     //<term'>   ::= *<index><term'> | /<index><term'> | ∅
-    //<index>   ::= <factor><index'>
-    //<index'>  ::= ^<factor><index'> | ∅
-    //<factor>  ::= Number | Variable | (<expr>)
+    //<index>   ::= <final><index'>
+    //<index'>  ::= ^<final><index'> | ∅
+    //<func>    ::= <final> | Function(<final>, <final>)
+    //<final>   ::= Number | Variable | (<expr>)
 
     let showExceptionPosition((tokens: Token list), position) =
         let mutable buffer = ""
@@ -40,7 +42,7 @@ module Parser =
                 let len = match t with
                           | Token.Number value -> value.Length
                           | Token.Variable value -> value.Length
-                          | Token.Reserved value -> value.Length
+                          | Token.Function value -> value.Length
                           | Token.Assign -> 2
                           | _ -> 1
                 buffer <- buffer + String.replicate len " "
@@ -70,18 +72,27 @@ module Parser =
             | Token.Times  :: tail -> (index >> term_pr) tail
             | Token.Divide :: tail -> (index >> term_pr) tail
             | _ -> tokens
-        and index tokens = (factor >> index_pr) tokens
+        and index tokens = (func >> index_pr) tokens
         and index_pr tokens =
             match tokens with
-            | Token.Indice :: tail -> (factor >> index_pr) tail
+            | Token.Indice :: tail -> (func >> index_pr) tail
             | _ -> tokens
-        and factor tokens =
+        and func tokens =
             match tokens with
-            | Token.Number value   :: tail -> tail
-            | Token.Variable value :: tail -> tail
-            | Token.L_Bracket ::tail -> match expr tail with
-                                        | Token.R_Bracket :: tail -> tail
-                                        | _ -> raise (ParseError $"Missing closing bracket: {showExceptionPosition(ogTokens, tail.Length)}")
+            | Token.Function _value :: Token.L_Bracket :: tail -> match final tail with
+                                                                  | Token.Comma :: tail2 -> match final tail2 with
+                                                                                            | Token.R_Bracket :: tail3 -> tail3
+                                                                                            | _ -> raise (ParseError $"Missing closing bracket: {showExceptionPosition(ogTokens, tail.Length + tail2.Length)}")
+                                                                  | Token.R_Bracket :: tail2 -> tail2
+                                                                  | _ -> raise (ParseError $"Missing comma in function: {showExceptionPosition(ogTokens, (ogTokens.Length-tail.Length)+1)}")
+            | _ -> final tokens
+        and final tokens =
+            match tokens with
+            | Token.Number _value   :: tail -> tail
+            | Token.Variable _value :: tail -> tail
+            | Token.L_Bracket :: tail -> match expr tail with
+                                         | Token.R_Bracket :: tail2 -> tail2
+                                         | _ -> raise (ParseError $"Missing closing bracket: {showExceptionPosition(ogTokens, tail.Length+1)}")
             | _ ->         
                 raise (ParseError $"Expected number or variable here: {showExceptionPosition(ogTokens, ogTokens.Length - tokens.Length)}")
         let out = assign tokens

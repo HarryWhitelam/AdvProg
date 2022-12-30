@@ -10,7 +10,7 @@ namespace Backend
 //*************************************************************************
 
 type Token = 
-    Plus | Minus | Times | Divide | L_Bracket | R_Bracket | Indice | Assign | Number of string | Variable of string | Reserved of string | Comma
+    Plus | Minus | Times | Divide | L_Bracket | R_Bracket | Indice | Assign | Number of string | Variable of string | Function of string | Comma
     
     override this.ToString() = 
             match this with
@@ -24,7 +24,7 @@ type Token =
             | Assign -> ":="
             | Number value -> value
             | Variable value -> value
-            | Reserved value -> value
+            | Function value -> value
             | Comma -> ","
 
     static member printTokens tokens =
@@ -68,7 +68,9 @@ module Lexer =
                                                             Token.Number finVal :: consume rest
             | var::tail when (System.Char.IsLetter var) ->  let (rest, finStr) = catchVar (tail, (string)var)
                                                             match finStr with
-                                                            | "root" ->  Token.Reserved finStr :: consume rest
+                                                            | "nroot" -> Token.Function finStr :: consume rest
+                                                            | "log"  -> Token.Function finStr :: consume rest
+                                                            | "logn" -> Token.Function finStr :: consume rest
                                                             | _ ->      Token.Variable finStr :: consume rest
             | spc::tail when (System.Char.IsWhiteSpace spc) -> consume tail
             | _ -> raise (LexerError $"Undefined character: {input[0]}")
