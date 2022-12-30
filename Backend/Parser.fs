@@ -11,7 +11,7 @@ namespace Backend
 
 module Parser =
 
-    exception ParseError of string
+    type ParseError (message:string) = inherit System.Exception(message)
 
     //Grammar in standard BNF
     //<assign>  ::= <expr>      | Variable:=<expr>

@@ -6,12 +6,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace AdvProg
+namespace Frontend
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
+    public enum Theme
+    {
+        Light,
+        Dark,
+        HighContrast
+    }
     public partial class App : Application
     {
+        
     }
 }

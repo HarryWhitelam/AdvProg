@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Frontend;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace AdvProg
 {
@@ -23,8 +13,27 @@ namespace AdvProg
             DataContext = new ViewModel();
         }
 
+        public Theme Theme { get; set; }
+
+        public void ChangeTheme(Theme newTheme)
+        {
+            this.Resources.MergedDictionaries.Clear();
+
+            this.Theme = newTheme;
+            this.Resources.MergedDictionaries.Add(new ResourceDictionary());
+            this.Resources.MergedDictionaries[0].Source =
+                new Uri($"/resources/themes/{Theme}.xaml", UriKind.Relative);
+        }
+
         private void ButtonDelVar_Click(object sender, RoutedEventArgs e)
         {
+            if (Theme is Theme.Dark)
+                ChangeTheme(Theme.Light);
+            else if (Theme is Theme.Light)
+                ChangeTheme(Theme.HighContrast);
+            else if (Theme is Theme.HighContrast)
+                ChangeTheme(Theme.Dark);
+
             if ((varNames.SelectedIndex == -1) && (varValues.SelectedIndex == -1))
             {
                 MessageBox.Show("Error: please select a variable for deletion.");
@@ -44,13 +53,24 @@ namespace AdvProg
                 varNames.Items.Remove(varNames.Items.GetItemAt(index));
                 varValues.Items.Remove(varValues.Items.GetItemAt(index));
             }
-//             Frontend.GraphWindow graphWindow = new Frontend.GraphWindow();
-//             graphWindow.Show();
         }
 
         private void RootShortcut_Click(object sender, RoutedEventArgs e)
         {
-            RootPopUp rootPopUp = new RootPopUp(1);
+            int type = 0;
+            if (sender == rootButton)
+            {
+                type = 1;
+            }
+            else if (sender == powerButton)
+            {
+                type = 2;
+            }
+            else if (sender == logButton)
+            {
+                type = 3;
+            }
+            RootPopUp rootPopUp = new RootPopUp(type);
             rootPopUp.Show();
         }
     }

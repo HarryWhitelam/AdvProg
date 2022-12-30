@@ -6,11 +6,19 @@
         xmlns:local="clr-namespace:AdvProg"
         xmlns:frontend="clr-namespace:Frontend"
         mc:Ignorable="d"
-        Title="Baltam" Height="750" Width="800">
+        Title="Baltam" Height="750" Width="1000"
+        Foreground="{DynamicResource ResourceKey=FontBrush}"
+        Background="{DynamicResource ResourceKey=BackgroundBrush}">
 
     <Window.Resources>
-        <frontend:HalfSideConverter x:Key="halfConverter" />
-        <frontend:ThirdSideConverter x:Key="thirdConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="resources/themes/highContrast.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <frontend:HalfSideConverter x:Key="halfConverter" />
+            <frontend:ThirdSideConverter x:Key="thirdConverter" />
+            <frontend:FifthSideConverter x:Key="fifthConverter" />
+        </ResourceDictionary>
     </Window.Resources>
 
     <Window.InputBindings>
@@ -37,7 +45,7 @@
 
             <TextBlock Grid.Row="0" Height="15pt" Name="iwTextBlock">Input Window</TextBlock>
 
-            <Border Grid.Row="1" BorderBrush="#FFABADB3" BorderThickness="1, 1, 1, 1">
+            <Border Grid.Row="1" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" BorderThickness="1, 1, 1, 1">
                 <!--INPUT CURSOR AND FIELD-->
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -45,14 +53,26 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" Name="cursorWindow" BorderBrush="{x:Null}" IsReadOnly="True" Background="{x:Null}" FontFamily="Consolas">>></TextBox>
-                    <TextBox Grid.Column="1" Name="inputWindow" BorderBrush="{x:Null}" Background="{x:Null}" FontFamily="Consolas"></TextBox>
+                    <TextBox Grid.Column="0" Name="cursorWindow" BorderBrush="{x:Null}" IsReadOnly="True" FontFamily="Consolas" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">>></TextBox>
+                    <RichTextBox Grid.Column="1" Height ="auto" Name="printWindow" VerticalAlignment="Top" BorderBrush="{x:Null}" IsReadOnly="True" FontFamily="Consolas" IsHitTestVisible="False" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">
+                        <FlowDocument>
+                            <Paragraph></Paragraph>
+                        </FlowDocument>
+                    </RichTextBox>
+                    <TextBox Grid.Column="1" Name="inputWindow" BorderBrush="{x:Null}" TextWrapping="Wrap" Height="auto" KeyboardNavigation.ControlTabNavigation="None" FontFamily="Consolas" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">
+                        <TextBox.InputBindings>
+                            <KeyBinding Command="{Binding UpHistoryCommand}" Key="Up" />
+                            <KeyBinding Command="{Binding DownHistoryCommand}" Key="Down" />
+                        </TextBox.InputBindings>
+                    </TextBox>
                 </Grid>
             </Border>
         </Grid>
-        <Expander Background="#FFEFEFEF" Header="Function Shortcuts" Width="{Binding ActualWidth, Converter={StaticResource halfConverter}, ElementName=iwTextBlock}" VerticalAlignment="Top" HorizontalAlignment="Right">
-            <StackPanel Grid.Row="0" Height="15pt">
-                <Button Content="ROOT" Click="RootShortcut_Click"/>
+        <Expander Header="Function Shortcuts" Width="{Binding ActualWidth, Converter={StaticResource halfConverter}, ElementName=iwTextBlock}" VerticalAlignment="Top" HorizontalAlignment="Right" Background="{DynamicResource ResourceKey=ExpanderBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}">
+            <StackPanel Grid.Row="0" Height="60pt">
+                <Button Name="rootButton" Content="ROOT" Click="RootShortcut_Click" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+                <Button Name="powerButton" Content="POWER" Click="RootShortcut_Click" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+                <Button Name="logButton" Content="LOGARITHM" Click="RootShortcut_Click" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
             </StackPanel>
         </Expander>
 
@@ -68,15 +88,11 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0">Workstation</TextBlock>
-            <Button Grid.Row="0" Grid.Column="1" x:Name="varDel" Height="15pt" Click="ButtonDelVar_Click">Delete</Button>
+            <Button Grid.Row="0" Grid.Column="1" x:Name="varDel" Height="15pt" Click="ButtonDelVar_Click" Background="{DynamicResource ResourceKey=ControlBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}">Delete</Button>
 
-            <ListBox Grid.Row="1" Grid.Column="0" x:Name="varNames" FontFamily="Consolas"></ListBox>
-            <ListBox Grid.Row="1" Grid.Column="1" x:Name="varValues" FontFamily="Consolas"></ListBox>
+            <ListBox Grid.Row="1" Grid.Column="0" x:Name="varNames" FontFamily="Consolas" Background="{DynamicResource ResourceKey=BackgroundBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+            <ListBox Grid.Row="1" Grid.Column="1" x:Name="varValues" FontFamily="Consolas" Background="{DynamicResource ResourceKey=BackgroundBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
         </Grid>
-
-        <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,0,0"/>
-
-
     </Grid>
 
 </Window>

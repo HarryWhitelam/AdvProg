@@ -2,21 +2,17 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <ApplicationIcon />
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="resources\root.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <COMReference Include="{bee4bfec-6683-3e67-9167-3c0cbc68f40a}">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>4</VersionMinor>
-      <VersionMajor>2</VersionMajor>
-      <Guid>bee4bfec-6683-3e67-9167-3c0cbc68f40a</Guid>
-    </COMReference>
+    <Compile Remove="resources\images\**" />
+    <EmbeddedResource Remove="resources\images\**" />
+    <None Remove="resources\images\**" />
+    <Page Remove="resources\images\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="resources\root.png" />
+    <Folder Include="resources\themes\" />
   </ItemGroup>
 
 </Project>
