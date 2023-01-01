@@ -103,7 +103,8 @@ namespace AdvProg
 
                     if (input.Contains("plot"))
                     {
-
+                        Frontend.OxyplotGraphWindow OPGW = new Frontend.OxyplotGraphWindow();
+                        OPGW.Show();
                     }
                     else if (input.Contains("error"))
                     {
