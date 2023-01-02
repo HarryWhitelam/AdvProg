@@ -11,10 +11,6 @@
         <local:PlotViewModel/>
     </Window.DataContext>
     <Grid>
-        <oxy:Plot Title="{Binding Title}">
-            <oxy:Plot.Series>
-                <oxy:LineSeries ItemsSource="{Binding Points}"/>
-            </oxy:Plot.Series>
-        </oxy:Plot>
+        <oxy:PlotView Model="{Binding MyModel}"/>
     </Grid>
 </Window>

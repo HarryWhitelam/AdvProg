@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Windows.Media;
 using System.Linq;
 using System.Collections;
+using System.Text.RegularExpressions;
 
 namespace AdvProg
 {
@@ -103,6 +104,17 @@ namespace AdvProg
 
                     if (input.Contains("plot"))
                     {
+                        string strtlinePattern = @"plot y=\dx\+\d";
+                        Match m = Regex.Match(input, strtlinePattern, RegexOptions.IgnoreCase);
+                        if (m.Success)
+                        {
+                            string[] inputArray = input.Split(" ");
+                            for (int i = 1; i < inputArray.Length; i++)
+                            {
+                                string output = inputArray[i];
+                                PrintResult(output, output);
+                            }
+                        }
                         Frontend.OxyplotGraphWindow OPGW = new Frontend.OxyplotGraphWindow();
                         OPGW.Show();
                     }
