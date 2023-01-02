@@ -13,7 +13,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="resources/themes/light.xaml" />
+                <ResourceDictionary Source="resources/themes/dark.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <frontend:HalfSideConverter x:Key="halfConverter" />
             <frontend:ThirdSideConverter x:Key="thirdConverter" />
@@ -59,7 +59,7 @@
                             <Paragraph></Paragraph>
                         </FlowDocument>
                     </RichTextBox>
-                    <TextBox Grid.Column="1" Name="inputWindow" BorderBrush="{x:Null}" TextWrapping="Wrap" Height="auto" KeyboardNavigation.ControlTabNavigation="None" FontFamily="Consolas" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">
+                    <TextBox Grid.Column="1" Name="inputWindow" BorderBrush="{x:Null}" TextWrapping="Wrap" Height="auto" KeyboardNavigation.ControlTabNavigation="None" FontFamily="Consolas" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}" CaretBrush="{DynamicResource ResourceKey=CaretBrush}">
                         <TextBox.InputBindings>
                             <KeyBinding Command="{Binding UpHistoryCommand}" Key="Up" />
                             <KeyBinding Command="{Binding DownHistoryCommand}" Key="Down" />
@@ -90,8 +90,8 @@
             <TextBlock Grid.Row="0">Workstation</TextBlock>
             <Button Grid.Row="0" Grid.Column="1" x:Name="varDel" Height="15pt" Click="ButtonDelVar_Click" Background="{DynamicResource ResourceKey=ControlBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}">Delete</Button>
 
-            <ListBox Grid.Row="1" Grid.Column="0" x:Name="varNames" FontFamily="Consolas" Background="{DynamicResource ResourceKey=BackgroundBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
-            <ListBox Grid.Row="1" Grid.Column="1" x:Name="varValues" FontFamily="Consolas" Background="{DynamicResource ResourceKey=BackgroundBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+            <ListBox Grid.Row="1" Grid.Column="0" x:Name="varNames" FontFamily="Consolas" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+            <ListBox Grid.Row="1" Grid.Column="1" x:Name="varValues" FontFamily="Consolas" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
         </Grid>
     </Grid>
 

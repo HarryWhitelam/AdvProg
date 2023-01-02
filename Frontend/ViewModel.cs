@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.Windows.Media;
 using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
+using Microsoft.FSharp.Collections;
 
 namespace AdvProg
 {
@@ -48,8 +50,8 @@ namespace AdvProg
                 inputWindow.AppendText(Environment.NewLine);
                 cursorWindow.AppendText(Environment.NewLine);
             }
-            
-            inputWindow.ScrollToLine(inputWindow.LineCount-1);
+
+            inputWindow.ScrollToLine(inputWindow.LineCount - 1);
             inputWindow.Select(inputWindow.Text.Length, 0);
 
             cursorWindow.AppendText(">>");
@@ -84,6 +86,25 @@ namespace AdvProg
             cursorWindow.ScrollToEnd();
         }
 
+        public void UpdateWorkstation()
+        {
+            ListBox varNames = (ListBox)Application.Current.MainWindow.FindName("varNames");
+            ListBox varValues = (ListBox)Application.Current.MainWindow.FindName("varValues");
+
+            foreach (KeyValuePair<string, string> entry in Interpreter.getVarStore())
+            {
+                if (!varNames.Items.Contains(entry.Key))
+                {
+                    varNames.Items.Add(entry.Key);
+                    varValues.Items.Add(entry.Value);
+                }
+                else
+                {
+                    varValues.Items[varNames.Items.IndexOf(entry.Key)] = entry.Value;
+                }
+            }
+        }
+
         private ICommand returnCommand;
         public ICommand ReturnCommand
         {
@@ -105,16 +126,16 @@ namespace AdvProg
                     {
 
                     }
-                    else if (input.Contains("error"))
-                    {
-                        PrintError("ERROR TEST <-- this text should display in red", input);
-                    }
                     else
                     {
                         try
                         {
-                            PrintResult(Interpreter.interpret(input), input);
                             var variableStore = Interpreter.updateVarStore;
+                            PrintResult(Interpreter.interpret(input), input);
+                            if (input.Contains(":="))
+                            {
+                                UpdateWorkstation();
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -154,6 +175,7 @@ namespace AdvProg
                         {
                             index = varValues.SelectedIndex;
                         }
+                        Interpreter.removeVarStore((string)varNames.Items[index]);
                         varNames.Items.Remove(varNames.Items.GetItemAt(index));
                         varValues.Items.Remove(varValues.Items.GetItemAt(index));
                     }
