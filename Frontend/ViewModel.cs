@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.Windows.Media;
 using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
+using Microsoft.FSharp.Collections;
 using System.Text.RegularExpressions;
 
 namespace AdvProg
@@ -49,8 +51,8 @@ namespace AdvProg
                 inputWindow.AppendText(Environment.NewLine);
                 cursorWindow.AppendText(Environment.NewLine);
             }
-            
-            inputWindow.ScrollToLine(inputWindow.LineCount-1);
+
+            inputWindow.ScrollToLine(inputWindow.LineCount - 1);
             inputWindow.Select(inputWindow.Text.Length, 0);
 
             cursorWindow.AppendText(">>");
@@ -83,6 +85,25 @@ namespace AdvProg
 
             cursorWindow.AppendText(">>");
             cursorWindow.ScrollToEnd();
+        }
+
+        public void UpdateWorkstation()
+        {
+            ListBox varNames = (ListBox)Application.Current.MainWindow.FindName("varNames");
+            ListBox varValues = (ListBox)Application.Current.MainWindow.FindName("varValues");
+
+            foreach (KeyValuePair<string, string> entry in Interpreter.getVarStore())
+            {
+                if (!varNames.Items.Contains(entry.Key))
+                {
+                    varNames.Items.Add(entry.Key);
+                    varValues.Items.Add(entry.Value);
+                }
+                else
+                {
+                    varValues.Items[varNames.Items.IndexOf(entry.Key)] = entry.Value;
+                }
+            }
         }
 
         private ICommand returnCommand;
@@ -118,25 +139,46 @@ namespace AdvProg
                         Frontend.OxyplotGraphWindow OPGW = new Frontend.OxyplotGraphWindow();
                         OPGW.Show();
                     }
-                    else if (input.Contains("error"))
-                    {
-                        PrintError("ERROR TEST <-- this text should display in red", input);
-                    }
                     else
                     {
                         try
                         {
-                            PrintResult(Interpreter.interpret(input), input);
                             var variableStore = Interpreter.updateVarStore;
+                            PrintResult(Interpreter.interpret(input), input);
+                            if (input.Contains(":="))
+                            {
+                                UpdateWorkstation();
+                            }
                         }
                         catch (Exception ex)
                         {
-                            //PrintError(ex.Message[(ex.Message.IndexOf("\"") + 1)..(ex.Message.Length - 1)], input);
                             PrintError(ex.Message, input);
                         }
                     }
                     inputSave = "";
                     historyIndex = -1;
+                });
+            }
+        }
+
+        private ICommand backCommand;
+        public ICommand BackCommand
+        {
+            get
+            {
+                return backCommand ??= new ActionCommand(() =>
+                {
+                    TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+                    string currentText = inputWindow.GetLineText(inputWindow.LineCount - 1);
+
+                    if (currentText != "")
+                    {
+                        RemoveCurrentLineText(inputWindow);
+                        inputWindow.AppendText(currentText.Remove(currentText.Length - 1));
+
+                        inputWindow.SelectionStart = inputWindow.Text.Length;
+                        inputWindow.SelectionLength = 0;
+                    }
                 });
             }
         }
@@ -167,6 +209,7 @@ namespace AdvProg
                         {
                             index = varValues.SelectedIndex;
                         }
+                        Interpreter.removeVarStore((string)varNames.Items[index]);
                         varNames.Items.Remove(varNames.Items.GetItemAt(index));
                         varValues.Items.Remove(varValues.Items.GetItemAt(index));
                     }
@@ -182,22 +225,22 @@ namespace AdvProg
                 return upHistoryCommand ??= new ActionCommand(() =>
                 {
                     TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
-                    if (inputSave == "")
+                    if (inputSave == "" && historyIndex == -1)
                     {
                         inputSave = inputWindow.GetLineText(inputWindow.LineCount - 1);
                     }
-                        if (inputHistory.Length > 0)
+                    if (inputHistory[0] != null)
+                    {
+                        if (historyIndex < 9 && historyIndex < inputHistory.Count()-1)
                         {
-                            if (historyIndex < 9 && historyIndex < inputHistory.Count())
-                            {
-                                RemoveCurrentLineText(inputWindow);
-                                historyIndex++;
-                                inputWindow.AppendText(inputHistory[historyIndex]);
-                            }
-                        
-                            inputWindow.SelectionStart = inputWindow.Text.Length;
-                            inputWindow.SelectionLength = 0;
+                            RemoveCurrentLineText(inputWindow);
+                            historyIndex++;
+                            inputWindow.AppendText(inputHistory[historyIndex]);
                         }
+                        
+                        inputWindow.SelectionStart = inputWindow.Text.Length;
+                        inputWindow.SelectionLength = 0;
+                    }
                 });
             }
         }
@@ -217,6 +260,7 @@ namespace AdvProg
                             RemoveCurrentLineText(inputWindow);
                             historyIndex--;
                             inputWindow.AppendText(inputSave);
+                            inputSave = "";
                         }
                         else if (historyIndex == -1)
                         {

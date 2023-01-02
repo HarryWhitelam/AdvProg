@@ -1,4 +1,5 @@
-﻿using Frontend;
+﻿using Backend;
+using Frontend;
 using System;
 using System.Windows;
 using System.Windows.Navigation;
@@ -11,16 +12,14 @@ namespace AdvProg
         {
             InitializeComponent();
             DataContext = new ViewModel();
+            this.Theme = Theme.HighContrast; // HARD CODED IN BOTH MAINWINDOW FILES
         }
 
         public Theme Theme { get; set; }
 
         public void ChangeTheme(Theme newTheme)
         {
-            this.Resources.MergedDictionaries.Clear();
-
             this.Theme = newTheme;
-            this.Resources.MergedDictionaries.Add(new ResourceDictionary());
             this.Resources.MergedDictionaries[0].Source =
                 new Uri($"/resources/themes/{Theme}.xaml", UriKind.Relative);
         }
@@ -50,6 +49,7 @@ namespace AdvProg
                 {
                     index = varValues.SelectedIndex;
                 }
+                Interpreter.removeVarStore((string)varNames.Items[index]);
                 varNames.Items.Remove(varNames.Items.GetItemAt(index));
                 varValues.Items.Remove(varValues.Items.GetItemAt(index));
             }
@@ -70,7 +70,7 @@ namespace AdvProg
             {
                 type = 3;
             }
-            RootPopUp rootPopUp = new RootPopUp(type);
+            RootPopUp rootPopUp = new RootPopUp(type, this.Theme);
             rootPopUp.Show();
         }
     }
