@@ -139,12 +139,33 @@ namespace AdvProg
                         }
                         catch (Exception ex)
                         {
-                            //PrintError(ex.Message[(ex.Message.IndexOf("\"") + 1)..(ex.Message.Length - 1)], input);
                             PrintError(ex.Message, input);
                         }
                     }
                     inputSave = "";
                     historyIndex = -1;
+                });
+            }
+        }
+
+        private ICommand backCommand;
+        public ICommand BackCommand
+        {
+            get
+            {
+                return backCommand ??= new ActionCommand(() =>
+                {
+                    TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+                    string currentText = inputWindow.GetLineText(inputWindow.LineCount - 1);
+
+                    if (currentText != "")
+                    {
+                        RemoveCurrentLineText(inputWindow);
+                        inputWindow.AppendText(currentText.Remove(currentText.Length - 1));
+
+                        inputWindow.SelectionStart = inputWindow.Text.Length;
+                        inputWindow.SelectionLength = 0;
+                    }
                 });
             }
         }
@@ -191,7 +212,7 @@ namespace AdvProg
                 return upHistoryCommand ??= new ActionCommand(() =>
                 {
                     TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
-                    if (inputSave == "")
+                    if (inputSave == "" && historyIndex == -1)
                     {
                         inputSave = inputWindow.GetLineText(inputWindow.LineCount - 1);
                     }
@@ -226,6 +247,7 @@ namespace AdvProg
                             RemoveCurrentLineText(inputWindow);
                             historyIndex--;
                             inputWindow.AppendText(inputSave);
+                            inputSave = "";
                         }
                         else if (historyIndex == -1)
                         {
