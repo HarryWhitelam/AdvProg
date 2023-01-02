@@ -1,7 +1,7 @@
 ﻿namespace Backend
 
 module Interpreter =
-    let interpret expression = 
+    let interpret(expression) = 
         if Seq.length expression = 0 then null
         else 
             let tokens = Lexer.lex expression
@@ -9,4 +9,7 @@ module Interpreter =
                 (string) (Executor.shuntingYard tokens)
             else null
 
-    let updateVarStore = Executor.variableStore
+    let getVarStore() = Executor.variableStore
+
+    let removeVarStore(key:string) = 
+        Executor.variableStore <- Executor.variableStore.Remove(key)
