@@ -48,17 +48,17 @@ namespace Frontend
             {
                 Title = "y=4x+4"
             };
-            this.MyModel.Series.Add(new FunctionSeries(g, min, max, 0.1, "y=4x+c"));
+            this.MyModel.Series.Add(new FunctionSeries(g, min, max, 0.1, "y=4x+4"));
             this.MyModel.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Bottom,
-                Minimum = 0,
+                Minimum = -5,
                 Maximum = 5
             });
             this.MyModel.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Left,
-                Minimum = 0,
+                Minimum = -5,
                 Maximum = 5
             });
         }

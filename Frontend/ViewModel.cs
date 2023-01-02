@@ -125,15 +125,19 @@ namespace AdvProg
 
                     if (input.Contains("plot"))
                     {
+                        // creating a Regex expression to pick up the y=mx+c pattern
                         string strtlinePattern = @"plot y=\dx\+\d";
                         Match m = Regex.Match(input, strtlinePattern, RegexOptions.IgnoreCase);
+                        // if the pattern matches the input
                         if (m.Success)
                         {
                             //Splitting the equation from the plot
                             string[] inputArray = input.Split(" ");
+                            // split the "plot" from the "y=mx+c"
                             for (int i = 1; i < inputArray.Length; i++)
                             {
                                 string output = inputArray[i];
+                                // printing the test 
                                 PrintResult(output, output);
                             }
                         }
