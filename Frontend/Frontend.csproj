@@ -9,10 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="resources\images\**" />
-    <EmbeddedResource Remove="resources\images\**" />
-    <None Remove="resources\images\**" />
-    <Page Remove="resources\images\**" />
+    <None Remove="resources\log.PNG" />
+    <None Remove="resources\logInvert.png" />
+    <None Remove="resources\root.png" />
+    <None Remove="resources\rootInvert.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +27,13 @@
 
   <ItemGroup>
     <Folder Include="resources\themes\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="resources\log.PNG" />
+    <Resource Include="resources\logInvert.png" />
+    <Resource Include="resources\root.png" />
+    <Resource Include="resources\rootInvert.png" />
   </ItemGroup>
 
 </Project>

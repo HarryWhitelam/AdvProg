@@ -173,18 +173,18 @@ namespace AdvProg
                     {
                         inputSave = inputWindow.GetLineText(inputWindow.LineCount - 1);
                     }
-                        if (inputHistory.Length > 0)
+                    if (inputHistory[0] != null)
+                    {
+                        if (historyIndex < 9 && historyIndex < inputHistory.Count()-1)
                         {
-                            if (historyIndex < 9 && historyIndex < inputHistory.Count())
-                            {
-                                RemoveCurrentLineText(inputWindow);
-                                historyIndex++;
-                                inputWindow.AppendText(inputHistory[historyIndex]);
-                            }
-                        
-                            inputWindow.SelectionStart = inputWindow.Text.Length;
-                            inputWindow.SelectionLength = 0;
+                            RemoveCurrentLineText(inputWindow);
+                            historyIndex++;
+                            inputWindow.AppendText(inputHistory[historyIndex]);
                         }
+                        
+                        inputWindow.SelectionStart = inputWindow.Text.Length;
+                        inputWindow.SelectionLength = 0;
+                    }
                 });
             }
         }

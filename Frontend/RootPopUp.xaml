@@ -6,12 +6,19 @@
         xmlns:local="clr-namespace:AdvProg"
         xmlns:frontend="clr-namespace:Frontend"
         mc:Ignorable="d"
-        Title="RootPopUp" SizeToContent="WidthAndHeight">
+        Title="PopUp" SizeToContent="WidthAndHeight"
+        Foreground="{DynamicResource ResourceKey=FontBrush}"
+        Background="{DynamicResource ResourceKey=BackgroundBrush}">
 
     <Window.Resources>
-        <frontend:HalfSideConverter x:Key="halfConverter" />
-        <frontend:ThirdSideConverter x:Key="thirdConverter" />
-        <frontend:FifthSideConverter x:Key="fifthConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="resources/themes/light.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <frontend:HalfSideConverter x:Key="halfConverter" />
+            <frontend:ThirdSideConverter x:Key="thirdConverter" />
+            <frontend:FifthSideConverter x:Key="fifthConverter" />
+        </ResourceDictionary>
     </Window.Resources>
 
     <Grid>
@@ -20,14 +27,14 @@
             <RowDefinition Height="*" Name="imgRow"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Name="TextRow"></TextBlock>
+        <TextBlock Grid.Row="0" Name="TextRow" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}"></TextBlock>
 
 
-        <Image Grid.Row="1" Name="popUpImg" Height="{Binding ActualWidth, Converter={StaticResource fifthConverter}, ElementName=TextRow}"/>
-        <TextBox Name="input2" Grid.Row="1" Margin="185,107,75,127"/>
-        <TextBox Name="input1" Grid.Row="1" Margin="135,142,165,90"/>
-        <TextBlock Grid.Row="1" Width="50pt" Height="15pt" Margin="281,224,2,20" TextAlignment="Right" Foreground="Red" Visibility="Hidden" Name="InputWarning">Input invalid!</TextBlock>
+        <Image Grid.Row="1" Name="popUpImg" Height="{Binding ActualWidth, Converter={StaticResource fifthConverter}, ElementName=TextRow}" />
+        <TextBox Name="input2" Grid.Row="1" Margin="185,107,75,127" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}" />
+        <TextBox Name="input1" Grid.Row="1" Margin="135,142,165,90" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}" />
+        <TextBlock Grid.Row="1" Width="50pt" Height="15pt" Margin="281,224,2,20" TextAlignment="Right" Foreground="{DynamicResource ResourceKey=ErrorBrush}" Visibility="Hidden" Name="InputWarning">Input invalid!</TextBlock>
 
-        <Button Grid.Row="1" Height="15pt" Width="50pt" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="ShortCutSubmit_Click">Submit</Button>
+        <Button Grid.Row="1" Height="15pt" Width="50pt" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="ShortCutSubmit_Click" Background="{DynamicResource ResourceKey=ControlBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}">Submit</Button>
     </Grid>
 </Window>
