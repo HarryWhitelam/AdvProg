@@ -61,6 +61,7 @@
                     </RichTextBox>
                     <TextBox Grid.Column="1" Name="inputWindow" BorderBrush="{x:Null}" TextWrapping="Wrap" Height="auto" KeyboardNavigation.ControlTabNavigation="None" FontFamily="Consolas" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}" CaretBrush="{DynamicResource ResourceKey=CaretBrush}">
                         <TextBox.InputBindings>
+                            <KeyBinding Command="{Binding BackCommand}" Key="Backspace" />
                             <KeyBinding Command="{Binding UpHistoryCommand}" Key="Up" />
                             <KeyBinding Command="{Binding DownHistoryCommand}" Key="Down" />
                         </TextBox.InputBindings>
