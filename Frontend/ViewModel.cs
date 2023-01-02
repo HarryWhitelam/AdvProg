@@ -108,6 +108,7 @@ namespace AdvProg
                         Match m = Regex.Match(input, strtlinePattern, RegexOptions.IgnoreCase);
                         if (m.Success)
                         {
+                            //Splitting the equation from the plot
                             string[] inputArray = input.Split(" ");
                             for (int i = 1; i < inputArray.Length; i++)
                             {

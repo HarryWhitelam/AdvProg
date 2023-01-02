@@ -14,18 +14,7 @@ namespace Frontend
     {
         public PlotViewModel()
         {
-            /*this.Title = "Test Plot";
-            this.Points = new List<DataPoint>
-                                {
-                                    new DataPoint(0,4),
-                                    new DataPoint(10,13),
-                                    new DataPoint(20,15),
-                                    new DataPoint(30,16),
-                                    new DataPoint(40,12),
-                                    new DataPoint(50,12)
-                                };*/
-
-            //Testing out Cos functions
+           
             double z = 5;
             double radiansX = (z * (Math.PI)) / 180;
             Func<double, double> f = (x) =>
@@ -34,10 +23,19 @@ namespace Frontend
                 return maths;
             };
 
-            int max = 200;
-            int min = -200;
+            /*
+            this.MyModel = new PlotModel
+            {
+                Title = "Cos Graph"
+            };
+            this.MyModel.Series.Add(new FunctionSeries(f, -200, 200, 0.1, "cos(x)"));
+           */
+
+            int max = 10;
+            int min = -10;
             int m = 4;
             int c = 4;
+           
             //Testing out y=mx+c functions
             Func<double, double> g = (x) =>
             {
@@ -48,9 +46,9 @@ namespace Frontend
 
             this.MyModel = new PlotModel
             {
-                Title = "Cos Graph"
+                Title = "y=4x+4"
             };
-            this.MyModel.Series.Add(new FunctionSeries(g, -10, 10, 0.1, "y=4x+c"));
+            this.MyModel.Series.Add(new FunctionSeries(g, min, max, 0.1, "y=4x+c"));
             this.MyModel.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Bottom,
