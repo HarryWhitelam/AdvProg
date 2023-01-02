@@ -11,7 +11,14 @@ module Interpreter =
                 (string) (Executor.shuntingYard tokens)
             else null
 
+
     let updateVarStore = Executor.variableStore
+
+    let getVarStore() = 
+        Executor.variableStore
+
+    let removeVarStore(key:string) = 
+        Executor.variableStore <- Executor.variableStore.Remove(key)
 
     let rec printTList (lst:list<Token>) : list<string> = 
         match lst with
