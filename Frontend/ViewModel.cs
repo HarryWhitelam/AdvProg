@@ -7,25 +7,36 @@ using System.Windows.Documents;
 using System.Diagnostics;
 using System.Windows.Media;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
-using Microsoft.FSharp.Collections;
 using System.Text.RegularExpressions;
 
 namespace AdvProg
 {
+    /// <summary>
+    /// Class <c>ViewModel</c> is used to control various elements of the GUI
+    /// </summary>
     public class ViewModel
     {
         public string[] inputHistory = new string[1];
         public int historyIndex = -1;
         public string inputSave = "";
 
+        /// <summary>
+        /// Method <c>CountRichLines</c> is used to count the number of lines the print will require
+        /// </summary>
+        /// <param name="resultString"></param> the string to be measured
+        /// <returns>Number of lines</returns>
         public int CountRichLines(String resultString)
         {
             string[] splitLines = resultString.Split(new[] {'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries);
+            Debug.WriteLine("NUM LINES: " + splitLines.Length);
             return splitLines.Length;
         }
 
+        /// <summary>
+        /// Method <c>RemoveCurrentLineText</c> removes the current entered line text in a given TextBox
+        /// </summary>
+        /// <param name="window"></param> the window/textbox that will be affected
         public void RemoveCurrentLineText(TextBox window)
         {
             if (window.GetLineText(window.LineCount - 1) != "")
@@ -34,6 +45,11 @@ namespace AdvProg
             }
         }
 
+        /// <summary>
+        /// Method <c>PrintResults</c> takes the input string and moves it to the PrintWindow along with the result
+        /// </summary>
+        /// <param name="result"></param> the result string to be printed
+        /// <param name="prompt"></param> the prompt which the user entered
         public void PrintResult(string result, string prompt)
         {
             TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
@@ -57,8 +73,14 @@ namespace AdvProg
 
             cursorWindow.AppendText(">>");
             cursorWindow.ScrollToEnd();
+            printWindow.ScrollToEnd();
         }
 
+        /// <summary>
+        /// Method <c>PrintError</c> is used when an error is printed, this is done in red with some formatting
+        /// </summary>
+        /// <param name="error"></param> the error message to be printed
+        /// <param name="prompt"></param> the prompt which the user entered
         public void PrintError(string error, string prompt)
         {
             TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
@@ -85,13 +107,18 @@ namespace AdvProg
 
             cursorWindow.AppendText(">>");
             cursorWindow.ScrollToEnd();
+            printWindow.ScrollToEnd();
         }
 
+        /// <summary>
+        /// Method <c>UpdateWorkstation</c> is used to synchronise the GUI workstation with the backend VariableStore
+        /// </summary>
         public void UpdateWorkstation()
         {
             ListBox varNames = (ListBox)Application.Current.MainWindow.FindName("varNames");
             ListBox varValues = (ListBox)Application.Current.MainWindow.FindName("varValues");
 
+            //Checks each pair to ensure all are present
             foreach (KeyValuePair<string, string> entry in Interpreter.getVarStore())
             {
                 if (!varNames.Items.Contains(entry.Key))
@@ -99,7 +126,7 @@ namespace AdvProg
                     varNames.Items.Add(entry.Key);
                     varValues.Items.Add(entry.Value);
                 }
-                else
+                else //replaces already assigned keys
                 {
                     varValues.Items[varNames.Items.IndexOf(entry.Key)] = entry.Value;
                 }
@@ -107,6 +134,9 @@ namespace AdvProg
         }
 
         private ICommand returnCommand;
+        /// <summary>
+        /// Method <c>ReturnCommand</c> is used with the return keybind to send prompts to the backend
+        /// </summary>
         public ICommand ReturnCommand
         {
             get
@@ -187,6 +217,9 @@ namespace AdvProg
         }
 
         private ICommand backCommand;
+        /// <summary>
+        /// Method <c>BackCommand</c> is used with the backspace keybind to handle character deletion. This ensures the user cannot delete previous prompts/move lines
+        /// </summary>
         public ICommand BackCommand
         {
             get
@@ -209,6 +242,9 @@ namespace AdvProg
         }
 
         private ICommand delVarCommand;
+        /// <summary>
+        /// Method <c>DelVarCommand</c> is used to delete a variable from the Workstation and hence the VariableStore
+        /// </summary>
         public ICommand DelVarCommand
         {
             get
@@ -243,6 +279,9 @@ namespace AdvProg
         }
 
         private ICommand upHistoryCommand;
+        /// <summary>
+        /// Method <c>UpHistoryCommand</c> is used with the up-arrow keybind to handle history viewing (ascends through the history array). 
+        /// </summary>
         public ICommand UpHistoryCommand
         {
             get
@@ -271,6 +310,9 @@ namespace AdvProg
         }
 
         private ICommand downHistoryCommand;
+        /// <summary>
+        /// Method <c>DownHistoryCommand</c> is used to descend through the history array using the down-arrow keybind. 
+        /// </summary>
         public ICommand DownHistoryCommand
         {
             get

@@ -9,13 +9,13 @@ using Frontend;
 
 namespace AdvProg
 {
-    public partial class RootPopUp : Window
+    public partial class PopUp : Window
     {
         // 1 - root
         // 2 - power
         // 3 - log
         int type;
-        public RootPopUp(int type, Theme theme)
+        public PopUp(int type, Theme theme)
         {
             InitializeComponent();
             DataContext = new ViewModel();

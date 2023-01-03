@@ -10,6 +10,9 @@
         Foreground="{DynamicResource ResourceKey=FontBrush}"
         Background="{DynamicResource ResourceKey=BackgroundBrush}">
 
+    
+    
+
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -53,13 +56,13 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" Name="cursorWindow" BorderBrush="{x:Null}" IsReadOnly="True" FontFamily="Consolas" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">>></TextBox>
-                    <RichTextBox Grid.Column="1" Height ="auto" Name="printWindow" VerticalAlignment="Top" BorderBrush="{x:Null}" IsReadOnly="True" FontFamily="Consolas" IsHitTestVisible="False" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">
+                    <TextBox Grid.Column="0" Name="cursorWindow" BorderBrush="{x:Null}" IsReadOnly="True" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">>></TextBox>
+                    <RichTextBox Grid.Column="1" Height ="auto" Name="printWindow" VerticalAlignment="Top" BorderBrush="{x:Null}" IsReadOnly="True" IsHitTestVisible="False" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">
                         <FlowDocument>
                             <Paragraph></Paragraph>
                         </FlowDocument>
                     </RichTextBox>
-                    <TextBox Grid.Column="1" Name="inputWindow" BorderBrush="{x:Null}" TextWrapping="Wrap" Height="auto" KeyboardNavigation.ControlTabNavigation="None" FontFamily="Consolas" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}" CaretBrush="{DynamicResource ResourceKey=CaretBrush}">
+                    <TextBox Grid.Column="1" Name="inputWindow" BorderBrush="{x:Null}" TextWrapping="Wrap" Height="auto" KeyboardNavigation.ControlTabNavigation="None" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}" CaretBrush="{DynamicResource ResourceKey=CaretBrush}">
                         <TextBox.InputBindings>
                             <KeyBinding Command="{Binding BackCommand}" Key="Backspace" />
                             <KeyBinding Command="{Binding UpHistoryCommand}" Key="Up" />
@@ -89,10 +92,12 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0">Workstation</TextBlock>
-            <Button Grid.Row="0" Grid.Column="1" x:Name="varDel" Height="15pt" Click="ButtonDelVar_Click" Background="{DynamicResource ResourceKey=ControlBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}">Delete</Button>
+            <Button Grid.Row="0" Grid.Column="1" x:Name="settingsButton" Height="15pt" Width="30pt" Click="SettingsButton_Click" Background="{DynamicResource ResourceKey=ControlBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" HorizontalAlignment="Right">
+                <Image Source="/resources/settings.png"></Image>
+            </Button>
 
-            <ListBox Grid.Row="1" Grid.Column="0" x:Name="varNames" FontFamily="Consolas" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
-            <ListBox Grid.Row="1" Grid.Column="1" x:Name="varValues" FontFamily="Consolas" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+            <ListBox Grid.Row="1" Grid.Column="0" x:Name="varNames" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+            <ListBox Grid.Row="1" Grid.Column="1" x:Name="varValues" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
         </Grid>
     </Grid>
 
