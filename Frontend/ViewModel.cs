@@ -157,9 +157,12 @@ namespace AdvProg
                     {
                         // creating a Regex expression to pick up the y=mx+c pattern
                         string strtlinePattern = @"plot y=\dx\+\d";
-                        Match m = Regex.Match(input, strtlinePattern, RegexOptions.IgnoreCase);
-                        // if the pattern matches the input
-                        if (m.Success)
+                        string polynomialPattern = @"\dx\^[0-9]+.*\dx.*\d";
+                        Match strtline = Regex.Match(input, strtlinePattern, RegexOptions.IgnoreCase);
+                        Match polynomial = Regex.Match(input, polynomialPattern, RegexOptions.IgnoreCase);
+
+                        // if the pattern matches the input for a straight line
+                        if (strtline.Success)
                         {
                             //Splitting the equation from the plot
                             string[] inputArray = input.Split(" ");
@@ -170,6 +173,23 @@ namespace AdvProg
                                 // printing the test 
                                 PrintResult(output, output);
                             }
+                            string leng = Convert.ToString(inputArray.Length);
+                            PrintResult(leng, leng);
+                        }
+                        else if (polynomial.Success)
+                        {
+                            string splitpattern = @"plot|y|=|\+|-";
+                            string[] inputArray = Regex.Split(input, splitpattern);
+                            for (int i = 0; i < inputArray.Length; i++)
+                            {
+                                string output = inputArray[i];
+                                // printing the test 
+                                PrintResult(output, output);
+                            }
+                            string result = string.Concat(inputArray);
+                            PrintResult(result, result);
+                            string leng = Convert.ToString(inputArray.Length);
+                            PrintResult(leng, leng);
                         }
                         Frontend.OxyplotGraphWindow OPGW = new Frontend.OxyplotGraphWindow();
                         OPGW.Show();
