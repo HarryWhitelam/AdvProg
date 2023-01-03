@@ -62,7 +62,7 @@ namespace Frontend
             Func<double, double> h = (x) =>
             {
                 double y = 0;
-                y = ((a * x) * (a * x)) + (b * x) + (c2);
+                y = ((a * x * x ) + (b * x) + (c2));
                 return y;
             };
             this.MyModel = new PlotModel
