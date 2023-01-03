@@ -143,6 +143,8 @@ namespace AdvProg
                                 // printing the test 
                                 PrintResult(output, output);
                             }
+                            string leng = Convert.ToString(inputArray.Length);
+                            PrintResult(leng, leng);
                         }
                         else if (polynomial.Success)
                         {
@@ -153,8 +155,11 @@ namespace AdvProg
                                 string output = inputArray[i];
                                 // printing the test 
                                 PrintResult(output, output);
-                                Console.WriteLine(inputArray);
                             }
+                            string result = string.Concat(inputArray);
+                            PrintResult(result, result);
+                            string leng = Convert.ToString(inputArray.Length);
+                            PrintResult(leng, leng);
                         }
                         Frontend.OxyplotGraphWindow OPGW = new Frontend.OxyplotGraphWindow();
                         OPGW.Show();

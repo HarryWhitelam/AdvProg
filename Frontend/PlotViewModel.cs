@@ -72,6 +72,11 @@ namespace Frontend
             };
             this.MyModel.Series.Add(new FunctionSeries(h, min, max, 0.1, "y = 6x^2 + 5x + 4"));
 
+            int[] equation = [5, 4, 3, 2, 1];
+            int lengthEq = equation.Length;
+            double y = 0;
+
+
 
             this.MyModel.Axes.Add(new LinearAxis
             {
