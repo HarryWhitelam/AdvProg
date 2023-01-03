@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using OxyPlot;
 using OxyPlot.Series;
 using OxyPlot.Axes;
+using System.Text.RegularExpressions;
 
 namespace Frontend
 {
@@ -72,9 +73,45 @@ namespace Frontend
             };
             this.MyModel.Series.Add(new FunctionSeries(h, min, max, 0.1, "y = 6x^2 + 5x + 4"));
 
-            int[] equation = [5, 4, 3, 2, 1];
+            //string[] equation = {"5x^4", "4x^3", "3x^2", "2x", "1"};
+            string[] equation = { "5x^3", "4x^2", "3x", "2" };
             int lengthEq = equation.Length;
             double y = 0;
+            double x = 2;
+            string splitpattern = @"x\^|x";
+            double[] calcValues = new double[lengthEq];
+            for (int i = 0; i < lengthEq; i++)
+            {
+                if (equation[i].Contains("^"))
+                {
+                    string[] inputSplit = Regex.Split(equation[i], splitpattern);
+                    double ax = Math.Pow(x, Double.Parse(inputSplit[1]));
+                    double a2 = (Double.Parse(inputSplit[0]) * ax);
+                    calcValues[i] = a2;
+                }
+                else if (equation[i].Contains("x"))
+                {
+                    string[] inputSplit = Regex.Split(equation[i], splitpattern);
+                    double d = (Double.Parse(inputSplit[0]) * x);
+                    calcValues[i] = d;
+
+                }
+                else
+                {
+                    calcValues[i] = Double.Parse(equation[i]);
+                }
+
+            }
+
+
+
+
+
+            foreach (double term in calcValues)
+            {
+                Console.WriteLine(term);
+            }
+
 
 
 
