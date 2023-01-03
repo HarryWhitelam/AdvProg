@@ -1,26 +1,36 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Frontend;
 
 namespace AdvProg
 {
-    public partial class RootPopUp : Window
+    public partial class PopUp : Window
     {
         // 1 - root
         // 2 - power
         // 3 - log
         int type;
-        public RootPopUp(int type)
+        public PopUp(int type, Theme theme)
         {
             InitializeComponent();
             DataContext = new ViewModel();
+            SetTheme(theme);
             this.type = type;
             ConstructFields();
+        }
+
+        public Theme Theme { get; set; }
+
+        public void SetTheme(Theme newTheme)
+        {
+            this.Theme = newTheme;
+            this.Resources.MergedDictionaries[0].Source =
+                new Uri($"/resources/themes/{Theme}.xaml", UriKind.Relative);
         }
 
         public void ConstructFields()
@@ -30,7 +40,10 @@ namespace AdvProg
                 case 1:
                     // root
                     TextRow.Text = "Root Function:";
-                    popUpImg.Source = new BitmapImage(new Uri("resources/root.png", UriKind.Relative));
+                    if (this.Theme == Theme.Light)
+                        popUpImg.Source = new BitmapImage(new Uri("/resources/root.png", UriKind.Relative));
+                    else
+                        popUpImg.Source = new BitmapImage(new Uri("/resources/rootInvert.png", UriKind.Relative));
                     input2.Width = 50;
                     input2.Height = 22;
                     input2.Margin = new Thickness(89, 102, 186, 142);
@@ -41,14 +54,16 @@ namespace AdvProg
                 case 2:
                     // power
                     TextRow.Text = "Power Function:";
-                    popUpImg.Source = new BitmapImage();
                     input2.Margin = new Thickness(187, 87, 117, 147);
                     input1.Margin = new Thickness(150, 122, 150, 95);
                     break;
                 case 3:
                     // log
                     TextRow.Text = "Logarithm Function:";
-                    popUpImg.Source = new BitmapImage(new Uri("resources/log.png", UriKind.Relative));
+                    if (this.Theme == Theme.Light)
+                        popUpImg.Source = new BitmapImage(new Uri("/resources/log.png", UriKind.Relative));
+                    else
+                        popUpImg.Source = new BitmapImage(new Uri("/resources/logInvert.png", UriKind.Relative));
                     popUpImg.Margin = new Thickness(-93, 97, 93, 97);
                     input2.Margin = new Thickness(185, 107, 75, 127);
                     input1.Margin = new Thickness(135, 142, 165, 90);

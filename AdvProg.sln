@@ -5,7 +5,12 @@ VisualStudioVersion = 16.0.31613.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Frontend", "Frontend\Frontend.csproj", "{3FFDBA7F-6158-4E99-AB26-D33D59AFFAFE}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Backend", "Backend\Backend.fsproj", "{E40D476B-2B6E-42D0-ACAE-DEE9F6D02115}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Backend", "Backend\Backend.fsproj", "{E40D476B-2B6E-42D0-ACAE-DEE9F6D02115}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{10C213C2-F1D1-43B3-BA17-0E5FC6F098CD}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

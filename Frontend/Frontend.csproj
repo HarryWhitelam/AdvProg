@@ -6,18 +6,24 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <ApplicationIcon />
     <StartupObject />
+	<DocumentationFile>resources/Documentation.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="resources\images\**" />
-    <EmbeddedResource Remove="resources\images\**" />
-    <None Remove="resources\images\**" />
-    <Page Remove="resources\images\**" />
+    <None Remove="resources\log.PNG" />
+    <None Remove="resources\logInvert.png" />
+    <None Remove="resources\root.png" />
+    <None Remove="resources\rootInvert.png" />
+    <None Remove="resources\settings.png" />
+    <None Remove="resources\settingsInvert.png" />
+    <None Remove="resources\UserSettings.xml" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="InteractiveDataDisplay.WPF" Version="1.0.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="OxyPlot.Core" Version="2.1.2" />
+    <PackageReference Include="OxyPlot.Wpf" Version="2.1.2" />
     <PackageReference Include="WPFToolkit.DataVisualization" Version="3.5.50211.1" />
   </ItemGroup>
 
@@ -26,7 +32,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="resources\themes\" />
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="resources\log.PNG" />
+    <Resource Include="resources\logInvert.png" />
+    <Resource Include="resources\root.png" />
+    <Resource Include="resources\rootInvert.png" />
+    <Resource Include="resources\settings.png" />
+    <Resource Include="resources\settingsInvert.png" />
+    <Resource Include="resources\UserSettings.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+
+    <Reference Include="OxyPlot">
+      <HintPath>\\ueahome4\stusci4\rhy18wxu\data\Downloads\OxyPlot\OxyPlot.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.Wpf">
+      <HintPath>\\ueahome4\stusci4\rhy18wxu\data\Downloads\OxyPlot\OxyPlot.Wpf.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
