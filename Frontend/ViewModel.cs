@@ -199,15 +199,16 @@ namespace AdvProg
                         try
                         {
                             var variableStore = Interpreter.getVarStore();
-                            PrintResult(Interpreter.interpret(input), input);
-                            if (input.Contains(":="))
+                            var result = Interpreter.interpret(input);
+                            PrintResult(result, input);
+                            if (result != null && result.Contains(":="))
                             {
                                 UpdateWorkstation();
                             }
                         }
                         catch (Exception ex)
                         {
-                            PrintError(ex.Message, input);
+                            PrintError(ex.Message[(ex.Message.IndexOf("\"") + 1)..ex.Message.Length], input);
                         }
                     }
                     inputSave = "";
