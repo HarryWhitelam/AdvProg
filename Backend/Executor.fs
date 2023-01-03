@@ -38,8 +38,8 @@ module Executor =
     let isVector (value:string) =
         value.Contains(",")
 
-    let isVar var =
-        variableStore.ContainsKey(var)
+    let isVar (var:string) =
+        System.Char.IsLetter(var.[0])
 
     let isNumber value =
         try double value |> ignore
@@ -83,16 +83,24 @@ module Executor =
             else raise (ExecError $"{value} is not a number or a stored variable")
 
     let handleArgs value =
-        let mutable out = "[" + outputStack.Pop() + "," + value
+        let mutable newVal = outputStack.Pop()
+        replaceVar &newVal
+        let mutable out = newVal + "," + value
+        System.Diagnostics.Debug.WriteLine($"out={out}")
         while operatorStack.Count <> 0 && operatorStack.Peek() = Token.Comma do
             operatorStack.Pop() |> ignore
             let mutable newVal = outputStack.Pop()
             replaceVar &newVal
             out <- newVal + "," + out
-        out + "]"
+        "[" + out + "]"
 
-    let operateOnVecs(vec1, vec2, op) =
-        vecToString (List.map2(op) (stringToVec(vec1)) (stringToVec(vec2)))
+    let operateOnVecs(vec1str, vec2str, op) =
+        let vec1 = stringToVec vec1str
+        let vec2 = stringToVec vec2str
+        if vec1.Length = vec2.Length then
+            vecToString (List.map2(op) vec1 vec2)
+        else
+            raise (ExecError $"Vector {vec2str} of size {vec2.Length} is not the same size as vector {vec1str} of size {vec1.Length}") 
 
     let operateOnVec(vec, op) =
         vecToString (List.map(op) (stringToVec(vec)))
@@ -111,7 +119,7 @@ module Executor =
                         handleAssign(&value, &value2)
                         outputStack.Push(value2 + ":=" + value)
                 | _ -> // TODO: needs re-doing so that it checks if value, and if necessary value2, are variables and then replaces them with their value if so and then chooses how to handle them based on their type                    
-                    replaceVar &value
+                    if isVar value then replaceVar &value
                     if (isVector value) then
                         if operator = Token.Minus && (outputStack.Count = 0 || (operatorStack.Count <> 0 && operatorStack.Peek() = Token.L_Parenth)) then 
                             outputStack.Push(operateOnVec(value, (fun a -> 0.0-a)))
@@ -134,7 +142,7 @@ module Executor =
                             outputStack.Push(string (0.0 - double value))
                         else
                             let mutable value2 = outputStack.Pop()
-                            replaceVar &value2
+                            if isVar value2 then replaceVar &value2
                             if isVector value2 then
                                 match operator with
                                 | Token.Indice ->   outputStack.Push(operateOnVec(value2, (fun a -> a**(double value))))
