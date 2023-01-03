@@ -7,9 +7,7 @@ using System.Windows.Documents;
 using System.Diagnostics;
 using System.Windows.Media;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
-using Microsoft.FSharp.Collections;
 using System.Text.RegularExpressions;
 
 namespace AdvProg

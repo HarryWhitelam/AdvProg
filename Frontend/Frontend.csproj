@@ -32,10 +32,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="resources\themes\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
@@ -46,7 +42,9 @@
     <Resource Include="resources\rootInvert.png" />
     <Resource Include="resources\settings.png" />
     <Resource Include="resources\settingsInvert.png" />
-    <Resource Include="resources\UserSettings.xml" />
+    <Resource Include="resources\UserSettings.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
 
     <Reference Include="OxyPlot">
       <HintPath>\\ueahome4\stusci4\rhy18wxu\data\Downloads\OxyPlot\OxyPlot.dll</HintPath>

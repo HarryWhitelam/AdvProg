@@ -12,34 +12,35 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="resources/themes/light.xaml" />
+                <ResourceDictionary Source="resources/themes/dark.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <frontend:HalfSideConverter x:Key="halfConverter" />
             <frontend:ThirdSideConverter x:Key="thirdConverter" />
             <frontend:FifthSideConverter x:Key="fifthConverter" />
         </ResourceDictionary>
     </Window.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="auto"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Column="0">
             <TextBlock Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}">Colour Theme</TextBlock>
-            <RadioButton GroupName="themeRadios" Content="Light" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}" />
-            <RadioButton GroupName="themeRadios" Content="Dark" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}" />
-            <RadioButton GroupName="themeRadios" Content="HighContrast" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}" />
+            <RadioButton GroupName="themeRadios" Name="lightRadio" Content="Light" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}" />
+            <RadioButton GroupName="themeRadios" Name="darkRadio" Content="Dark" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}" />
+            <RadioButton GroupName="themeRadios" Name="hcRadio" Content="High Contrast" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}" />
 
             <TextBlock Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}" Margin="0,20,0,0">Font Styling</TextBlock>
-            <DockPanel VerticalAlignment="Center" Margin="5">
-                <Slider Name="FontSizeSlider" Minimum="6" Maximum="32" TickFrequency="2" TickPlacement="BottomRight" IsSnapToTickEnabled="True" Width="200"></Slider>
-                <TextBox Name="FontSizeBox" Text="12" DockPanel.Dock="Right" TextAlignment="Right" Width="40"></TextBox>
+            <DockPanel VerticalAlignment="Center" Margin="5" Background="{DynamicResource ResourceKey=BackgroundBrush}">
+                <Slider Name="FontSizeSlider" Minimum="6" Maximum="32" TickFrequency="2" TickPlacement="BottomRight" IsSnapToTickEnabled="True" Width="200" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}"></Slider>
+                <TextBox Name="FontSizeBox" Text="12" DockPanel.Dock="Right" TextAlignment="Right" Width="40" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}"></TextBox>
             </DockPanel>
-            <ComboBox Margin="5" Name="FontComboBox" SelectedIndex="1">
-                <ComboBoxItem Tag="Arial">Arial</ComboBoxItem>
-                <ComboBoxItem Tag="CourierNew">Courier New</ComboBoxItem>
-                <ComboBoxItem Tag="TimesNewRoman">Times New Roman</ComboBoxItem>
+            <ComboBox Margin="5" Name="FontComboBox" SelectedIndex="1" Background="{DynamicResource BackgroundBrush}">
+                <ComboBoxItem Tag="Arial" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}">Arial</ComboBoxItem>
+                <ComboBoxItem Tag="CourierNew" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}">Courier New</ComboBoxItem>
+                <ComboBoxItem Tag="TimesNewRoman" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}">Times New Roman</ComboBoxItem>
             </ComboBox>
         </StackPanel>
 

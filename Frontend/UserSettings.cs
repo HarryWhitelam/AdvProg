@@ -8,13 +8,13 @@ using System.Xml.Serialization;
 
 namespace Frontend
 {
-    class UserSettings
+    public class UserSettings
     {
         public List<string> settings { get; set; }
 
-        public UserSettings(List<string> settingsList)
+        public UserSettings()
         {
-            this.settings = settingsList;
+            
         }
         
         public void Save(string filename)

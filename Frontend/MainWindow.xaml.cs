@@ -2,7 +2,6 @@
 using Frontend;
 using System;
 using System.Windows;
-using System.Windows.Navigation;
 
 namespace AdvProg
 {
@@ -12,27 +11,33 @@ namespace AdvProg
         {
             InitializeComponent();
             DataContext = new ViewModel();
-            this.Theme = Theme.HighContrast; // HARD CODED IN BOTH MAINWINDOW FILES
+            PrepSettings();
         }
 
-        public Theme Theme { get; set; }
+        public static Theme Theme { get; set; }
 
-        public void ChangeTheme(Theme newTheme)
+        public void PrepSettings()
         {
-            this.Theme = newTheme;
+            UserSettings us = Settings.GetSettings();
+            switch (us.settings[0])
+            {
+                case "Light":
+                    Theme = Theme.Light;
+                    break;
+                case "Dark":
+                    Theme = Theme.Dark;
+                    break;
+                case "High Contrast":
+                    Theme = Theme.HighContrast;
+                    break;
+            }
             this.Resources.MergedDictionaries[0].Source =
                 new Uri($"/resources/themes/{Theme}.xaml", UriKind.Relative);
         }
 
+
         private void ButtonDelVar_Click(object sender, RoutedEventArgs e)
         {
-            if (Theme is Theme.Dark)
-                ChangeTheme(Theme.Light);
-            else if (Theme is Theme.Light)
-                ChangeTheme(Theme.HighContrast);
-            else if (Theme is Theme.HighContrast)
-                ChangeTheme(Theme.Dark);
-
             if ((varNames.SelectedIndex == -1) && (varValues.SelectedIndex == -1))
             {
                 MessageBox.Show("Error: please select a variable for deletion.");
@@ -57,7 +62,7 @@ namespace AdvProg
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            Settings settings = new Settings();
+            Settings settings = new Settings(Theme);
             settings.Show();
         }
 
@@ -76,7 +81,7 @@ namespace AdvProg
             {
                 type = 3;
             }
-            PopUp PopUp = new PopUp(type, this.Theme);
+            PopUp PopUp = new PopUp(type, Theme);
             PopUp.Show();
         }
     }
