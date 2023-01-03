@@ -53,6 +53,7 @@ namespace Frontend
             this.MyModel.Series.Add(new FunctionSeries(g, min, max, 0.1, "y=4x-4"));
             */
             
+            /*
             int a = 6;
             int b = 5;
             int c2 = 4;
@@ -72,48 +73,54 @@ namespace Frontend
                 TitleColor = OxyColor.Parse("#036ffc")
             };
             this.MyModel.Series.Add(new FunctionSeries(h, min, max, 0.1, "y = 6x^2 + 5x + 4"));
+            */
 
-            //string[] equation = {"5x^4", "4x^3", "3x^2", "2x", "1"};
-            string[] equation = { "5x^3", "4x^2", "3x", "2" };
+            string[] equation = {"5x^4", "4x^3", "3x^2", "2x", "1"};
+            //string[] equation = { "5x^3", "4x^2", "3x", "2" };
             int lengthEq = equation.Length;
-            double y = 0;
-            double x = 2;
-            string splitpattern = @"x\^|x";
-            double[] calcValues = new double[lengthEq];
-            for (int i = 0; i < lengthEq; i++)
+            int min = -10;
+            int max = 10;
+            //double x = 2;
+            Func<double, double> i = (x) =>
             {
-                if (equation[i].Contains("^"))
+                string splitpattern = @"x\^|x";
+                double[] calcValues = new double[lengthEq];
+                for (int j = 0; j < lengthEq; j++)
                 {
-                    string[] inputSplit = Regex.Split(equation[i], splitpattern);
-                    double ax = Math.Pow(x, Double.Parse(inputSplit[1]));
-                    double a2 = (Double.Parse(inputSplit[0]) * ax);
-                    calcValues[i] = a2;
+                    if (equation[j].Contains("^"))
+                    {
+                        string[] inputSplit = Regex.Split(equation[j], splitpattern);
+                        double ax = Math.Pow(x, Double.Parse(inputSplit[1]));
+                        double a2 = (Double.Parse(inputSplit[0]) * ax);
+                        calcValues[j] = a2;
+                    }
+                    else if (equation[j].Contains("x"))
+                    {
+                        string[] inputSplit = Regex.Split(equation[j], splitpattern);
+                        double d = (Double.Parse(inputSplit[0]) * x);
+                        calcValues[j] = d;
+
+                    }
+                    else
+                    {
+                        calcValues[j] = Double.Parse(equation[j]);
+                    }
+
                 }
-                else if (equation[i].Contains("x"))
+                double y = 0;
+                int numTerms = calcValues.Length;
+                for(int k = 0; k < numTerms; k++)
                 {
-                    string[] inputSplit = Regex.Split(equation[i], splitpattern);
-                    double d = (Double.Parse(inputSplit[0]) * x);
-                    calcValues[i] = d;
-
+                    y += calcValues[k];
                 }
-                else
-                {
-                    calcValues[i] = Double.Parse(equation[i]);
-                }
-
-            }
-
-
-
-
-
-            foreach (double term in calcValues)
+                return y;
+            };
+            this.MyModel = new PlotModel
             {
-                Console.WriteLine(term);
-            }
-
-
-
+                Title = "y = 5x^4 + 4x^3 + 3x^2 + 2x + 1",
+                TitleColor = OxyColor.Parse("#036ffc")
+            };
+            this.MyModel.Series.Add(new FunctionSeries(i, min, max, 0.1, "y = 5x^4 + 4x^3 + 3x^2 + 2x + 1"));
 
             this.MyModel.Axes.Add(new LinearAxis
             {
