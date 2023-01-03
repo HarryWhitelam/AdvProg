@@ -111,8 +111,7 @@ module Executor =
                         handleAssign(&value, &value2)
                         outputStack.Push(value2 + ":=" + value)
                 | _ -> // TODO: needs re-doing so that it checks if value, and if necessary value2, are variables and then replaces them with their value if so and then chooses how to handle them based on their type                    
-                    if(isVar value) then
-                        replaceVar &value
+                    replaceVar &value
                     if (isVector value) then
                         if operator = Token.Minus && (outputStack.Count = 0 || (operatorStack.Count <> 0 && operatorStack.Peek() = Token.L_Parenth)) then 
                             outputStack.Push(operateOnVec(value, (fun a -> 0.0-a)))
@@ -135,8 +134,7 @@ module Executor =
                             outputStack.Push(string (0.0 - double value))
                         else
                             let mutable value2 = outputStack.Pop()
-                            if isVar value2 then
-                                replaceVar &value2
+                            replaceVar &value2
                             if isVector value2 then
                                 match operator with
                                 | Token.Indice ->   outputStack.Push(operateOnVec(value2, (fun a -> a**(double value))))
