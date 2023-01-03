@@ -1,0 +1,50 @@
+﻿<Window x:Class="Frontend.Settings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:frontend="clr-namespace:Frontend"
+        mc:Ignorable="d"
+        Title="Settings" Height="450" Width="500"
+        Foreground="{DynamicResource ResourceKey=FontBrush}"
+        Background="{DynamicResource ResourceKey=BackgroundBrush}">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="resources/themes/light.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <frontend:HalfSideConverter x:Key="halfConverter" />
+            <frontend:ThirdSideConverter x:Key="thirdConverter" />
+            <frontend:FifthSideConverter x:Key="fifthConverter" />
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0">
+            <TextBlock Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}">Colour Theme</TextBlock>
+            <RadioButton GroupName="themeRadios" Content="Light" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}" />
+            <RadioButton GroupName="themeRadios" Content="Dark" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}" />
+            <RadioButton GroupName="themeRadios" Content="HighContrast" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}" />
+
+            <TextBlock Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}" Margin="0,20,0,0">Font Styling</TextBlock>
+            <DockPanel VerticalAlignment="Center" Margin="5">
+                <Slider Name="FontSizeSlider" Minimum="6" Maximum="32" TickFrequency="2" TickPlacement="BottomRight" IsSnapToTickEnabled="True" Width="200"></Slider>
+                <TextBox Name="FontSizeBox" Text="12" DockPanel.Dock="Right" TextAlignment="Right" Width="40"></TextBox>
+            </DockPanel>
+            <ComboBox Margin="5" Name="FontComboBox" SelectedIndex="1">
+                <ComboBoxItem Tag="Arial">Arial</ComboBoxItem>
+                <ComboBoxItem Tag="CourierNew">Courier New</ComboBoxItem>
+                <ComboBoxItem Tag="TimesNewRoman">Times New Roman</ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+
+
+
+        <Button Grid.Column="0" Height="15pt" Width="50pt" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="SaveSettings_Click" Background="{DynamicResource ResourceKey=ControlBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}">Submit</Button>
+    </Grid>
+</Window>

@@ -55,6 +55,12 @@ namespace AdvProg
             }
         }
 
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            Settings settings = new Settings();
+            settings.Show();
+        }
+
         private void RootShortcut_Click(object sender, RoutedEventArgs e)
         {
             int type = 0;
@@ -70,8 +76,8 @@ namespace AdvProg
             {
                 type = 3;
             }
-            RootPopUp rootPopUp = new RootPopUp(type, this.Theme);
-            rootPopUp.Show();
+            PopUp PopUp = new PopUp(type, this.Theme);
+            PopUp.Show();
         }
     }
 }
