@@ -57,6 +57,7 @@ namespace AdvProg
 
             cursorWindow.AppendText(">>");
             cursorWindow.ScrollToEnd();
+            printWindow.ScrollToEnd();
         }
 
         public void PrintError(string error, string prompt)
@@ -85,6 +86,7 @@ namespace AdvProg
 
             cursorWindow.AppendText(">>");
             cursorWindow.ScrollToEnd();
+            printWindow.ScrollToEnd();
         }
 
         public void UpdateWorkstation()
