@@ -95,7 +95,7 @@ module Parser =
             | Token.L_Bracket :: tail ->match args tail with
                                         | Token.R_Bracket :: tail2 -> tail2
                                         // TODO: Check alignment once monospace is back
-                                        | toks -> raise (ParseError $"Unexpected {toks.[0]} here: {Token.pointToToken(ogTokens, tail.Length+1)} \n toks = {Token.printTokens(toks)}")
+                                        | toks -> raise (ParseError $"Unexpected {toks.[0]} here: {Token.pointToToken(ogTokens, ogTokens.Length-toks.Length)} \n toks = {Token.printTokens(toks)}")
             | _ -> raise (ParseError $"Expected number, variable, or closing bracket here: {Token.pointToToken(ogTokens, ogTokens.Length - tokens.Length)}")
         let out = assign tokens
         if out.IsEmpty then
