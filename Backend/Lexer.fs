@@ -10,7 +10,7 @@ namespace Backend
 //*************************************************************************
 
 type Token = 
-    Plus | Minus | Times | Divide | L_Parenth | R_Parenth | Indice | Assign | Comma | L_Bracket | R_Bracket | Number of string | Variable of string | Function of string 
+    Plus | Minus | Times | Divide | L_Parenth | R_Parenth | Indice | Assign | Comma | SemiColon | L_Bracket | R_Bracket | Number of string | Variable of string | Function of string | Reserved of string
     
     override this.ToString() = 
             match this with
@@ -22,12 +22,14 @@ type Token =
             | R_Parenth -> ")"
             | Indice -> "^"
             | Assign -> ":="
-            | Number value -> value
-            | Variable value -> value
-            | Function value -> value
             | Comma -> ","
+            | SemiColon -> ";"
             | L_Bracket -> "["
             | R_Bracket -> "]"
+            | Number value -> value
+            | Variable name -> name
+            | Function name -> name
+            | Reserved name -> name
 
     static member printTokens tokens =
         let mutable out = ""
@@ -41,8 +43,9 @@ type Token =
             for t in tokens.[..position-1] do
                 let len = match t with
                           | Number value -> value.Length
-                          | Variable value -> value.Length
-                          | Function value -> value.Length
+                          | Variable name -> name.Length
+                          | Function name -> name.Length
+                          | Reserved name -> name.Length
                           | Assign -> 2
                           | _ -> 1
                 buffer <- buffer + String.replicate len " "
@@ -88,18 +91,19 @@ module Lexer =
                             | '='::tail -> Token.Assign :: consume tail
                             | _ -> raise (LexerError $"Expected '=' after ':': {showExceptionPosition(ogInput, ogInput.Length-input.Length+1)}")
             | ','::tail -> Token.Comma    :: consume tail
+            | ';'::tail -> Token.SemiColon:: consume tail
             | num::tail when (System.Char.IsDigit num) ->   let (rest, finVal) = catchNum (tail, (string)num)
                                                             Token.Number finVal :: consume rest
             | var::tail when (System.Char.IsLetter var) ->  let (rest, finStr) = catchVar (tail, (string)var)
                                                             let finStrUp = finStr.ToUpper()
                                                             match finStrUp with
-                                                            | "SQRT"->Token.Function finStrUp :: consume rest
+                                                            | "SQRT"->  Token.Function finStrUp :: consume rest
                                                             | "NROOT" ->Token.Function finStrUp :: consume rest
                                                             | "LOG" ->  Token.Function finStrUp :: consume rest
                                                             | "LOGN" -> Token.Function finStrUp :: consume rest
-                                                            | "E" ->    Token.Function finStrUp :: consume rest
-                                                            | "PI" ->   Token.Function finStrUp :: consume rest
-                                                            | _ ->      Token.Variable finStr :: consume rest
+                                                            | "E" ->    Token.Reserved finStrUp :: consume rest
+                                                            | "PI" ->   Token.Reserved finStrUp :: consume rest
+                                                            | _ ->      Token.Variable finStr   :: consume rest
             | spc::tail when (System.Char.IsWhiteSpace spc) -> consume tail
             | _ -> raise (LexerError $"Undefined character: {showExceptionPosition(ogInput, ogInput.Length-input.Length)}")
             
