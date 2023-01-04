@@ -34,13 +34,13 @@
 
             <TextBlock Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}" Margin="0,20,0,0">Font Styling</TextBlock>
             <DockPanel VerticalAlignment="Center" Margin="5" Background="{DynamicResource ResourceKey=BackgroundBrush}">
-                <Slider Name="FontSizeSlider" Minimum="6" Maximum="32" TickFrequency="2" TickPlacement="BottomRight" IsSnapToTickEnabled="True" Width="200" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}"></Slider>
-                <TextBox Name="FontSizeBox" Text="12" DockPanel.Dock="Right" TextAlignment="Right" Width="40" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}"></TextBox>
+                <Slider Name="FontSizeSlider" Minimum="2" Maximum="24" TickFrequency="2" TickPlacement="BottomRight" IsSnapToTickEnabled="True" Width="200" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}"></Slider>
+                <TextBox Name="FontSizeBox" Text="{Binding ElementName=FontSizeSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" TextAlignment="Right" Width="40" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}"></TextBox>
             </DockPanel>
             <ComboBox Margin="5" Name="FontComboBox" SelectedIndex="1" Background="{DynamicResource BackgroundBrush}">
-                <ComboBoxItem Tag="Arial" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}">Arial</ComboBoxItem>
-                <ComboBoxItem Tag="CourierNew" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}">Courier New</ComboBoxItem>
-                <ComboBoxItem Tag="TimesNewRoman" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}">Times New Roman</ComboBoxItem>
+                <ComboBoxItem Tag="Consolas" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}">Consolas</ComboBoxItem>
+                <ComboBoxItem Tag="Courier New" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}">Courier New</ComboBoxItem>
+                <ComboBoxItem Tag="Lucida Sans" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}">Lucida Sans</ComboBoxItem>
             </ComboBox>
         </StackPanel>
 
