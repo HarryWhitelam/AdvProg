@@ -29,19 +29,38 @@ namespace AdvProg
         public int CountRichLines(String resultString)
         {
             string[] splitLines = resultString.Split(new[] {'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries);
-            Debug.WriteLine("NUM LINES: " + splitLines.Length);
             return splitLines.Length;
+        }
+
+        public char GetPriorChar(TextBox textbox, int curIndex)
+        {
+            if (curIndex > 0)
+            {
+                textbox.Select(curIndex - 1, 1);
+                string res = textbox.SelectedText;
+                textbox.Select(curIndex, 0);
+                if (res.Length == 1)
+                {
+                    return Convert.ToChar(res);
+                }
+                else
+                {
+                    return '\n';
+                }
+            }
+            else
+                return '\n';
         }
 
         /// <summary>
         /// Method <c>RemoveCurrentLineText</c> removes the current entered line text in a given TextBox
         /// </summary>
-        /// <param name="window"></param> the window/textbox that will be affected
-        public void RemoveCurrentLineText(TextBox window)
+        /// <param name="textbox"></param> the textbox that will be affected
+        public void RemoveCurrentLineText(TextBox textbox)
         {
-            if (window.GetLineText(window.LineCount - 1) != "")
+            if (textbox.GetLineText(textbox.LineCount - 1) != "")
             {
-                window.Text = window.Text.Remove(window.Text.IndexOf(window.GetLineText(window.LineCount - 1)));
+                textbox.Text = textbox.Text.Remove(textbox.Text.IndexOf(textbox.GetLineText(textbox.LineCount - 1)));
             }
         }
 
@@ -178,6 +197,7 @@ namespace AdvProg
                     {
                         try
                         {
+                            Debug.WriteLine("PROCESSING USER INPUT: " + input);
                             var variableStore = Interpreter.updateVarStore;
                             PrintResult(Interpreter.interpret(input), input);
                             if (input.Contains(":="))
@@ -217,6 +237,26 @@ namespace AdvProg
                         inputWindow.SelectionStart = inputWindow.Text.Length;
                         inputWindow.SelectionLength = 0;
                     }
+                });
+            }
+        }
+
+        private ICommand leftCommand;
+        public ICommand LeftCommand
+        {
+            get
+            {
+                return leftCommand ??= new ActionCommand(() =>
+                {
+                    TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+                    int currentSelection = inputWindow.SelectionStart;
+                    char priorChar = GetPriorChar(inputWindow, currentSelection);
+
+                    if (priorChar != '\n')
+                    {
+                        inputWindow.Select(currentSelection - 1, 0);
+                    }
+                    Debug.WriteLine(currentSelection);
                 });
             }
         }
@@ -275,7 +315,7 @@ namespace AdvProg
                     }
                     if (inputHistory[0] != null)
                     {
-                        if (historyIndex < 9 && historyIndex < inputHistory.Count()-1)
+                        if (historyIndex < 9 && historyIndex < inputHistory.Length - 1)
                         {
                             RemoveCurrentLineText(inputWindow);
                             historyIndex++;

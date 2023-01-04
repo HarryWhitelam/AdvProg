@@ -40,7 +40,7 @@
             <summary>
             Method <c>RemoveCurrentLineText</c> removes the current entered line text in a given TextBox
             </summary>
-            <param name="window"></param> the window/textbox that will be affected
+            <param name="textbox"></param> the textbox that will be affected
         </member>
         <member name="M:AdvProg.ViewModel.PrintResult(System.String,System.String)">
             <summary>

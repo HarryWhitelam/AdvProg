@@ -67,6 +67,7 @@
                             <KeyBinding Command="{Binding BackCommand}" Key="Backspace" />
                             <KeyBinding Command="{Binding UpHistoryCommand}" Key="Up" />
                             <KeyBinding Command="{Binding DownHistoryCommand}" Key="Down" />
+                            <KeyBinding Command="{Binding LeftCommand}" Key="Left" />
                         </TextBox.InputBindings>
                     </TextBox>
                 </Grid>
