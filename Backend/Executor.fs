@@ -30,13 +30,14 @@ module Executor =
         out
 
     let vecToString (input:list<double>) =
+        System.Diagnostics.Debug.WriteLine($"vecToString input: {input}")
         let mutable out = "["
         for i in input do
-            out <- out + i.ToString() + ", "
-        out.Remove(out.Length-2, 2) + "]"
+            out <- out + i.ToString() + ","
+        out.Remove(out.Length-1, 1) + "]"
 
     let isVector (value:string) =
-        value.Contains(",")
+        value.Contains("[")
 
     let isVar (var:string) =
         System.Char.IsLetter(var.[0])
@@ -46,30 +47,29 @@ module Executor =
             true
         with :? System.FormatException -> false
 
-    let replaceVar (var :byref<string>) =
+    let replaceVariable (var :byref<string>) =
         if not(isNumber var) then
             if variableStore.TryGetValue(var, &var) = false then
                 raise (ExecError $"{var} does not have an assigned value")
 
+    let replaceReserved name =
+        match name with
+        | "PI" -> string(double(System.Math.PI))
+        | "E" -> string(double(System.Math.E))
+        | _ -> raise (ExecError "How on earth did you raise this")
+
     let handleFunc(funcName) =
-        if outputStack.Count = 0 then
-            match funcName with
-            | "PI" -> double(System.Math.PI)
-            | "E" -> double(System.Math.E)
-            | _ -> raise (ExecError (funcException(funcName, 0)))
-        else
-            let mutable value = outputStack.Pop()
-            let args = value.Split(",")
-            match args.Length with
-            | 1 ->  match funcName with
-                    | "LOG" ->  log(double (args[0]))
-                    | "SQRT" -> sqrt(double (args[0]))
-                    | _ -> raise (ExecError (funcException(funcName, 1)))
-            | 2 ->  match funcName with
-                    | "NROOT"-> double (args[0]) ** (1.0/ double (args[1]))
-                    | "LOGN" -> System.Math.Log(double (args[0]), double (args[1]))
-                    | _ -> raise (ExecError (funcException(funcName, 2)))
-            | any -> raise (ExecError (funcException(funcName, any)))
+        let args = stringToVec(outputStack.Pop())
+        match args.Length with
+        | 1 ->  match funcName with
+                | "LOG" ->  log(args.[0])
+                | "SQRT" -> sqrt(args.[0])
+                | _ -> raise (ExecError (funcException(funcName, 1)))
+        | 2 ->  match funcName with
+                | "NROOT"-> args.[0] ** (1.0/ args.[1])
+                | "LOGN" -> System.Math.Log(args.[0], args.[1])
+                | _ -> raise (ExecError (funcException(funcName, 2)))
+        | any -> raise (ExecError (funcException(funcName, any)))
 
     let handleAssign(value:byref<string>, value2:byref<string>) =
         System.Diagnostics.Debug.WriteLine($"value = {value}, value2 = {value2}")
@@ -84,19 +84,22 @@ module Executor =
 
     let handleArgs value =
         let mutable newVal = outputStack.Pop()
-        replaceVar &newVal
+        if isVar newVal then replaceVariable &newVal
         let mutable out = newVal + "," + value
         System.Diagnostics.Debug.WriteLine($"out={out}")
         while operatorStack.Count <> 0 && operatorStack.Peek() = Token.Comma do
             operatorStack.Pop() |> ignore
             let mutable newVal = outputStack.Pop()
-            replaceVar &newVal
+            if isVar newVal then replaceVariable &newVal
             out <- newVal + "," + out
         "[" + out + "]"
 
     let operateOnVecs(vec1str, vec2str, op) =
+        System.Diagnostics.Debug.WriteLine($"vec1str: {vec1str}, vec2str: {vec2str}")
         let vec1 = stringToVec vec1str
         let vec2 = stringToVec vec2str
+        System.Diagnostics.Debug.WriteLine($"vec1: {vec1}")
+        System.Diagnostics.Debug.WriteLine($"vec1: {vec2}")
         if vec1.Length = vec2.Length then
             vecToString (List.map2(op) vec1 vec2)
         else
@@ -112,26 +115,23 @@ module Executor =
         | _ ->  let mutable value = outputStack.Pop()
                 match operator with
                 | Token.Comma ->
-                        replaceVar &value
+                        if isVar value then replaceVariable &value
                         outputStack.Push(handleArgs value)                 
                 | Token.Assign ->
                         let mutable value2 = outputStack.Pop()
                         handleAssign(&value, &value2)
                         outputStack.Push(value2 + ":=" + value)
-                | _ -> // TODO: needs re-doing so that it checks if value, and if necessary value2, are variables and then replaces them with their value if so and then chooses how to handle them based on their type                    
-                    if isVar value then replaceVar &value
+                | _ ->         
+                    if isVar value then replaceVariable &value
                     if (isVector value) then
                         if operator = Token.Minus && (outputStack.Count = 0 || (operatorStack.Count <> 0 && operatorStack.Peek() = Token.L_Parenth)) then 
                             outputStack.Push(operateOnVec(value, (fun a -> 0.0-a)))
                         else
                             let mutable value2 = outputStack.Pop()
-                            if isVar value2 then
-                                replaceVar &value2
+                            if isVar value2 then replaceVariable &value2
                             if isVector value2 then
                                 match operator with
-                                //| Token.Indice ->   outputStack.Push(operateOnVecs(value2, value, (fun a b -> a**b))) // dont think this should be a thing
                                 | Token.Times ->    outputStack.Push(operateOnVecs(value2, value, (fun a b -> a*b)))
-                                //| Token.Divide ->   outputStack.Push(operateOnVecs(value2, value, (fun a b -> a/b))) // neither should this
                                 | Token.Plus ->     outputStack.Push(operateOnVecs(value2, value, (fun a b -> a+b)))
                                 | Token.Minus ->    outputStack.Push(operateOnVecs(value2, value, (fun a b -> a-b)))
                                 | _ ->              failwith $"Invalid {operator.ToString()} here"
@@ -142,7 +142,7 @@ module Executor =
                             outputStack.Push(string (0.0 - double value))
                         else
                             let mutable value2 = outputStack.Pop()
-                            if isVar value2 then replaceVar &value2
+                            if isVar value2 then replaceVariable &value2
                             if isVector value2 then
                                 match operator with
                                 | Token.Indice ->   outputStack.Push(operateOnVec(value2, (fun a -> a**(double value))))
@@ -165,18 +165,22 @@ module Executor =
             match token with
             | Token.Number value -> 
                             outputStack.Push(value)
-                            System.Diagnostics.Debug.WriteLine("Number " + value + " added to output stack")
-            | Token.Variable value -> 
+                            System.Diagnostics.Debug.WriteLine($"Number {value} added to output stack")
+            | Token.Variable name -> 
                             if(tokens.Length = 1) then 
-                                let mutable x = value
-                                replaceVar &x
-                                outputStack.Push(x)
-                            else
+                                let mutable value = name
+                                replaceVariable &value
                                 outputStack.Push(value)
-                            System.Diagnostics.Debug.WriteLine("Variable " + value + " added to output stack")
+                            else
+                                outputStack.Push(name)
+                            System.Diagnostics.Debug.WriteLine($"Variable {name} added to output stack")
+            | Token.Reserved name -> 
+                            let value = replaceReserved(name);
+                            outputStack.Push(value)
+                            System.Diagnostics.Debug.WriteLine($"{name} added to output stack as {value}")
             | Token.Function value ->
                             operatorStack.Push(token)
-                            System.Diagnostics.Debug.WriteLine(value + " added to operator stack")
+                            System.Diagnostics.Debug.WriteLine($"{value} added to operator stack")
             | Token.Plus -> 
                             while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Parenth && operatorStack.Peek() <> Token.Assign do
                                 calculate()
@@ -204,6 +208,10 @@ module Executor =
                             while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Parenth do
                                 calculate()
                             System.Diagnostics.Debug.WriteLine("{0} removed from operator stack", operatorStack.Pop())
+                            //if operatorStack.Count <> 0 then
+                            //    match operatorStack.Peek() with 
+                            //    | Token.Function _ -> calculate()
+                            //    //| _ -> ()
             | Token.L_Bracket ->
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine("[ added to operator stack")
@@ -224,6 +232,9 @@ module Executor =
             | Token.Comma -> 
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine(", added to operator stack")
+            | Token.SemiColon -> 
+                            operatorStack.Push(token)
+                            System.Diagnostics.Debug.WriteLine("; added to operator stack")
         while operatorStack.Count <> 0 do
             calculate()
         outputStack.Pop()
