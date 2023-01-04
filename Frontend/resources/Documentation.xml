@@ -36,11 +36,19 @@
             <param name="resultString"></param> the string to be measured
             <returns>Number of lines</returns>
         </member>
+        <member name="M:AdvProg.ViewModel.GetPriorChar(System.Windows.Controls.TextBox,System.Int32)">
+            <summary>
+            Method <c>GetPriorChar</c> returns the character in the textbox one index before the cursor. 
+            </summary>
+            <param name="textbox"></param> the textbox to be addressed
+            <param name="curIndex"></param> the current index of the cursor/selection
+            <returns></returns>
+        </member>
         <member name="M:AdvProg.ViewModel.RemoveCurrentLineText(System.Windows.Controls.TextBox)">
             <summary>
             Method <c>RemoveCurrentLineText</c> removes the current entered line text in a given TextBox
             </summary>
-            <param name="window"></param> the window/textbox that will be affected
+            <param name="textbox"></param> the textbox that will be affected
         </member>
         <member name="M:AdvProg.ViewModel.PrintResult(System.String,System.String)">
             <summary>
@@ -69,6 +77,11 @@
         <member name="P:AdvProg.ViewModel.BackCommand">
             <summary>
             Method <c>BackCommand</c> is used with the backspace keybind to handle character deletion. This ensures the user cannot delete previous prompts/move lines
+            </summary>
+        </member>
+        <member name="P:AdvProg.ViewModel.LeftCommand">
+            <summary>
+            Method <c>LeftCommand</c> is used with the left-arrow keybind to handle line-selection. This ensures the user cannot ascend/descend lines incorrectly. 
             </summary>
         </member>
         <member name="P:AdvProg.ViewModel.DelVarCommand">

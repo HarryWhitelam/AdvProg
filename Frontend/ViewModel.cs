@@ -9,6 +9,8 @@ using System.Windows.Media;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using static Microsoft.FSharp.Core.LanguagePrimitives;
+using System.Text;
 
 namespace AdvProg
 {
@@ -29,20 +31,52 @@ namespace AdvProg
         public int CountRichLines(String resultString)
         {
             string[] splitLines = resultString.Split(new[] {'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries);
-            Debug.WriteLine("NUM LINES: " + splitLines.Length);
+            Debug.WriteLine("LINES: " + splitLines.Length);
             return splitLines.Length;
+        }
+
+        /// <summary>
+        /// Method <c>GetPriorChar</c> returns the character in the textbox one index before the cursor. 
+        /// </summary>
+        /// <param name="textbox"></param> the textbox to be addressed
+        /// <param name="curIndex"></param> the current index of the cursor/selection
+        /// <returns></returns>
+        public char GetPriorChar(TextBox textbox, int curIndex)
+        {
+            if (curIndex > 0)
+            {
+                textbox.Select(curIndex - 1, 1);        // manual selection to ensure only one character is selected
+                string res = textbox.SelectedText;
+                textbox.Select(curIndex, 0);
+                if (res.Length == 1)                    // error checking for conversion
+                {
+                    return Convert.ToChar(res);
+                }
+                else
+                {
+                    return '\n';
+                }
+            }
+            else
+                return '\n';
         }
 
         /// <summary>
         /// Method <c>RemoveCurrentLineText</c> removes the current entered line text in a given TextBox
         /// </summary>
-        /// <param name="window"></param> the window/textbox that will be affected
-        public void RemoveCurrentLineText(TextBox window)
+        /// <param name="textbox"></param> the textbox that will be affected
+        public void RemoveCurrentLineText(TextBox textbox)
         {
-            if (window.GetLineText(window.LineCount - 1) != "")
+            if (GetPrompt(textbox) != "")
             {
-                window.Text = window.Text.Remove(window.Text.IndexOf(window.GetLineText(window.LineCount - 1)));
+                textbox.Text = textbox.Text.Remove(textbox.Text.IndexOf(GetPrompt(textbox)));
             }
+        }
+
+        public string GetPrompt(TextBox textbox)
+        {
+            string[] lines = textbox.Text.Split(new char[] { '\n' });
+            return lines[lines.Length - 1];
         }
 
         /// <summary>
@@ -57,18 +91,17 @@ namespace AdvProg
             RichTextBox printWindow = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
 
             string resultString = prompt + '\r' + "    " + result + Environment.NewLine;
-            printWindow.AppendText(resultString);
+            TextRange errorRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
+            errorRange.Text = resultString;
 
             RemoveCurrentLineText(inputWindow);
 
             int lineCount = CountRichLines(resultString);
             for (int i = 0; i <= lineCount; i++)
             {
-                inputWindow.AppendText(Environment.NewLine);
-                cursorWindow.AppendText(Environment.NewLine);
+                inputWindow.AppendText("\n");
+                cursorWindow.AppendText("\n");
             }
-
-            inputWindow.ScrollToLine(inputWindow.LineCount - 1);
             inputWindow.Select(inputWindow.Text.Length, 0);
 
             cursorWindow.AppendText(">>");
@@ -99,10 +132,9 @@ namespace AdvProg
             int lineCount = CountRichLines(resultString + errorString);
             for (int i = 0; i <= lineCount; i++)
             {
-                inputWindow.AppendText(Environment.NewLine);
-                cursorWindow.AppendText(Environment.NewLine);
+                inputWindow.AppendText("\n");
+                cursorWindow.AppendText("\n");
             }
-            inputWindow.ScrollToEnd();
             inputWindow.Select(inputWindow.Text.Length, 0);
 
             cursorWindow.AppendText(">>");
@@ -146,13 +178,14 @@ namespace AdvProg
                     ListBox varNames = (ListBox) Application.Current.MainWindow.FindName("varNames");
                     ListBox varValues = (ListBox) Application.Current.MainWindow.FindName("varValues");
                     TextBox inputWindow = (TextBox) Application.Current.MainWindow.FindName("inputWindow");
-                    
-                    String input = inputWindow.GetLineText(inputWindow.LineCount-1);
+
+                    int lc = inputWindow.LineCount;
+                    string input = GetPrompt(inputWindow);
+
                     if (inputHistory[0] != input)
                     {
                         inputHistory = inputHistory.Prepend(input).ToArray();
                     }
-
                     if (input.Contains("plot"))
                     {
                         // creating a Regex expression to pick up the y=mx+c pattern
@@ -242,6 +275,28 @@ namespace AdvProg
             }
         }
 
+        private ICommand leftCommand;
+        /// <summary>
+        /// Method <c>LeftCommand</c> is used with the left-arrow keybind to handle line-selection. This ensures the user cannot ascend/descend lines incorrectly. 
+        /// </summary>
+        public ICommand LeftCommand
+        {
+            get
+            {
+                return leftCommand ??= new ActionCommand(() =>
+                {
+                    TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+                    int currentSelection = inputWindow.SelectionStart;
+                    char priorChar = GetPriorChar(inputWindow, currentSelection);
+
+                    if (priorChar != '\n')
+                    {
+                        inputWindow.Select(currentSelection - 1, 0);
+                    }
+                });
+            }
+        }
+
         private ICommand delVarCommand;
         /// <summary>
         /// Method <c>DelVarCommand</c> is used to delete a variable from the Workstation and hence the VariableStore
@@ -296,7 +351,7 @@ namespace AdvProg
                     }
                     if (inputHistory[0] != null)
                     {
-                        if (historyIndex < 9 && historyIndex < inputHistory.Count()-1)
+                        if (historyIndex < 9 && historyIndex < inputHistory.Length - 1)
                         {
                             RemoveCurrentLineText(inputWindow);
                             historyIndex++;
