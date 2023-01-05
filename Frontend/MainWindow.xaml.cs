@@ -2,6 +2,7 @@
 using Frontend;
 using System;
 using System.Windows;
+using System.Windows.Media;
 
 namespace AdvProg
 {
@@ -31,6 +32,8 @@ namespace AdvProg
                     Theme = Theme.HighContrast;
                     break;
             }
+            Application.Current.MainWindow.FontSize = Convert.ToInt32(us.settings[1]);
+            Application.Current.MainWindow.FontFamily = new FontFamily(Convert.ToString(us.settings[2]));
             this.Resources.MergedDictionaries[0].Source =
                 new Uri($"/resources/themes/{Theme}.xaml", UriKind.Relative);
         }
