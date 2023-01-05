@@ -1,19 +1,52 @@
 ﻿using Backend;
 using Frontend;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Media;
 
 namespace AdvProg
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         public MainWindow()
         {
             InitializeComponent();
             DataContext = new ViewModel();
+            HelpMenu.DataContext = this;
             PrepSettings();
+            SearchList = new List<string>() { "TEST", "TEST2", "TEST3", "TEST4" };
+        }
+
+        private string search;
+        public string Search
+        {
+            get
+            {
+                return search;
+            }
+            set
+            {
+                search = value;
+                OnPropertyChanged("SearchText");
+                OnPropertyChanged("SearchResults");
+            }
+        }
+
+        public List<string> SearchList { get; set; }
+        public IEnumerable<string> SearchResults
+        {
+            get
+            {
+                if (Search == null) return SearchList;
+
+                return SearchList.Where(x => x.ToLower().StartsWith(Search.ToLower()));
+            }
         }
 
         public static Theme Theme { get; set; }
@@ -74,7 +107,16 @@ namespace AdvProg
 
         private void HelpButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (HelpMenu.Visibility == Visibility.Collapsed)
+            {
+                WorkstationTextBlock.Text = "Help Menu";
+                HelpMenu.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                WorkstationTextBlock.Text = "Workstation";
+                HelpMenu.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void RootShortcut_Click(object sender, RoutedEventArgs e)
@@ -94,6 +136,14 @@ namespace AdvProg
             }
             PopUp PopUp = new PopUp(type, Theme);
             PopUp.Show();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        void OnPropertyChanged(string value)
+        {
+            Debug.WriteLine("CHANGE LOGGED");
+            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(value));
         }
     }
 }

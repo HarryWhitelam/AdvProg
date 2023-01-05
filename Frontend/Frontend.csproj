@@ -10,6 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="resources\help.png" />
+    <None Remove="resources\helpInvert.png" />
     <None Remove="resources\log.PNG" />
     <None Remove="resources\logInvert.png" />
     <None Remove="resources\root.png" />
@@ -36,6 +38,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="resources\help.png" />
+    <Resource Include="resources\helpInvert.png" />
     <Resource Include="resources\log.PNG" />
     <Resource Include="resources\logInvert.png" />
     <Resource Include="resources\root.png" />

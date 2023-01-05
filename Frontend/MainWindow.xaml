@@ -23,7 +23,6 @@
     </Window.Resources>
 
     <Window.InputBindings>
-        <KeyBinding Command="{Binding ReturnCommand}" Key="Return" />
         <KeyBinding Command="{Binding DelVarCommand}" Key="Delete" />
     </Window.InputBindings>
 
@@ -67,6 +66,7 @@
                     </RichTextBox>
                     <TextBox Grid.Column="1" Name="inputWindow" BorderBrush="{x:Null}" TextWrapping="Wrap" Height="auto" KeyboardNavigation.ControlTabNavigation="None" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}" CaretBrush="{DynamicResource ResourceKey=CaretBrush}">
                         <TextBox.InputBindings>
+                            <KeyBinding Command="{Binding ReturnCommand}" Key="Return" />
                             <KeyBinding Command="{Binding BackCommand}" Key="Backspace" />
                             <KeyBinding Command="{Binding UpHistoryCommand}" Key="Up" />
                             <KeyBinding Command="{Binding DownHistoryCommand}" Key="Down" />
@@ -95,7 +95,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" Margin="5,0,0,0">Workstation</TextBlock>
+            <TextBlock Grid.Row="0" x:Name="WorkstationTextBlock" Margin="5,0,0,0">Workstation</TextBlock>
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Grid.Column="1" x:Name="helpButton" Height="15pt" Width="30pt" Click="HelpButton_Click" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" HorizontalAlignment="Right">
                     <Image Source="/resources/help.png"></Image>
@@ -107,7 +107,25 @@
 
             <ListBox Grid.Row="1" Grid.Column="0" x:Name="varNames" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
             <ListBox Grid.Row="1" Grid.Column="1" x:Name="varValues" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+
+            <StackPanel Grid.Row="1" Grid.ColumnSpan="2" x:Name="HelpMenu" Visibility="Collapsed" Background="{DynamicResource ResourceKey=BackgroundBrush}">
+                <Grid>
+                    <TextBox x:Name="helpSearch" VerticalAlignment="Center" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StackPanel}},Path=ActualWidth}" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+                    <TextBlock IsHitTestVisible="False" Text="Search for a Term/Operator" Margin="5,0,0,0" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=helpSearch}" Value="">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+                <ListBox x:Name="resultsListBox" Height="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StackPanel}},Path=ActualHeight}" ItemsSource="{Binding SearchResults}" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+            </StackPanel>
         </Grid>
     </Grid>
-
 </Window>
