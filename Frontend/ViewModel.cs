@@ -4,13 +4,11 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Backend;
 using System.Windows.Documents;
-using System.Diagnostics;
 using System.Windows.Media;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using static Microsoft.FSharp.Core.LanguagePrimitives;
-using System.Text;
 
 namespace AdvProg
 {
@@ -31,7 +29,6 @@ namespace AdvProg
         public int CountRichLines(String resultString)
         {
             string[] splitLines = resultString.Split(new[] {'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries);
-            Debug.WriteLine("LINES: " + splitLines.Length);
             return splitLines.Length;
         }
 
@@ -91,16 +88,16 @@ namespace AdvProg
             RichTextBox printWindow = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
 
             string resultString = prompt + '\r' + "    " + result + Environment.NewLine;
-            TextRange errorRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
-            errorRange.Text = resultString;
+            TextRange resultRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
+            resultRange.Text = resultString;
 
             RemoveCurrentLineText(inputWindow);
 
             int lineCount = CountRichLines(resultString);
             for (int i = 0; i <= lineCount; i++)
             {
-                inputWindow.AppendText("\n");
-                cursorWindow.AppendText("\n");
+                inputWindow.AppendText(Environment.NewLine);
+                cursorWindow.AppendText(Environment.NewLine);
             }
             inputWindow.Select(inputWindow.Text.Length, 0);
 
@@ -122,7 +119,8 @@ namespace AdvProg
 
             string resultString = prompt + '\r';
             string errorString = "Error: " + error + Environment.NewLine;
-            printWindow.AppendText(resultString);
+            TextRange resultRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
+            resultRange.Text = resultString;
             TextRange errorRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
             errorRange.Text = errorString;
             errorRange.ApplyPropertyValue(TextElement.ForegroundProperty, (SolidColorBrush)Application.Current.MainWindow.Resources.MergedDictionaries[0]["ErrorBrush"]);
@@ -261,7 +259,7 @@ namespace AdvProg
                 return backCommand ??= new ActionCommand(() =>
                 {
                     TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
-                    string currentText = inputWindow.GetLineText(inputWindow.LineCount - 1);
+                    string currentText = GetPrompt(inputWindow);
 
                     if (currentText != "")
                     {
