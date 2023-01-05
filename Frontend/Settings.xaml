@@ -37,7 +37,7 @@
                 <Slider Name="FontSizeSlider" Minimum="2" Maximum="24" TickFrequency="2" TickPlacement="BottomRight" IsSnapToTickEnabled="True" Width="200" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}"></Slider>
                 <TextBox Name="FontSizeBox" Text="{Binding ElementName=FontSizeSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" TextAlignment="Right" Width="40" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}"></TextBox>
             </DockPanel>
-            <ComboBox Margin="5" Name="FontComboBox" SelectedIndex="1" Background="{DynamicResource BackgroundBrush}">
+            <ComboBox Margin="5" Name="FontComboBox" SelectedValuePath="Content" Background="{DynamicResource BackgroundBrush}">
                 <ComboBoxItem Tag="Consolas" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}">Consolas</ComboBoxItem>
                 <ComboBoxItem Tag="Courier New" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}">Courier New</ComboBoxItem>
                 <ComboBoxItem Tag="Lucida Sans" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=BackgroundBrush}">Lucida Sans</ComboBoxItem>
