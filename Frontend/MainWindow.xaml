@@ -10,7 +10,7 @@
         Foreground="{DynamicResource ResourceKey=FontBrush}"
         Background="{DynamicResource ResourceKey=BackgroundBrush}">
 
-    
+    <!--Resources for the page (for dynamic themes and sizing)-->
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -22,10 +22,12 @@
         </ResourceDictionary>
     </Window.Resources>
 
+    <!--INPUT BINDINGS-->
     <Window.InputBindings>
         <KeyBinding Command="{Binding DelVarCommand}" Key="Delete" />
     </Window.InputBindings>
 
+    <!--Definition of main grid: page uses grid system for placement-->
     <Grid Name="MainGrid" Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -46,20 +48,17 @@
             <TextBlock Grid.Row="0" Height="15pt" Name="iwTextBlock">Input Window</TextBlock>
 
             <Border Grid.Row="1" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" BorderThickness="1, 1, 1, 1">
-                <!--INPUT CURSOR AND FIELD-->
+                <!--INPUT FIELDS-->
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="20pt" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
+                    <!--Input fields use three textboxes: 1) cursor window, input window for the user to interact with, print window to display results-->
                     <TextBox Grid.Column="0" Name="cursorWindow" BorderBrush="{x:Null}" IsReadOnly="True" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">>></TextBox>
+                    <!--RichTextBox to allow colour adjustment-->
                     <RichTextBox Grid.Column="1" Height ="auto" Name="printWindow" VerticalAlignment="Top" BorderBrush="{x:Null}" IsReadOnly="True" IsHitTestVisible="False" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">
-                        <!--<RichTextBox.Resources>
-                            <Style TargetType="{x:Type Paragraph}">
-                                <Setter Property="Margin" Value="0"/>
-                            </Style>
-                        </RichTextBox.Resources>-->
                         <FlowDocument>
                             <Paragraph></Paragraph>
                         </FlowDocument>
@@ -76,11 +75,12 @@
                 </Grid>
             </Border>
         </Grid>
+        <!--Expander for method visualisers-->
         <Expander Header="Function Shortcuts" Width="{Binding ActualWidth, Converter={StaticResource halfConverter}, ElementName=iwTextBlock}" VerticalAlignment="Top" HorizontalAlignment="Right" Background="{DynamicResource ResourceKey=ExpanderBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}">
             <StackPanel Grid.Row="0" Height="60pt">
-                <Button Name="rootButton" Content="ROOT" Click="RootShortcut_Click" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
-                <Button Name="powerButton" Content="POWER" Click="RootShortcut_Click" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
-                <Button Name="logButton" Content="LOGARITHM" Click="RootShortcut_Click" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+                <Button Name="rootButton" Content="ROOT" Click="Shortcut_Click" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+                <Button Name="powerButton" Content="POWER" Click="Shortcut_Click" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+                <Button Name="logButton" Content="LOGARITHM" Click="Shortcut_Click" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
             </StackPanel>
         </Expander>
 
@@ -95,7 +95,10 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
+            <!--Workstation/Help menu-->
+            <!--Uses collapsible panels to swap displays, text edited with C#-->
             <TextBlock Grid.Row="0" x:Name="WorkstationTextBlock" Margin="5,0,0,0">Workstation</TextBlock>
+            <!--Button display-->
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Grid.Column="1" x:Name="helpButton" Height="15pt" Width="30pt" Click="HelpButton_Click" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" HorizontalAlignment="Right">
                     <Image Source="/resources/help.png"></Image>
@@ -105,12 +108,16 @@
                 </Button>
             </StackPanel>
 
+            <!--Listbox for variable names and values respectively-->
             <ListBox Grid.Row="1" Grid.Column="0" x:Name="varNames" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
             <ListBox Grid.Row="1" Grid.Column="1" x:Name="varValues" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
 
+            <!--Collapsible Help Menu-->
             <StackPanel Grid.Row="1" Grid.ColumnSpan="2" x:Name="HelpMenu" Visibility="Collapsed" Background="{DynamicResource ResourceKey=BackgroundBrush}">
                 <Grid>
+                    <!--Search bar with dynamic results display via listbox-->
                     <TextBox x:Name="helpSearch" VerticalAlignment="Center" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StackPanel}},Path=ActualWidth}" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+                    <!--TextBlock to display prompt (hidden when user begins typing)-->
                     <TextBlock IsHitTestVisible="False" Text="Search for a Term/Operator" Margin="5,0,0,0" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
