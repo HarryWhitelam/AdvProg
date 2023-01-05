@@ -14,16 +14,22 @@ namespace AdvProg
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        /// <summary>
+        /// Constructor <c>MainWindow</c> instantiates the main display, specifying Data Contexts (controllers) and preparing the user's settings
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
             DataContext = new ViewModel();
             HelpMenu.DataContext = this;
             PrepSettings();
-            SearchList = new List<string>() { "TEST", "TEST2", "TEST3", "TEST4" };
+            SearchList = new List<string>() { "TEST", "TEST2", "TEST3", "TEST4" };  //PLACEHOLDER
         }
 
         private string search;
+        /// <summary>
+        /// Search get and set methods for the help menu
+        /// </summary>
         public string Search
         {
             get
@@ -39,6 +45,9 @@ namespace AdvProg
         }
 
         public List<string> SearchList { get; set; }
+        /// <summary>
+        /// Method <c>SearchResults</c> returns an Enumerable of the filtered results from the SearchList
+        /// </summary>
         public IEnumerable<string> SearchResults
         {
             get
@@ -51,6 +60,9 @@ namespace AdvProg
 
         public static Theme Theme { get; set; }
 
+        /// <summary>
+        /// Method <c>PrepSettings</c> loads and establishes the user's settings from a saved file
+        /// </summary>
         public void PrepSettings()
         {
             UserSettings us = Settings.GetSettings();
@@ -67,44 +79,27 @@ namespace AdvProg
                     break;
             }
             Application.Current.MainWindow.FontSize = Convert.ToInt32(us.settings[1]);
-            FontFamily ff = new FontFamily(Convert.ToString(us.settings[2]));
-            Debug.WriteLine("FONT FAMILY: " + ff.Source);
-            Application.Current.MainWindow.FontFamily = ff;
+            Application.Current.MainWindow.FontFamily = new FontFamily(Convert.ToString(us.settings[2]));
             this.Resources.MergedDictionaries[0].Source =
                 new Uri($"/resources/themes/{Theme}.xaml", UriKind.Relative);
         }
 
-
-        private void ButtonDelVar_Click(object sender, RoutedEventArgs e)
-        {
-            if ((varNames.SelectedIndex == -1) && (varValues.SelectedIndex == -1))
-            {
-                MessageBox.Show("Error: please select a variable for deletion.");
-            }
-            else if ((varNames.SelectedItems.Count > 1) || (varValues.SelectedItems.Count > 1))
-            {
-                MessageBox.Show("Error: multi-deletion not implemented; please select one variable");
-            }
-            else
-            {
-                int index = varNames.SelectedIndex;
-                // ensures vars can be deleted from either column
-                if (index == -1)
-                {
-                    index = varValues.SelectedIndex;
-                }
-                Interpreter.removeVarStore((string)varNames.Items[index]);
-                varNames.Items.Remove(varNames.Items.GetItemAt(index));
-                varValues.Items.Remove(varValues.Items.GetItemAt(index));
-            }
-        }
-
+        /// <summary>
+        /// Method <c>SettingsButton_Click</c> opens the settings menu popup
+        /// </summary>
+        /// <param name="sender"><c>sender</c> provides information about the sender button</param>
+        /// <param name="e"><c>e</c> provides event arguments</param>
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             Settings settings = new Settings(Theme);
             settings.Show();
         }
 
+        /// <summary>
+        /// Method <c>HelpButton_Click</c> opens the help menu or closes it
+        /// </summary>
+        /// <param name="sender"><c>sender</c> provides information about the sender button</param>
+        /// <param name="e"><c>e</c> provides event arguments</param>
         private void HelpButton_Click(object sender, RoutedEventArgs e)
         {
             if (HelpMenu.Visibility == Visibility.Collapsed)
@@ -119,7 +114,12 @@ namespace AdvProg
             }
         }
 
-        private void RootShortcut_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Method <c>ShortCut_Click</c> opens the relevant maths visualiser popup 
+        /// </summary>
+        /// <param name="sender"><c>sender</c> provides information about the sender button</param>
+        /// <param name="e"><c>e</c> provides event arguments</param>
+        private void Shortcut_Click(object sender, RoutedEventArgs e)
         {
             int type = 0;
             if (sender == rootButton)
@@ -139,11 +139,14 @@ namespace AdvProg
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        void OnPropertyChanged(string value)
+        /// <summary>
+        /// Method <c>OnPropertyChanged</c> triggered when search help menu is changed
+        /// </summary>
+        /// <param name="element"><c>element</c> gives thee name of the xaml element which has changed</param>
+        void OnPropertyChanged(string element)
         {
-            Debug.WriteLine("CHANGE LOGGED");
-            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(value));
+            Debug.WriteLine("Value: " + element);
+            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(element));
         }
     }
 }

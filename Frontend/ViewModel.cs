@@ -17,9 +17,9 @@ namespace AdvProg
     /// </summary>
     public class ViewModel
     {
-        public string[] inputHistory = new string[1];
-        public int historyIndex = -1;
-        public string inputSave = "";
+        public string[] inputHistory = new string[1];       // array to store input history
+        public int historyIndex = -1;                       // index to track history
+        public string inputSave = "";                       // inputSave to remember non-submitted user-input
 
         /// <summary>
         /// Method <c>CountRichLines</c> is used to count the number of lines the print will require
@@ -61,7 +61,7 @@ namespace AdvProg
         /// <summary>
         /// Method <c>RemoveCurrentLineText</c> removes the current entered line text in a given TextBox
         /// </summary>
-        /// <param name="textbox"></param> the textbox that will be affected
+        /// <param name="textbox"></param> the textbox that will be accessed
         public void RemoveCurrentLineText(TextBox textbox)
         {
             if (GetPrompt(textbox) != "")
@@ -70,6 +70,11 @@ namespace AdvProg
             }
         }
 
+        /// <summary>
+        /// Method <c>GetPrompt</c> is used to get the current line code (which is always the final line)
+        /// </summary>
+        /// <param name="textbox"></param> the textbox to be accessed
+        /// <returns></returns>
         public string GetPrompt(TextBox textbox)
         {
             string[] lines = textbox.Text.Split(new char[] { '\n' });
@@ -83,10 +88,11 @@ namespace AdvProg
         /// <param name="prompt"></param> the prompt which the user entered
         public void PrintResult(string result, string prompt)
         {
-            TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+            TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");          // Accessors to get window content/controls
             TextBox cursorWindow = (TextBox)Application.Current.MainWindow.FindName("cursorWindow");
             RichTextBox printWindow = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
 
+            // constructs a string and inserts it into the textrange at the end of the textbox
             string resultString = prompt + '\r' + "    " + result + Environment.NewLine;
             TextRange resultRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
             resultRange.Text = resultString;
@@ -107,7 +113,7 @@ namespace AdvProg
         }
 
         /// <summary>
-        /// Method <c>PrintError</c> is used when an error is printed, this is done in red with some formatting
+        /// Method <c>PrintError</c> is used when an error is printed, this is done in red with some formatting, thus very similar to <c>PrintResult</c>
         /// </summary>
         /// <param name="error"></param> the error message to be printed
         /// <param name="prompt"></param> the prompt which the user entered
@@ -118,9 +124,11 @@ namespace AdvProg
             RichTextBox printWindow = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
 
             string resultString = prompt + '\r';
-            string errorString = "Error: " + error + Environment.NewLine;
             TextRange resultRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
             resultRange.Text = resultString;
+
+            // constructs a similar string and textrange, then applies a style brush for red font
+            string errorString = "Error: " + error + Environment.NewLine;
             TextRange errorRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
             errorRange.Text = errorString;
             errorRange.ApplyPropertyValue(TextElement.ForegroundProperty, (SolidColorBrush)Application.Current.MainWindow.Resources.MergedDictionaries[0]["ErrorBrush"]);
@@ -177,14 +185,19 @@ namespace AdvProg
                     ListBox varValues = (ListBox) Application.Current.MainWindow.FindName("varValues");
                     TextBox inputWindow = (TextBox) Application.Current.MainWindow.FindName("inputWindow");
 
-                    int lc = inputWindow.LineCount;
                     string input = GetPrompt(inputWindow);
 
+                    // ignores repeat inputs to avoid flooding the history array
                     if (inputHistory[0] != input)
                     {
                         inputHistory = inputHistory.Prepend(input).ToArray();
                     }
-                    if (input.Contains("plot"))
+
+                    if (input == "exit")        // checks for specific inputs which don't require the F# backend
+                    {
+                        Application.Current.Shutdown();
+                    }
+                    else if (input.Contains("plot"))
                     {
                         // creating a Regex expression to pick up the y=mx+c pattern
                         string strtlinePattern = @"plot y=\dx\+\d";
@@ -225,23 +238,24 @@ namespace AdvProg
                         Frontend.OxyplotGraphWindow OPGW = new Frontend.OxyplotGraphWindow();
                         OPGW.Show();
                     }
-                    else
+                    else        // otherwise, forwards the input to the backend
                     {
                         try
                         {
                             var variableStore = Interpreter.getVarStore();
                             var result = Interpreter.interpret(input);
                             PrintResult(result, input);
-                            if (result != null && result.Contains(":="))
+                            if (result != null && result.Contains(":="))    // checks for a valid result which contains an assignment...
                             {
-                                UpdateWorkstation();
+                                UpdateWorkstation();                        // ...hence, updates the GUI workstation
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception ex)        // prints the error if the input was not valid
                         {
                             PrintError(ex.Message[(ex.Message.IndexOf("\"") + 1)..ex.Message.Length], input);
                         }
                     }
+                    // resets some variables for the next input
                     inputSave = "";
                     historyIndex = -1;
                 });
@@ -263,11 +277,11 @@ namespace AdvProg
 
                     if (currentText != "")
                     {
+                        // removes the final character from the current line text
                         RemoveCurrentLineText(inputWindow);
                         inputWindow.AppendText(currentText.Remove(currentText.Length - 1));
 
-                        inputWindow.SelectionStart = inputWindow.Text.Length;
-                        inputWindow.SelectionLength = 0;
+                        inputWindow.Select(inputWindow.Text.Length, 0);
                     }
                 });
             }
@@ -287,7 +301,7 @@ namespace AdvProg
                     int currentSelection = inputWindow.SelectionStart;
                     char priorChar = GetPriorChar(inputWindow, currentSelection);
 
-                    if (priorChar != '\n')
+                    if (priorChar != '\n') // prevents ascending lines (locks the cursor to the current line)
                     {
                         inputWindow.Select(currentSelection - 1, 0);
                     }
@@ -308,6 +322,7 @@ namespace AdvProg
                     ListBox varNames = (ListBox) Application.Current.MainWindow.FindName("varNames");
                     ListBox varValues = (ListBox) Application.Current.MainWindow.FindName("varValues");
 
+                    // error checking (must have one variable selected)
                     if ((varNames.SelectedIndex == -1) && (varValues.SelectedIndex == -1))
                     {
                         MessageBox.Show("Error: please select a variable for deletion.");
@@ -324,6 +339,7 @@ namespace AdvProg
                         {
                             index = varValues.SelectedIndex;
                         }
+                        // removes var from the backend workstation
                         Interpreter.removeVarStore((string)varNames.Items[index]);
                         varNames.Items.Remove(varNames.Items.GetItemAt(index));
                         varValues.Items.Remove(varValues.Items.GetItemAt(index));
@@ -343,21 +359,20 @@ namespace AdvProg
                 return upHistoryCommand ??= new ActionCommand(() =>
                 {
                     TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
-                    if (inputSave == "" && historyIndex == -1)
+                    if (inputSave == "" && historyIndex == -1)      // saves current input to return to if necessary
                     {
                         inputSave = inputWindow.GetLineText(inputWindow.LineCount - 1);
                     }
-                    if (inputHistory[0] != null)
+                    if (inputHistory[0] != null)                    // checks the array has content
                     {
-                        if (historyIndex < 9 && historyIndex < inputHistory.Length - 1)
+                        if (historyIndex < 9 && historyIndex < inputHistory.Length - 1)     // checks to ensure the history can only extend so far
                         {
                             RemoveCurrentLineText(inputWindow);
                             historyIndex++;
                             inputWindow.AppendText(inputHistory[historyIndex]);
                         }
-                        
-                        inputWindow.SelectionStart = inputWindow.Text.Length;
-                        inputWindow.SelectionLength = 0;
+
+                        inputWindow.Select(inputWindow.Text.Length, 0);
                     }
                 });
             }
@@ -374,16 +389,16 @@ namespace AdvProg
                 return downHistoryCommand ??= new ActionCommand(() =>
                 {
                     TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
-                    if (inputHistory.Length > 0)
+                    if (inputHistory.Length > 0)    // checks the array is established
                     {
-                        if (historyIndex == 0)
+                        if (historyIndex == 0)      // returns to the user's saved input if they descend out of the array
                         {
                             RemoveCurrentLineText(inputWindow);
                             historyIndex--;
                             inputWindow.AppendText(inputSave);
                             inputSave = "";
                         }
-                        else if (historyIndex == -1)
+                        else if (historyIndex == -1)        // deletes current input if the user descends from their saved input
                         {
                             RemoveCurrentLineText(inputWindow);
                         }
@@ -393,9 +408,8 @@ namespace AdvProg
                             historyIndex--;
                             inputWindow.AppendText(inputHistory[historyIndex]);
                         }
-                        
-                        inputWindow.SelectionStart = inputWindow.Text.Length;
-                        inputWindow.SelectionLength = 0;
+
+                        inputWindow.Select(inputWindow.Text.Length, 0);
                     }
                 });
             }
