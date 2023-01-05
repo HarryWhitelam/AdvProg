@@ -56,7 +56,7 @@ namespace Frontend
             }
             FontSizeBox.Text = userSettings.settings[1];
             FontSizeSlider.Value = Convert.ToDouble(userSettings.settings[1]);
-            FontComboBox.SelectedIndex = Convert.ToInt32(userSettings.settings[2]);
+            FontComboBox.SelectedValue = userSettings.settings[2];
         }
 
         public static UserSettings GetSettings()
@@ -69,7 +69,7 @@ namespace Frontend
             List<string> settingsList = new List<string>();
             settingsList.Add(FindInputs<RadioButton>(this).FirstOrDefault(n => (bool)n.IsChecked).Content.ToString());
             settingsList.Add(FontSizeSlider.Value.ToString());
-            settingsList.Add(FontComboBox.SelectedIndex.ToString());
+            settingsList.Add(FontComboBox.SelectedValue.ToString());
 
             UserSettings userSettings = new UserSettings();
             userSettings.settings = settingsList;

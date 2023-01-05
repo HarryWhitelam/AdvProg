@@ -11,8 +11,6 @@
         Background="{DynamicResource ResourceKey=BackgroundBrush}">
 
     
-    
-
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -97,10 +95,15 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0">Workstation</TextBlock>
-            <Button Grid.Row="0" Grid.Column="1" x:Name="settingsButton" Height="15pt" Width="30pt" Click="SettingsButton_Click" Background="{DynamicResource ResourceKey=ControlBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" HorizontalAlignment="Right">
-                <Image Source="/resources/settings.png"></Image>
-            </Button>
+            <TextBlock Grid.Row="0" Margin="5,0,0,0">Workstation</TextBlock>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Grid.Column="1" x:Name="helpButton" Height="15pt" Width="30pt" Click="HelpButton_Click" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" HorizontalAlignment="Right">
+                    <Image Source="/resources/help.png"></Image>
+                </Button>
+                <Button Grid.Column="1" x:Name="settingsButton" Height="15pt" Width="30pt" Click="SettingsButton_Click" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" HorizontalAlignment="Right">
+                    <Image Source="/resources/settings.png"></Image>
+                </Button>
+            </StackPanel>
 
             <ListBox Grid.Row="1" Grid.Column="0" x:Name="varNames" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
             <ListBox Grid.Row="1" Grid.Column="1" x:Name="varValues" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />

@@ -1,6 +1,7 @@
 ﻿using Backend;
 using Frontend;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 
@@ -33,7 +34,9 @@ namespace AdvProg
                     break;
             }
             Application.Current.MainWindow.FontSize = Convert.ToInt32(us.settings[1]);
-            Application.Current.MainWindow.FontFamily = new FontFamily(Convert.ToString(us.settings[2]));
+            FontFamily ff = new FontFamily(Convert.ToString(us.settings[2]));
+            Debug.WriteLine("FONT FAMILY: " + ff.Source);
+            Application.Current.MainWindow.FontFamily = ff;
             this.Resources.MergedDictionaries[0].Source =
                 new Uri($"/resources/themes/{Theme}.xaml", UriKind.Relative);
         }
@@ -67,6 +70,11 @@ namespace AdvProg
         {
             Settings settings = new Settings(Theme);
             settings.Show();
+        }
+
+        private void HelpButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void RootShortcut_Click(object sender, RoutedEventArgs e)
