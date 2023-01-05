@@ -15,72 +15,90 @@ namespace Frontend
     {
         public PlotViewModel()
         {
-           
-            double z = 5;
-            double radiansX = (z * (Math.PI)) / 180;
+            double min = -10;
+            double max = 10;
             Func<double, double> f = (x) =>
             {
-                double maths = Math.Cos(z);
+                double maths = Math.Cos(x);
                 return maths;
             };
-
-            /*
-            this.MyModel = new PlotModel
+            this.CosModel = new PlotModel
             {
-                Title = "Cos Graph"
+                Title = "Cos(x) Graph"
             };
-            this.MyModel.Series.Add(new FunctionSeries(f, -200, 200, 0.1, "cos(x)"));
-           */
+            this.CosModel.Series.Add(new FunctionSeries(f, min, max, 0.1, "cos(x)"));
 
-            /*
-            int max = 10;
-            int min = -10;
-            int m = 4;
-            int c = -4;
-           
-            //Testing out y=mx+c functions
+            this.CosModel.Axes.Add(new LinearAxis
+            {
+                Position = AxisPosition.Bottom,
+                Minimum = -5,
+                Maximum = 5,
+                MajorGridlineStyle = LineStyle.Dot
+            });
+            this.CosModel.Axes.Add(new LinearAxis
+            {
+                Position = AxisPosition.Left,
+                Minimum = -5,
+                Maximum = 5,
+                MajorGridlineStyle = LineStyle.Dot
+            });
+
             Func<double, double> g = (x) =>
             {
-                double y = 0;
-                y = (m * x) + (c);
-                return y;
+                double maths = Math.Sin(x);
+                return maths;
             };
-
-            this.MyModel = new PlotModel
+            this.SinModel = new PlotModel
             {
-                Title = "y=4x-4"
+                Title = "Sin(x) Graph"
             };
-            this.MyModel.Series.Add(new FunctionSeries(g, min, max, 0.1, "y=4x-4"));
-            */
-            
-            /*
-            int a = 6;
-            int b = 5;
-            int c2 = 4;
-            int min = -10;
-            int max = 10;
+            this.SinModel.Series.Add(new FunctionSeries(g, min, max, 0.1, "Sin(x)"));
 
-            //Testing out y = ax^2 + bx + c functions
+            this.SinModel.Axes.Add(new LinearAxis
+            {
+                Position = AxisPosition.Bottom,
+                Minimum = -5,
+                Maximum = 5,
+                MajorGridlineStyle = LineStyle.Dot
+            });
+            this.SinModel.Axes.Add(new LinearAxis
+            {
+                Position = AxisPosition.Left,
+                Minimum = -5,
+                Maximum = 5,
+                MajorGridlineStyle = LineStyle.Dot
+            });
+
             Func<double, double> h = (x) =>
             {
-                double y = 0;
-                y = ((a * x * x ) + (b * x) + (c2));
-                return y;
+                double maths = Math.Tan(x);
+                return maths;
             };
-            this.MyModel = new PlotModel
+            this.TanModel = new PlotModel
             {
-                Title = "y = 6x^2 + 5x + 4",
-                TitleColor = OxyColor.Parse("#036ffc")
+                Title = "Tan(x) Graph"
             };
-            this.MyModel.Series.Add(new FunctionSeries(h, min, max, 0.1, "y = 6x^2 + 5x + 4"));
-            */
+            this.TanModel.Series.Add(new FunctionSeries(h, min, max, 0.1, "Tan(x)"));
 
-            string[] equation = {"5x^4", "4x^3", "3x^2", "2x", "1"};
+            this.TanModel.Axes.Add(new LinearAxis
+            {
+                Position = AxisPosition.Bottom,
+                Minimum = -5,
+                Maximum = 5,
+                MajorGridlineStyle = LineStyle.Dot
+            });
+            this.TanModel.Axes.Add(new LinearAxis
+            {
+                Position = AxisPosition.Left,
+                Minimum = -5,
+                Maximum = 5,
+                MajorGridlineStyle = LineStyle.Dot
+            });
+
+            //string[] equation = { "5x^4", "4x^3", "3x^2", "2x", "1" };
             //string[] equation = { "5x^3", "4x^2", "3x", "2" };
+            string[] equation = { "6x", "3" };
             int lengthEq = equation.Length;
-            int min = -10;
-            int max = 10;
-            //double x = 2;
             Func<double, double> i = (x) =>
             {
                 string splitpattern = @"x\^|x";
@@ -109,27 +127,28 @@ namespace Frontend
                 }
                 double y = 0;
                 int numTerms = calcValues.Length;
-                for(int k = 0; k < numTerms; k++)
+                for (int k = 0; k < numTerms; k++)
                 {
                     y += calcValues[k];
                 }
                 return y;
             };
-            this.MyModel = new PlotModel
+            this.PolynomialModel = new PlotModel
             {
-                Title = "y = 5x^4 + 4x^3 + 3x^2 + 2x + 1",
+                //Title = "y = 5x^4 + 4x^3 + 3x^2 + 2x + 1",
+                Title = "y = 6x + 3",
                 TitleColor = OxyColor.Parse("#036ffc")
             };
-            this.MyModel.Series.Add(new FunctionSeries(i, min, max, 0.1, "y = 5x^4 + 4x^3 + 3x^2 + 2x + 1"));
+            this.PolynomialModel.Series.Add(new FunctionSeries(i, min, max, 0.1, "y = 6x + 3"));
 
-            this.MyModel.Axes.Add(new LinearAxis
+            this.PolynomialModel.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Bottom,
                 Minimum = -5,
                 Maximum = 5,
                 MajorGridlineStyle = LineStyle.Dot
-            }) ;
-            this.MyModel.Axes.Add(new LinearAxis
+            });
+            this.PolynomialModel.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Left,
                 Minimum = -5,
@@ -150,7 +169,25 @@ namespace Frontend
             private set;
         }
 
-        public PlotModel MyModel
+        public PlotModel CosModel
+        {
+            get;
+            private set;
+        }
+
+        public PlotModel SinModel
+        {
+            get;
+            private set;
+        }
+
+        public PlotModel TanModel
+        {
+            get;
+            private set;
+        }
+
+        public PlotModel PolynomialModel
         {
             get;
             private set;
