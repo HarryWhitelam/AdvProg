@@ -11,6 +11,6 @@
         <local:PlotViewModel/>
     </Window.DataContext>
     <Grid>
-        <oxy:PlotView Model="{Binding MyModel}"/>
+        <oxy:PlotView Model="{Binding TanModel}"/>
     </Grid>
 </Window>
