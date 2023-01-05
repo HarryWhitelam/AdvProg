@@ -58,6 +58,11 @@
 
                     <TextBox Grid.Column="0" Name="cursorWindow" BorderBrush="{x:Null}" IsReadOnly="True" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">>></TextBox>
                     <RichTextBox Grid.Column="1" Height ="auto" Name="printWindow" VerticalAlignment="Top" BorderBrush="{x:Null}" IsReadOnly="True" IsHitTestVisible="False" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">
+                        <!--<RichTextBox.Resources>
+                            <Style TargetType="{x:Type Paragraph}">
+                                <Setter Property="Margin" Value="0"/>
+                            </Style>
+                        </RichTextBox.Resources>-->
                         <FlowDocument>
                             <Paragraph></Paragraph>
                         </FlowDocument>
