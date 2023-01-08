@@ -26,6 +26,15 @@ namespace Frontend
             SearchList = new List<string>() { "TEST", "TEST2", "TEST3", "TEST4" };  //PLACEHOLDER
         }
 
+        /// <summary>
+        /// Constructor <c>MainWindow</c> instantiates an instance of MainWindow to be used with NUnit testing
+        /// </summary>
+        /// <param name="isTesting"></param>
+        public MainWindow(bool isTesting) 
+        {
+            InitializeComponent();
+        }
+
         private string search;
         /// <summary>
         /// Search get and set methods for the help menu

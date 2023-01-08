@@ -94,6 +94,12 @@
             Constructor <c>MainWindow</c> instantiates the main display, specifying Data Contexts (controllers) and preparing the user's settings
             </summary>
         </member>
+        <member name="M:Frontend.MainWindow.#ctor(System.Boolean)">
+            <summary>
+            Constructor <c>MainWindow</c> instantiates an instance of MainWindow to be used with NUnit testing
+            </summary>
+            <param name="isTesting"></param>
+        </member>
         <member name="P:Frontend.MainWindow.Search">
             <summary>
             Search get and set methods for the help menu
@@ -354,34 +360,34 @@
             Method <c>DownHistoryCommand</c> is used to descend through the history array using the down-arrow keybind. 
             </summary>
         </member>
-        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+        <member name="P:Frontend.ViewModel.ReturnCommand">
             <summary>
-            GeneratedInternalTypeHelper
+            Method <c>ReturnCommand</c> is used with the return keybind to send prompts to the backend
             </summary>
         </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+        <member name="P:Frontend.ViewModel.BackCommand">
             <summary>
-            CreateInstance
+            Method <c>BackCommand</c> is used with the backspace keybind to handle character deletion. This ensures the user cannot delete previous prompts/move lines
             </summary>
         </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+        <member name="P:Frontend.ViewModel.LeftCommand">
             <summary>
-            GetPropertyValue
+            Method <c>LeftCommand</c> is used with the left-arrow keybind to handle line-selection. This ensures the user cannot ascend/descend lines incorrectly. 
             </summary>
         </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+        <member name="P:Frontend.ViewModel.DelVarCommand">
             <summary>
-            SetPropertyValue
+            Method <c>DelVarCommand</c> is used to delete a variable from the Workstation and hence the VariableStore
             </summary>
         </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+        <member name="P:Frontend.ViewModel.UpHistoryCommand">
             <summary>
-            CreateDelegate
+            Method <c>UpHistoryCommand</c> is used with the up-arrow keybind to handle history viewing (ascends through the history array). 
             </summary>
         </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+        <member name="P:Frontend.ViewModel.DownHistoryCommand">
             <summary>
-            AddEventHandler
+            Method <c>DownHistoryCommand</c> is used to descend through the history array using the down-arrow keybind. 
             </summary>
         </member>
     </members>
