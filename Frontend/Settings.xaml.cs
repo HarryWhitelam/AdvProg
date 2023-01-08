@@ -18,8 +18,8 @@ namespace Frontend
     {
         // attributes definition
         UserSettings userSettings;
-        string settingsFile = "../../../resources/UserSettings.xml";
-        static string staticFile = "../../../resources/UserSettings.xml";
+        string settingsFile = "../../../../Frontend/resources/UserSettings.xml";
+        static string staticFile = "../../../../Frontend/resources/UserSettings.xml";
 
         /// <summary>
         /// Constructor <c>Settings</c> instantiates a Settings window with the relevant theme and prefills
