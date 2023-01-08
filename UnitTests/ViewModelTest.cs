@@ -20,7 +20,6 @@ namespace UnitTests
             _viewModel = new ViewModel();
             if (Application.Current == null)
             {
-                TestContext.Out.WriteLine("Restarting app");
                 new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown };
             }
             new MainWindow(true);
@@ -77,6 +76,7 @@ namespace UnitTests
             TextBox iw = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
             TextBox cw = (TextBox)Application.Current.MainWindow.FindName("cursorWindow");
             RichTextBox pw = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
+
             iw.AppendText(prompt);
             _viewModel.PrintResult(result, prompt);
             string pwText = new TextRange(pw.Document.ContentStart, pw.Document.ContentEnd).Text;
@@ -89,10 +89,55 @@ namespace UnitTests
             TextBox iw = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
             TextBox cw = (TextBox)Application.Current.MainWindow.FindName("cursorWindow");
             RichTextBox pw = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
+
             iw.AppendText(prompt);
             _viewModel.PrintError(error, prompt);
             string pwText = new TextRange(pw.Document.ContentStart, pw.Document.ContentEnd).Text;
             return new string[] { iw.Text, cw.Text, pwText };
+        }
+
+        [TestCase("x:=1", "x", "1", false, ExpectedResult = new bool[] { true, true, true })]
+        [TestCase("x:=1", "y", "5", true, ExpectedResult = new bool[] { true, true, true })]
+        public bool[] UpdateWorkstation(string testInput, string name, string value, bool changeValue)
+        {
+            TextBox iw = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+            ListBox varNames = (ListBox)Application.Current.MainWindow.FindName("varNames");
+            ListBox varValues = (ListBox)Application.Current.MainWindow.FindName("varValues");
+
+            iw.AppendText(testInput);
+            _viewModel.ReturnCommand.Execute(null);
+
+            // Check for if updating values is also functioning correctly
+            if (changeValue)
+            {
+                iw.AppendText(name + ":=10");
+                _viewModel.ReturnCommand.Execute(null);
+                value = "10";
+            }
+
+            bool indexTest = varNames.Items.IndexOf(name) == varValues.Items.IndexOf(value);
+
+            return new bool[] { varNames.Items.Contains(name), varValues.Items.Contains(value), indexTest };
+        }
+
+        [TestCase(ExpectedResult = true)]
+        public bool TestReturnCommand()
+        {
+            return _viewModel.ReturnCommand.CanExecute(null);
+        }
+
+        [TestCase("5+5", "0", ExpectedResult = "5+")]
+        [TestCase("", "0", ExpectedResult = "")]
+        [TestCase("\r\n", "0", ExpectedResult = "")]
+        [TestCase("5+5", "2", ExpectedResult = "+5")]
+        [TestCase("5+5", "3", ExpectedResult = "5+5")]
+        public string TestBackCommand(string inputString, int offset)
+        {
+            TextBox iw = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+            iw.AppendText(inputString);
+            iw.Select(iw.Text.Length - (offset+1), 0);
+            _viewModel.BackCommand.Execute(null);
+            return _viewModel.GetPrompt(iw);
         }
     }
 }
