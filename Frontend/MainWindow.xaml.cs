@@ -10,7 +10,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
 
-namespace AdvProg
+namespace Frontend
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {

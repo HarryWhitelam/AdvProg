@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace AdvProg
+namespace Frontend
 {
     /// <summary>
     /// Class <c>ActionCommand</c> is an implementation of ICommand

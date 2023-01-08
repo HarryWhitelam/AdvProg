@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Frontend;
-using AdvProg;
 using System.Collections;
 
 namespace Frontend
