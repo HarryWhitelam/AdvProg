@@ -360,5 +360,35 @@
             Method <c>DownHistoryCommand</c> is used to descend through the history array using the down-arrow keybind. 
             </summary>
         </member>
+        <member name="P:Frontend.ViewModel.ReturnCommand">
+            <summary>
+            Method <c>ReturnCommand</c> is used with the return keybind to send prompts to the backend
+            </summary>
+        </member>
+        <member name="P:Frontend.ViewModel.BackCommand">
+            <summary>
+            Method <c>BackCommand</c> is used with the backspace keybind to handle character deletion. This ensures the user cannot delete previous prompts/move lines
+            </summary>
+        </member>
+        <member name="P:Frontend.ViewModel.LeftCommand">
+            <summary>
+            Method <c>LeftCommand</c> is used with the left-arrow keybind to handle line-selection. This ensures the user cannot ascend/descend lines incorrectly. 
+            </summary>
+        </member>
+        <member name="P:Frontend.ViewModel.DelVarCommand">
+            <summary>
+            Method <c>DelVarCommand</c> is used to delete a variable from the Workstation and hence the VariableStore
+            </summary>
+        </member>
+        <member name="P:Frontend.ViewModel.UpHistoryCommand">
+            <summary>
+            Method <c>UpHistoryCommand</c> is used with the up-arrow keybind to handle history viewing (ascends through the history array). 
+            </summary>
+        </member>
+        <member name="P:Frontend.ViewModel.DownHistoryCommand">
+            <summary>
+            Method <c>DownHistoryCommand</c> is used to descend through the history array using the down-arrow keybind. 
+            </summary>
+        </member>
     </members>
 </doc>
