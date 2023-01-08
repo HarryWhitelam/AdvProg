@@ -94,6 +94,12 @@
             Constructor <c>MainWindow</c> instantiates the main display, specifying Data Contexts (controllers) and preparing the user's settings
             </summary>
         </member>
+        <member name="M:Frontend.MainWindow.#ctor(System.Boolean)">
+            <summary>
+            Constructor <c>MainWindow</c> instantiates an instance of MainWindow to be used with NUnit testing
+            </summary>
+            <param name="isTesting"></param>
+        </member>
         <member name="P:Frontend.MainWindow.Search">
             <summary>
             Search get and set methods for the help menu

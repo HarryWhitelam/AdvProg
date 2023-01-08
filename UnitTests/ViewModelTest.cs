@@ -4,16 +4,20 @@ using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Documents;
 
+[assembly: Apartment(ApartmentState.STA)]
+
 namespace UnitTests
 {
     public class Tests
     {
+        private App _app;
         private MainWindow _mainWindow;
         private ViewModel _viewModel;
 
         [SetUp]
         public void Setup()
         {
+            _mainWindow = new MainWindow(true);
             _viewModel = new();
         }
 
@@ -24,7 +28,6 @@ namespace UnitTests
             return _viewModel.CountRichLines(testValue);
         }
 
-        [Apartment(ApartmentState.STA)]
         [TestCase("test1", 2, ExpectedResult = 'e')]
         [TestCase("test2", 0, ExpectedResult = '\n')]
         public char TestGetPriorChar(string tbText, int curIndex)
@@ -34,7 +37,6 @@ namespace UnitTests
             return _viewModel.GetPriorChar(tb, curIndex);
         }
 
-        [Apartment(ApartmentState.STA)]
         [TestCase("test1", ExpectedResult = "")]
         [TestCase("test2\nremoveThisText", ExpectedResult = "test2\n")]
         [TestCase("test3\n\nplaceholder\n\nremoveThisText", ExpectedResult = "test3\n\nplaceholder\n\n")]
@@ -48,7 +50,6 @@ namespace UnitTests
             return tb.Text;
         }
 
-        [Apartment(ApartmentState.STA)]
         [TestCase("test1", ExpectedResult = "test1")]
         [TestCase("test2\n\nplaceholder\n\ngetThisText", ExpectedResult = "getThisText")]
         public string TestGetPrompt(string tbText)
@@ -58,14 +59,13 @@ namespace UnitTests
             return _viewModel.GetPrompt(tb);
         }
 
-        //[Apartment(ApartmentState.STA)]
-        //[TestCase("5+5", "10", ExpectedResult = "fail")]
-        //public string TestPrintResult(string result, string prompt)
-        //{
-        //    TextBox iw = (TextBox)_mainWindow.FindName("inputWindow");
-        //    iw.AppendText(prompt);
-        //    _viewModel.PrintResult(result, prompt);
-        //    return iw.Text;
-        //}
+        [TestCase("5+5", "10", ExpectedResult = "fail")]
+        public string TestPrintResult(string result, string prompt)
+        {
+            TextBox iw = (TextBox)_mainWindow.FindName("inputWindow");
+            iw.AppendText(prompt);
+            _viewModel.PrintResult(result, prompt);
+            return iw.Text;
+        }
     }
 }
