@@ -273,15 +273,16 @@ namespace AdvProg
                 return backCommand ??= new ActionCommand(() =>
                 {
                     TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
-                    string currentText = GetPrompt(inputWindow);
+                    int currentSelection = inputWindow.SelectionStart;
+                    char priorChar = GetPriorChar(inputWindow, currentSelection);
 
-                    if (currentText != "")
+                    if (priorChar != '\n')
                     {
-                        // removes the final character from the current line text
+                        string currentText = GetPrompt(inputWindow);
                         RemoveCurrentLineText(inputWindow);
-                        inputWindow.AppendText(currentText.Remove(currentText.Length - 1));
-
-                        inputWindow.Select(inputWindow.Text.Length, 0);
+                        int lineIndex = currentSelection - inputWindow.GetCharacterIndexFromLineIndex(inputWindow.LineCount - 1);
+                        inputWindow.AppendText(currentText.Remove(lineIndex - 1, 1));
+                        inputWindow.Select(currentSelection - 1, 0);
                     }
                 });
             }
