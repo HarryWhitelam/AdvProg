@@ -20,6 +20,7 @@ namespace UnitTests
             _viewModel = new ViewModel();
             if (Application.Current == null)
             {
+                //TestContext.Out.WriteLine("Restarting app");
                 new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown };
             }
             new MainWindow(true);
@@ -83,7 +84,7 @@ namespace UnitTests
             return new string[] { iw.Text, cw.Text, pwText };
         }
 
-        [TestCase("Expected number, variable, or closing bracket here: \r   5+\r     ^", "5+", ExpectedResult = new string[] { "\n\n\n\n\n", ">>\n\n\n\n\n>>", "5+\rError: Expected number, variable, or closing bracket here: \r   5+\r     ^\r\n\r\n" })]
+        [TestCase("Expected number, variable, or closing bracket here: \r   5+\r     ^", "5+", ExpectedResult = new string[] { "\r\n\r\n\r\n\r\n\r\n", ">>\r\n\r\n\r\n\r\n\r\n>>", "5+\rError: Expected number, variable, or closing bracket here: \r   5+\r     ^\r\n\r\n" })]
         public string[] TestPrintError(string error, string prompt)
         {
             TextBox iw = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
@@ -105,7 +106,7 @@ namespace UnitTests
             ListBox varValues = (ListBox)Application.Current.MainWindow.FindName("varValues");
 
             iw.AppendText(testInput);
-            _viewModel.ReturnCommand.Execute(null);
+            _viewModel.ReturnCommand.Execute(null);     //UpdateWorkstation called within ReturnCommand
 
             // Check for if updating values is also functioning correctly
             if (changeValue)
@@ -126,17 +127,87 @@ namespace UnitTests
             return _viewModel.ReturnCommand.CanExecute(null);
         }
 
-        [TestCase("5+5", "0", ExpectedResult = "5+")]
-        [TestCase("", "0", ExpectedResult = "")]
-        [TestCase("\r\n", "0", ExpectedResult = "")]
-        [TestCase("5+5", "2", ExpectedResult = "+5")]
-        [TestCase("5+5", "3", ExpectedResult = "5+5")]
+        [TestCase("", 0, ExpectedResult = "")]
+        [TestCase("\r\n", 0, ExpectedResult = "")]
+        [TestCase("5+5", 0, ExpectedResult = "5+")]
+        [TestCase("5+5", 2, ExpectedResult = "+5")]
+        [TestCase("5+5", 3, ExpectedResult = "5+5")]
         public string TestBackCommand(string inputString, int offset)
         {
             TextBox iw = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
             iw.AppendText(inputString);
-            iw.Select(iw.Text.Length - (offset+1), 0);
+            iw.Select(iw.Text.Length-offset, 0);
             _viewModel.BackCommand.Execute(null);
+            return _viewModel.GetPrompt(iw);
+        }
+
+        [TestCase("", 0, ExpectedResult = 0)]
+        [TestCase("\r\n\r\n\r\n", 0, ExpectedResult = 6)]
+        [TestCase("\r\n\r\n\r\n5+5", 0, ExpectedResult = 8)]
+        [TestCase("\r\n\r\n\r\n5+5", 3, ExpectedResult = 6)]
+        public int TestLeftCommand(string inputString, int offset)
+        {
+            TextBox iw = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+            iw.AppendText(inputString);
+            iw.Select(iw.Text.Length - offset, 0);
+            _viewModel.LeftCommand.Execute(null);
+            return iw.SelectionStart;
+        }
+
+        [TestCase("x:=5", "x", "5", ExpectedResult = new bool[] { true, true })]
+        [TestCase("y:=100", "y", "100", ExpectedResult = new bool[] { true, true })]
+        public bool[] TestDelVarCommand(string testInput, string name, string value)
+        {
+            TextBox iw = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+            ListBox varNames = (ListBox)Application.Current.MainWindow.FindName("varNames");
+            ListBox varValues = (ListBox)Application.Current.MainWindow.FindName("varValues");
+            bool[] results = new bool[] { false, false };
+
+            //populate in order to remove
+            iw.AppendText(testInput);
+            _viewModel.ReturnCommand.Execute(null);
+            // check both column selections are valid
+            varNames.SelectedIndex = varNames.Items.IndexOf(name);
+            _viewModel.DelVarCommand.Execute(null);
+            if (!varNames.Items.Contains(name) && !varValues.Items.Contains(value))
+                results[0] = true;
+
+            // repeat for second columnn selection
+            iw.AppendText(testInput);
+            _viewModel.ReturnCommand.Execute(null);
+            // check both column selections are valid
+            varValues.SelectedIndex = varValues.Items.IndexOf(value);
+            _viewModel.DelVarCommand.Execute(null);
+            if (!varNames.Items.Contains(name) && !varValues.Items.Contains(value))
+                results[1] = true;
+
+            return results;
+        }
+
+        [TestCase(new string[] { "1+1", "" }, "1", ExpectedResult = "1+1")]
+        [TestCase(new string[] { "1+1", "2+2", "3+3", "4+4", "5+5", "" }, "5", ExpectedResult = "5+5")]
+        [TestCase(new string[] { "1+1", "2+2", "3+3", "4+4", "5+5", "6+6", "" }, "9", ExpectedResult = "")]
+        public string TestUpHistoryCommand(string[] historyArray, int recursions)
+        {
+            TextBox iw = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+            _viewModel.inputHistory = historyArray;
+
+            for (int i=0; i < recursions; i++)  { _viewModel.UpHistoryCommand.Execute(null); }
+            return _viewModel.GetPrompt(iw);
+        }
+
+        [TestCase(new string[] { "1+1", "2+2", "3+3", "4+4", "5+5", "" }, 2, 4, "", ExpectedResult = "2+2")]
+        [TestCase(new string[] { "1+1", "2+2", "3+3", "4+4", "5+5", "" }, 2, 10, "", ExpectedResult = "4+4")]
+        [TestCase(new string[] { "1+1", "2+2", "3+3", "4+4", "5+5", "" }, 4, 4, "6+6", ExpectedResult = "6+6")]
+        public string TestDownHistoryCommand(string[] historyArray, int recursions, int upRecursions, string inputSave)
+        {
+            TextBox iw = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+            iw.AppendText(inputSave);
+            _viewModel.inputHistory = historyArray;
+
+            for (int i = 0; i < upRecursions; i++) { _viewModel.UpHistoryCommand.Execute(null); }
+            for (int i = 0; i < recursions; i++) { _viewModel.DownHistoryCommand.Execute(null); }
+
             return _viewModel.GetPrompt(iw);
         }
     }
