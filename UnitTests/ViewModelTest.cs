@@ -1,5 +1,6 @@
 using Frontend;
 using NUnit.Framework;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,17 +12,25 @@ namespace UnitTests
 {
     public class Tests
     {
-        private MainWindow _mainWindow;
         private ViewModel _viewModel;
 
         [SetUp]
         public void Setup()
         {
-            _viewModel = new();
+            _viewModel = new ViewModel();
             if (Application.Current == null)
+            {
+                TestContext.Out.WriteLine("Restarting app");
                 new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown };
-            if (Application.Current.MainWindow == null)
-                new MainWindow(true);
+            }
+            new MainWindow(true);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Application.Current.MainWindow.Close();
+            Application.Current.Shutdown();
         }
 
         [TestCase("This \n is a \n test string \n for testing", ExpectedResult = 4)]
@@ -70,6 +79,18 @@ namespace UnitTests
             RichTextBox pw = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
             iw.AppendText(prompt);
             _viewModel.PrintResult(result, prompt);
+            string pwText = new TextRange(pw.Document.ContentStart, pw.Document.ContentEnd).Text;
+            return new string[] { iw.Text, cw.Text, pwText };
+        }
+
+        [TestCase("Expected number, variable, or closing bracket here: \r   5+\r     ^", "5+", ExpectedResult = new string[] { "\n\n\n\n\n", ">>\n\n\n\n\n>>", "5+\rError: Expected number, variable, or closing bracket here: \r   5+\r     ^\r\n\r\n" })]
+        public string[] TestPrintError(string error, string prompt)
+        {
+            TextBox iw = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+            TextBox cw = (TextBox)Application.Current.MainWindow.FindName("cursorWindow");
+            RichTextBox pw = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
+            iw.AppendText(prompt);
+            _viewModel.PrintError(error, prompt);
             string pwText = new TextRange(pw.Document.ContentStart, pw.Document.ContentEnd).Text;
             return new string[] { iw.Text, cw.Text, pwText };
         }
