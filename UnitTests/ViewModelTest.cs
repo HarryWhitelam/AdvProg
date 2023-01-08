@@ -57,5 +57,15 @@ namespace UnitTests
             tb.Text = tbText;
             return _viewModel.GetPrompt(tb);
         }
+
+        //[Apartment(ApartmentState.STA)]
+        //[TestCase("5+5", "10", ExpectedResult = "fail")]
+        //public string TestPrintResult(string result, string prompt)
+        //{
+        //    TextBox iw = (TextBox)_mainWindow.FindName("inputWindow");
+        //    iw.AppendText(prompt);
+        //    _viewModel.PrintResult(result, prompt);
+        //    return iw.Text;
+        //}
     }
 }
