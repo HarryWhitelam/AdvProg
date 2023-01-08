@@ -138,8 +138,8 @@ namespace Frontend
             int lineCount = CountRichLines(resultString + errorString);
             for (int i = 0; i <= lineCount; i++)
             {
-                inputWindow.AppendText("\n");
-                cursorWindow.AppendText("\n");
+                inputWindow.AppendText(Environment.NewLine);
+                cursorWindow.AppendText(Environment.NewLine);
             }
             inputWindow.Select(inputWindow.Text.Length, 0);
 
