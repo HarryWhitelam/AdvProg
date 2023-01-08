@@ -1,6 +1,7 @@
 using Frontend;
 using NUnit.Framework;
 using System.Threading;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 
@@ -10,15 +11,17 @@ namespace UnitTests
 {
     public class Tests
     {
-        private App _app;
         private MainWindow _mainWindow;
         private ViewModel _viewModel;
 
         [SetUp]
         public void Setup()
         {
-            _mainWindow = new MainWindow(true);
             _viewModel = new();
+            if (Application.Current == null)
+                new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown };
+            if (Application.Current.MainWindow == null)
+                new MainWindow(true);
         }
 
         [TestCase("This \n is a \n test string \n for testing", ExpectedResult = 4)]
@@ -59,13 +62,16 @@ namespace UnitTests
             return _viewModel.GetPrompt(tb);
         }
 
-        [TestCase("5+5", "10", ExpectedResult = "fail")]
-        public string TestPrintResult(string result, string prompt)
+        [TestCase("10", "5+5", ExpectedResult = new string[] { "\r\n\r\n\r\n", ">>\r\n\r\n\r\n>>", "5+5\r    10\r\n\r\n" })]
+        public string[] TestPrintResult(string result, string prompt)
         {
-            TextBox iw = (TextBox)_mainWindow.FindName("inputWindow");
+            TextBox iw = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+            TextBox cw = (TextBox)Application.Current.MainWindow.FindName("cursorWindow");
+            RichTextBox pw = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
             iw.AppendText(prompt);
             _viewModel.PrintResult(result, prompt);
-            return iw.Text;
+            string pwText = new TextRange(pw.Document.ContentStart, pw.Document.ContentEnd).Text;
+            return new string[] { iw.Text, cw.Text, pwText };
         }
     }
 }
