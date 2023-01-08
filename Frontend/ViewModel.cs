@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using static Microsoft.FSharp.Core.LanguagePrimitives;
 
-namespace AdvProg
+namespace Frontend
 {
     /// <summary>
     /// Class <c>ViewModel</c> is used to control various elements of the GUI

@@ -7,7 +7,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Frontend;
 
-namespace AdvProg
+namespace Frontend
 {
     public partial class PopUp : Window
     {
@@ -128,7 +128,7 @@ namespace AdvProg
         }
 
         /// <summary>
-        /// Method <c>ShortCutSubmit_Click</c> gathers the users inputs and passes them to a list. <see cref=">ProcessShortcut"/>
+        /// Method <c>ShortCutSubmit_Click</c> gathers the users inputs and passes them to a list. <see cref="ProcessShortcut"/>
         /// </summary>
         /// <param name="sender"><c>sender</c> provides information about the sender button</param>
         /// <param name="e"><c>e</c> provides event arguments</param>
