@@ -53,9 +53,9 @@ namespace UnitTests
         }
 
         [TestCase("test1", ExpectedResult = "")]
-        [TestCase("test2\nremoveThisText", ExpectedResult = "test2\n")]
-        [TestCase("test3\n\nplaceholder\n\nremoveThisText", ExpectedResult = "test3\n\nplaceholder\n\n")]
-        [TestCase("test4\n\n\n\n", ExpectedResult = "test4\n\n\n\n")]
+        [TestCase("test2\r\nremoveThisText", ExpectedResult = "test2\r\n")]
+        [TestCase("test3\r\n\r\nplaceholder\r\n\r\nremoveThisText", ExpectedResult = "test3\r\n\r\nplaceholder\r\n\r\n")]
+        [TestCase("test4\r\n\r\n\r\n\r\n", ExpectedResult = "test4\r\n\r\n\r\n\r\n")]
         public string TestRemoveCurrentLineText(string tbText)
         {
             TextBox tb = new();
@@ -66,8 +66,8 @@ namespace UnitTests
         }
 
         [TestCase("test1", ExpectedResult = "test1")]
-        [TestCase("test2\n\nplaceholder\n\ngetThisText", ExpectedResult = "getThisText")]
-        [TestCase("test2\n\nplaceholder\n\nnotThisText\r\n", ExpectedResult = "")]
+        [TestCase("test2\r\nplaceholder\r\ngetThisText", ExpectedResult = "getThisText")]
+        [TestCase("test2\r\nplaceholder\r\nnotThisText\r\n", ExpectedResult = "")]
         public string TestGetPrompt(string tbText)
         {
             TextBox tb = new();
@@ -77,6 +77,7 @@ namespace UnitTests
 
         [TestCase("10", "5+5", ExpectedResult = new string[] { "\r\n\r\n\r\n", ">>\r\n\r\n\r\n>>", "5+5\r    10\r\n\r\n" })]
         [TestCase("x:=5", "x:=5", ExpectedResult = new string[] { "\r\n\r\n\r\n", ">>\r\n\r\n\r\n>>", "x:=5\r    x:=5\r\n\r\n" })]
+        [TestCase("", "", ExpectedResult = new string[] { "\r\n\r\n", ">>\r\n\r\n>>", "\r\n\r\n" })]
         public string[] TestPrintResult(string result, string prompt)
         {
             TextBox iw = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
