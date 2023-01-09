@@ -1,6 +1,5 @@
 using Frontend;
 using NUnit.Framework;
-using System.Diagnostics;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,7 +20,6 @@ namespace UnitTests
             _viewModel = new ViewModel();
             if (Application.Current == null)
             {
-                //TestContext.Out.WriteLine("Restarting app");
                 new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown };
             }
             new MainWindow(true);
@@ -34,8 +32,9 @@ namespace UnitTests
             Application.Current.Shutdown();
         }
 
-        [TestCase("This \n is a \n test string \n for testing", ExpectedResult = 4)]
-        [TestCase("Test2", ExpectedResult = 1)]
+        [TestCase("Test1", ExpectedResult = 1)]
+        [TestCase("\r\n\r\n\r\nTest2\r\n\r\n", ExpectedResult = 1)]     // should remove empty entries
+        [TestCase("This \r\n is a \r\n test string \r\n for test3", ExpectedResult = 4)]
         public int TestCountRichLines(string testValue)
         {
             return _viewModel.CountRichLines(testValue);
@@ -43,6 +42,9 @@ namespace UnitTests
 
         [TestCase("test1", 2, ExpectedResult = 'e')]
         [TestCase("test2", 0, ExpectedResult = '\n')]
+        [TestCase("test3\r\n\r\nplaceholder", 9, ExpectedResult = 'p')]
+        [TestCase("test4\r\n\r\nplaceholder", 8, ExpectedResult = '\n')]
+        [TestCase("test5\r\n\r\nplaceholder", 20, ExpectedResult = 'r')]
         public char TestGetPriorChar(string tbText, int curIndex)
         {
             TextBox tb = new();
@@ -65,6 +67,7 @@ namespace UnitTests
 
         [TestCase("test1", ExpectedResult = "test1")]
         [TestCase("test2\n\nplaceholder\n\ngetThisText", ExpectedResult = "getThisText")]
+        [TestCase("test2\n\nplaceholder\n\nnotThisText\r\n", ExpectedResult = "")]
         public string TestGetPrompt(string tbText)
         {
             TextBox tb = new();
@@ -73,6 +76,7 @@ namespace UnitTests
         }
 
         [TestCase("10", "5+5", ExpectedResult = new string[] { "\r\n\r\n\r\n", ">>\r\n\r\n\r\n>>", "5+5\r    10\r\n\r\n" })]
+        [TestCase("x:=5", "x:=5", ExpectedResult = new string[] { "\r\n\r\n\r\n", ">>\r\n\r\n\r\n>>", "x:=5\r    x:=5\r\n\r\n" })]
         public string[] TestPrintResult(string result, string prompt)
         {
             TextBox iw = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
@@ -141,7 +145,6 @@ namespace UnitTests
             if (index >= 0)
             {
                 iw.SelectionStart = index;
-                TestContext.Out.WriteLine(_viewModel.GetPriorChar(iw, index));
             }
             else
                 iw.SelectionStart = 0;
@@ -214,7 +217,6 @@ namespace UnitTests
             _viewModel.inputHistory = historyArray;
 
             for (int i = 0; i < upRecursions; i++) { _viewModel.UpHistoryCommand.Execute(null); }
-            TestContext.Out.WriteLine(_viewModel.inputSave);
             for (int i = 0; i < recursions; i++) { _viewModel.DownHistoryCommand.Execute(null); }
 
             return _viewModel.GetPrompt(iw);
