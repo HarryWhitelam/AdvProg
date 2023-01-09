@@ -23,55 +23,129 @@ namespace Frontend
             double min = -10;
             double max = 10;
 
-            int modelnum = 4;
+            int modelnum = 1;
 
             if (modelnum == 1)
             {
                 //string[] equation = { "5x^4", "4x^3", "3x^2", "2x", "1" };
-                //string[] equation = { "5x^3", "4x^2", "3x", "2" };
-                string[] equation = { "6x", "3" };
-                int lengthEq = equation.Length;
+                string[] equation = { "5x^3", "+", "4x^2", "-", "3x", "+", "2" };
+                //string[] equation = { "6x", "-" ,"3" };
+                int totalLength = equation.Length;
+                bool plus;
+                bool neg;
+                int numOfTerms = (totalLength + 1) / 2;
+                int numOperations = numOfTerms - 1;
+                int ops = 0;
+                string[] eqOperands = new string[numOperations];
+                string[] newEq = new string[numOfTerms];
+                for ( int terms = 0; terms < numOfTerms; terms++)
+                {
+                    if (equation[terms].Contains("+"))
+                    {
+                        plus = true;
+                        neg = false;
+                        equation = equation.Where((source, index) => index != terms).ToArray();
+                        System.Diagnostics.Debug.WriteLine(equation);
+                        if (plus == true)
+                        {
+                            eqOperands[ops] = "+";
+                            ops++;
+                        }
+                        else if (neg == true)
+                        {
+                            eqOperands[ops] = "-";
+                            ops++;
+                        }
+                    }
+                    else if (equation[terms].Contains("-"))
+                    {
+                        plus = false;
+                        neg = true;
+                        equation = equation.Where((source, index) => index != terms).ToArray();
+                        System.Diagnostics.Debug.WriteLine(equation);
+                        if (plus == true)
+                        {
+                            eqOperands[ops] = "+";
+                            ops++;
+                        }
+                        else if (neg == true)
+                        {
+                            eqOperands[ops] = "-";
+                            ops++;
+                        }
+                    }
+                    
+                }
+
+                Array.Copy(equation, newEq, numOfTerms);
+                
                 Func<double, double> i = (x) =>
                 {
                     string splitpattern = @"x\^|x";
-                    double[] calcValues = new double[lengthEq];
-                    for (int j = 0; j < lengthEq; j++)
+                    double[] calcValues = new double[numOfTerms];
+                    string[] operands = new string[numOperations];
+                    //I think I can re-write this better
+                    for (int k = 0; k < numOperations; k++)
                     {
-                        if (equation[j].Contains("^"))
+                        for (int j = 0; j < numOfTerms; j++)
                         {
-                            string[] inputSplit = Regex.Split(equation[j], splitpattern);
-                            double ax = Math.Pow(x, Double.Parse(inputSplit[1]));
-                            double a2 = (Double.Parse(inputSplit[0]) * ax);
-                            calcValues[j] = a2;
-                        }
-                        else if (equation[j].Contains("x"))
-                        {
-                            string[] inputSplit = Regex.Split(equation[j], splitpattern);
-                            double d = (Double.Parse(inputSplit[0]) * x);
-                            calcValues[j] = d;
+                            if (newEq[j].Contains("^"))
+                            {
+                                string[] inputSplit = Regex.Split(newEq[j], splitpattern);
+                                double ax = Math.Pow(x, Double.Parse(inputSplit[1]));
+                                double a2 = (Double.Parse(inputSplit[0]) * ax);
+                                calcValues[j] = a2;
+                            }
+                            else if (newEq[j].Contains("x"))
+                            {
+                                string[] inputSplit = Regex.Split(newEq[j], splitpattern);
+                                double d = (Double.Parse(inputSplit[0]) * x);
+                                calcValues[j] = d;
+
+                            }
+                            else
+                            {
+                                calcValues[j] = Double.Parse(newEq[j]);
+                            }
 
                         }
-                        else
-                        {
-                            calcValues[j] = Double.Parse(equation[j]);
-                        }
-
                     }
-                    double y = 0;
-                    int numTerms = calcValues.Length;
-                    for (int k = 0; k < numTerms; k++)
+
+                    double add(double a, double b)
                     {
-                        y += calcValues[k];
+                        return a + b;
+                    }
+                    double subtract(double a, double b)
+                    {
+                        return a - (b);
+                    }
+
+
+                    double y = 0;
+                    y = calcValues[0];
+                    System.Diagnostics.Debug.WriteLine(calcValues.ToString());
+                    System.Diagnostics.Debug.WriteLine(eqOperands.ToString());
+                    for(int m = 1; m < numOfTerms; m++)
+                    {
+                        if (eqOperands[m-1].Contains("+"))
+                        {
+                            y = add(y, calcValues[m]);
+                        }
+                        else if (eqOperands[m-1].Contains("-"))
+                        {
+                            y = subtract(y, calcValues[m]);
+                        }
                     }
                     return y;
                 };
                 this.GraphModel = new PlotModel
                 {
                     //Title = "y = 5x^4 + 4x^3 + 3x^2 + 2x + 1",
-                    Title = "y = 6x + 3",
+                    Title = "y = 5x^3 + 4x^2 - 3x + 2",
+                    //Title = "y = 6x - 3",
                     TitleColor = OxyColor.Parse("#036ffc")
                 };
-                this.GraphModel.Series.Add(new FunctionSeries(i, min, max, 0.1, "y = 6x + 3"));
+                this.GraphModel.Series.Add(new FunctionSeries(i, min, max, 0.1, "y = 5x^3 + 4x^2 - 3x + 2"));
 
                 this.GraphModel.Axes.Add(new LinearAxis
                 {
