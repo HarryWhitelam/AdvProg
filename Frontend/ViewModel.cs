@@ -280,7 +280,11 @@ namespace Frontend
                     {
                         string currentText = GetPrompt(inputWindow);
                         RemoveCurrentLineText(inputWindow);
-                        int lineIndex = currentSelection - inputWindow.GetCharacterIndexFromLineIndex(inputWindow.LineCount - 1);
+                        int lineIndex = inputWindow.GetCharacterIndexFromLineIndex(inputWindow.LineCount - 1);
+                        if (lineIndex >= 0)
+                            lineIndex = currentSelection - lineIndex;
+                        else
+                            lineIndex = currentSelection;
                         inputWindow.AppendText(currentText.Remove(lineIndex - 1, 1));
                         inputWindow.Select(currentSelection - 1, 0);
                     }
