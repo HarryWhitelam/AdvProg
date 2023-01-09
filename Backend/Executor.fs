@@ -23,11 +23,15 @@ module Executor =
     let operatorStack = Stack<Token>()
 
     let stringToVec (input:string) =
-        let stringVec = input.Substring(1, input.Length-2).Split(",")
-        let mutable out:list<double> = []
-        for s in stringVec do
-            out <- out@[double (s)]
-        out
+        if input.Contains(";") then
+            let mutable out:list<double> = []
+            out
+        else
+            let stringVec = input.Substring(1, input.Length-2).Split(",")
+            let mutable out:list<double> = []
+            for s in stringVec do
+                out <- out@[double (s)]
+            out
 
     let vecToString (input:list<double>) =
         System.Diagnostics.Debug.WriteLine($"vecToString input: {input}")
@@ -86,12 +90,10 @@ module Executor =
         let mutable newVal = outputStack.Pop()
         if isVar newVal then replaceVariable &newVal
         let mutable out = newVal + "," + value
-        System.Diagnostics.Debug.WriteLine($"out={out}")
-        while operatorStack.Count <> 0 && operatorStack.Peek() = Token.Comma do
-            operatorStack.Pop() |> ignore
+        while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket do
             let mutable newVal = outputStack.Pop()
             if isVar newVal then replaceVariable &newVal
-            out <- newVal + "," + out
+            out <- newVal + (if operatorStack.Pop() = Token.Comma then "," else ";") + out
         "[" + out + "]"
 
     let operateOnVecs(vec1str, vec2str, op) =
@@ -116,7 +118,9 @@ module Executor =
                 match operator with
                 | Token.Comma ->
                         if isVar value then replaceVariable &value
-                        outputStack.Push(handleArgs value)                 
+                        let x = handleArgs value
+                        outputStack.Push(x)    
+                        System.Diagnostics.Debug.WriteLine($"{x} added to output stack")
                 | Token.Assign ->
                         let mutable value2 = outputStack.Pop()
                         handleAssign(&value, &value2)
@@ -186,7 +190,7 @@ module Executor =
                                 calculate()
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine("+ added to operator stack")
-            | Token.Minus -> 
+            | Token.Minus ->
                             while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Parenth && operatorStack.Peek() <> Token.Assign do
                                 calculate()
                             operatorStack.Push(token)
@@ -208,10 +212,6 @@ module Executor =
                             while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Parenth do
                                 calculate()
                             System.Diagnostics.Debug.WriteLine("{0} removed from operator stack", operatorStack.Pop())
-                            //if operatorStack.Count <> 0 then
-                            //    match operatorStack.Peek() with 
-                            //    | Token.Function _ -> calculate()
-                            //    //| _ -> ()
             | Token.L_Bracket ->
                             operatorStack.Push(token)
                             System.Diagnostics.Debug.WriteLine("[ added to operator stack")

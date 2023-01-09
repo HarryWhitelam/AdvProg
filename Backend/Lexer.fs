@@ -10,7 +10,7 @@ namespace Backend
 //*************************************************************************
 
 type Token = 
-    Plus | Minus | Times | Divide | L_Parenth | R_Parenth | Indice | Assign | Comma | SemiColon | L_Bracket | R_Bracket | Number of string | Variable of string | Function of string | Reserved of string
+    Plus | Minus | Times | Divide | L_Parenth | R_Parenth | Indice | Assign | Comma | Dot | SemiColon | L_Bracket | R_Bracket | Number of string | Variable of string | Function of string | Reserved of string
     
     override this.ToString() = 
             match this with
@@ -23,6 +23,7 @@ type Token =
             | Indice -> "^"
             | Assign -> ":="
             | Comma -> ","
+            | Dot -> "."
             | SemiColon -> ";"
             | L_Bracket -> "["
             | R_Bracket -> "]"
@@ -91,13 +92,14 @@ module Lexer =
                             | '='::tail -> Token.Assign :: consume tail
                             | _ -> raise (LexerError $"Expected '=' after ':': {showExceptionPosition(ogInput, ogInput.Length-input.Length+1)}")
             | ','::tail -> Token.Comma    :: consume tail
+            | '.'::tail -> Token.Dot      :: consume tail
             | ';'::tail -> Token.SemiColon:: consume tail
             | num::tail when (System.Char.IsDigit num) ->   let (rest, finVal) = catchNum (tail, (string)num)
                                                             Token.Number finVal :: consume rest
             | var::tail when (System.Char.IsLetter var) ->  let (rest, finStr) = catchVar (tail, (string)var)
                                                             let finStrUp = finStr.ToUpper()
                                                             match finStrUp with
-                                                            | "SQRT"->  Token.Function finStrUp :: consume rest
+                                                            | "SQRT" -> Token.Function finStrUp :: consume rest
                                                             | "NROOT" ->Token.Function finStrUp :: consume rest
                                                             | "LOG" ->  Token.Function finStrUp :: consume rest
                                                             | "LOGN" -> Token.Function finStrUp :: consume rest
