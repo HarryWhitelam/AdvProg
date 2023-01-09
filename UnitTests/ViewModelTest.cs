@@ -6,11 +6,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 
+// requires single thread apartments to support WPF implementations
 [assembly: Apartment(ApartmentState.STA)]
 
 namespace UnitTests
 {
-    public class Tests
+    public class ViewModelTest
     {
         private ViewModel _viewModel;
 
@@ -136,7 +137,14 @@ namespace UnitTests
         {
             TextBox iw = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
             iw.AppendText(inputString);
-            iw.Select(iw.Text.Length-offset, 0);
+            int index = iw.Text.Length - offset;
+            if (index >= 0)
+            {
+                iw.SelectionStart = index;
+                TestContext.Out.WriteLine(_viewModel.GetPriorChar(iw, index));
+            }
+            else
+                iw.SelectionStart = 0;
             _viewModel.BackCommand.Execute(null);
             return _viewModel.GetPrompt(iw);
         }
@@ -202,10 +210,11 @@ namespace UnitTests
         public string TestDownHistoryCommand(string[] historyArray, int recursions, int upRecursions, string inputSave)
         {
             TextBox iw = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
-            iw.AppendText(inputSave);
+            _viewModel.inputSave = inputSave;
             _viewModel.inputHistory = historyArray;
 
             for (int i = 0; i < upRecursions; i++) { _viewModel.UpHistoryCommand.Execute(null); }
+            TestContext.Out.WriteLine(_viewModel.inputSave);
             for (int i = 0; i < recursions; i++) { _viewModel.DownHistoryCommand.Execute(null); }
 
             return _viewModel.GetPrompt(iw);
