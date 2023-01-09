@@ -10,6 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="resources\help.png" />
+    <None Remove="resources\helpInvert.png" />
     <None Remove="resources\log.PNG" />
     <None Remove="resources\logInvert.png" />
     <None Remove="resources\root.png" />
@@ -36,15 +38,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="resources\help.png" />
+    <Resource Include="resources\helpInvert.png" />
     <Resource Include="resources\log.PNG" />
     <Resource Include="resources\logInvert.png" />
     <Resource Include="resources\root.png" />
     <Resource Include="resources\rootInvert.png" />
     <Resource Include="resources\settings.png" />
     <Resource Include="resources\settingsInvert.png" />
-    <Resource Include="resources\UserSettings.xml">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="resources\UserSettings.xml" />
 
     <Reference Include="OxyPlot">
       <HintPath>\\ueahome4\stusci4\rhy18wxu\data\Downloads\OxyPlot\OxyPlot.dll</HintPath>

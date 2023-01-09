@@ -15,127 +15,234 @@ namespace Frontend
     {
         public PlotViewModel()
         {
-           
-            double z = 5;
-            double radiansX = (z * (Math.PI)) / 180;
-            Func<double, double> f = (x) =>
-            {
-                double maths = Math.Cos(z);
-                return maths;
-            };
 
-            /*
-            this.MyModel = new PlotModel
-            {
-                Title = "Cos Graph"
-            };
-            this.MyModel.Series.Add(new FunctionSeries(f, -200, 200, 0.1, "cos(x)"));
-           */
+            /* modelnum 1 = polynomial
+             * modelnum 2 = cos(x)
+             * modelnum 3 = sin(x)
+             * modelnum 4 = tan(x) */
+            double min = -10;
+            double max = 10;
 
-            /*
-            int max = 10;
-            int min = -10;
-            int m = 4;
-            int c = -4;
-           
-            //Testing out y=mx+c functions
-            Func<double, double> g = (x) =>
-            {
-                double y = 0;
-                y = (m * x) + (c);
-                return y;
-            };
+            int modelnum = 1;
 
-            this.MyModel = new PlotModel
+            if (modelnum == 1)
             {
-                Title = "y=4x-4"
-            };
-            this.MyModel.Series.Add(new FunctionSeries(g, min, max, 0.1, "y=4x-4"));
-            */
-            
-            /*
-            int a = 6;
-            int b = 5;
-            int c2 = 4;
-            int min = -10;
-            int max = 10;
-
-            //Testing out y = ax^2 + bx + c functions
-            Func<double, double> h = (x) =>
-            {
-                double y = 0;
-                y = ((a * x * x ) + (b * x) + (c2));
-                return y;
-            };
-            this.MyModel = new PlotModel
-            {
-                Title = "y = 6x^2 + 5x + 4",
-                TitleColor = OxyColor.Parse("#036ffc")
-            };
-            this.MyModel.Series.Add(new FunctionSeries(h, min, max, 0.1, "y = 6x^2 + 5x + 4"));
-            */
-
-            string[] equation = {"5x^4", "4x^3", "3x^2", "2x", "1"};
-            //string[] equation = { "5x^3", "4x^2", "3x", "2" };
-            int lengthEq = equation.Length;
-            int min = -10;
-            int max = 10;
-            //double x = 2;
-            Func<double, double> i = (x) =>
-            {
-                string splitpattern = @"x\^|x";
-                double[] calcValues = new double[lengthEq];
-                for (int j = 0; j < lengthEq; j++)
+                //string[] equation = { "5x^4", "4x^3", "3x^2", "2x", "1" };
+                string[] equation = { "5x^3", "+", "4x^2", "-", "3x", "+", "2" };
+                //string[] equation = { "6x", "-" ,"3" };
+                int totalLength = equation.Length;
+                bool plus;
+                bool neg;
+                int numOfTerms = (totalLength + 1) / 2;
+                int numOperations = numOfTerms - 1;
+                int ops = 0;
+                string[] eqOperands = new string[numOperations];
+                string[] newEq = new string[numOfTerms];
+                for ( int terms = 0; terms < numOfTerms; terms++)
                 {
-                    if (equation[j].Contains("^"))
+                    if (equation[terms].Contains("+"))
                     {
-                        string[] inputSplit = Regex.Split(equation[j], splitpattern);
-                        double ax = Math.Pow(x, Double.Parse(inputSplit[1]));
-                        double a2 = (Double.Parse(inputSplit[0]) * ax);
-                        calcValues[j] = a2;
+                        plus = true;
+                        neg = false;
+                        equation = equation.Where((source, index) => index != terms).ToArray();
+                        System.Diagnostics.Debug.WriteLine(equation);
+                        if (plus == true)
+                        {
+                            eqOperands[ops] = "+";
+                            ops++;
+                        }
+                        else if (neg == true)
+                        {
+                            eqOperands[ops] = "-";
+                            ops++;
+                        }
                     }
-                    else if (equation[j].Contains("x"))
+                    else if (equation[terms].Contains("-"))
                     {
-                        string[] inputSplit = Regex.Split(equation[j], splitpattern);
-                        double d = (Double.Parse(inputSplit[0]) * x);
-                        calcValues[j] = d;
-
+                        plus = false;
+                        neg = true;
+                        equation = equation.Where((source, index) => index != terms).ToArray();
+                        System.Diagnostics.Debug.WriteLine(equation);
+                        if (plus == true)
+                        {
+                            eqOperands[ops] = "+";
+                            ops++;
+                        }
+                        else if (neg == true)
+                        {
+                            eqOperands[ops] = "-";
+                            ops++;
+                        }
                     }
-                    else
-                    {
-                        calcValues[j] = Double.Parse(equation[j]);
-                    }
-
+                    
                 }
-                double y = 0;
-                int numTerms = calcValues.Length;
-                for(int k = 0; k < numTerms; k++)
+
+                Array.Copy(equation, newEq, numOfTerms);
+                
+                Func<double, double> i = (x) =>
                 {
-                    y += calcValues[k];
-                }
-                return y;
-            };
-            this.MyModel = new PlotModel
-            {
-                Title = "y = 5x^4 + 4x^3 + 3x^2 + 2x + 1",
-                TitleColor = OxyColor.Parse("#036ffc")
-            };
-            this.MyModel.Series.Add(new FunctionSeries(i, min, max, 0.1, "y = 5x^4 + 4x^3 + 3x^2 + 2x + 1"));
+                    string splitpattern = @"x\^|x";
+                    double[] calcValues = new double[numOfTerms];
+                    string[] operands = new string[numOperations];
+                    //I think I can re-write this better
+                    for (int k = 0; k < numOperations; k++)
+                    {
+                        for (int j = 0; j < numOfTerms; j++)
+                        {
+                            if (newEq[j].Contains("^"))
+                            {
+                                string[] inputSplit = Regex.Split(newEq[j], splitpattern);
+                                double ax = Math.Pow(x, Double.Parse(inputSplit[1]));
+                                double a2 = (Double.Parse(inputSplit[0]) * ax);
+                                calcValues[j] = a2;
+                            }
+                            else if (newEq[j].Contains("x"))
+                            {
+                                string[] inputSplit = Regex.Split(newEq[j], splitpattern);
+                                double d = (Double.Parse(inputSplit[0]) * x);
+                                calcValues[j] = d;
 
-            this.MyModel.Axes.Add(new LinearAxis
+                            }
+                            else
+                            {
+                                calcValues[j] = Double.Parse(newEq[j]);
+                            }
+
+                        }
+                    }
+
+                    double add(double a, double b)
+                    {
+                        return a + b;
+                    }
+                    double subtract(double a, double b)
+                    {
+                        return a - (b);
+                    }
+
+
+                    double y = 0;
+                    y = calcValues[0];
+                    System.Diagnostics.Debug.WriteLine(calcValues.ToString());
+                    System.Diagnostics.Debug.WriteLine(eqOperands.ToString());
+                    for(int m = 1; m < numOfTerms; m++)
+                    {
+                        if (eqOperands[m-1].Contains("+"))
+                        {
+                            y = add(y, calcValues[m]);
+                        }
+                        else if (eqOperands[m-1].Contains("-"))
+                        {
+                            y = subtract(y, calcValues[m]);
+                        }
+                    }
+                    return y;
+                };
+                this.GraphModel = new PlotModel
+                {
+                    //Title = "y = 5x^4 + 4x^3 + 3x^2 + 2x + 1",
+                    Title = "y = 5x^3 + 4x^2 - 3x + 2",
+                    //Title = "y = 6x - 3",
+                    TitleColor = OxyColor.Parse("#036ffc")
+                };
+                this.GraphModel.Series.Add(new FunctionSeries(i, min, max, 0.1, "y = 5x^3 + 4x^2 - 3x + 2"));
+
+                this.GraphModel.Axes.Add(new LinearAxis
+                {
+                    Position = AxisPosition.Bottom,
+                    Minimum = -5,
+                    Maximum = 5,
+                    MajorGridlineStyle = LineStyle.Dot
+                });
+                this.GraphModel.Axes.Add(new LinearAxis
+                {
+                    Position = AxisPosition.Left,
+                    Minimum = -5,
+                    Maximum = 5,
+                    MajorGridlineStyle = LineStyle.Dot
+                });
+            } else if (modelnum == 2)
             {
-                Position = AxisPosition.Bottom,
-                Minimum = -5,
-                Maximum = 5,
-                MajorGridlineStyle = LineStyle.Dot
-            }) ;
-            this.MyModel.Axes.Add(new LinearAxis
+                Func<double, double> f = (x) =>
+                {
+                    double maths = Math.Cos(x);
+                    return maths;
+                };
+                this.GraphModel = new PlotModel
+                {
+                    Title = "Cos(x) Graph"
+                };
+                this.GraphModel.Series.Add(new FunctionSeries(f, min, max, 0.1, "cos(x)"));
+
+                this.GraphModel.Axes.Add(new LinearAxis
+                {
+                    Position = AxisPosition.Bottom,
+                    Minimum = -5,
+                    Maximum = 5,
+                    MajorGridlineStyle = LineStyle.Dot
+                });
+                this.GraphModel.Axes.Add(new LinearAxis
+                {
+                    Position = AxisPosition.Left,
+                    Minimum = -5,
+                    Maximum = 5,
+                    MajorGridlineStyle = LineStyle.Dot
+                });
+            } else if (modelnum == 3)
             {
-                Position = AxisPosition.Left,
-                Minimum = -5,
-                Maximum = 5,
-                MajorGridlineStyle = LineStyle.Dot
-            });
+                Func<double, double> g = (x) =>
+                {
+                    double maths = Math.Sin(x);
+                    return maths;
+                };
+                this.GraphModel = new PlotModel
+                {
+                    Title = "Sin(x) Graph"
+                };
+                this.GraphModel.Series.Add(new FunctionSeries(g, min, max, 0.1, "Sin(x)"));
+
+                this.GraphModel.Axes.Add(new LinearAxis
+                {
+                    Position = AxisPosition.Bottom,
+                    Minimum = -5,
+                    Maximum = 5,
+                    MajorGridlineStyle = LineStyle.Dot
+                });
+                this.GraphModel.Axes.Add(new LinearAxis
+                {
+                    Position = AxisPosition.Left,
+                    Minimum = -5,
+                    Maximum = 5,
+                    MajorGridlineStyle = LineStyle.Dot
+                });
+            } else if(modelnum == 4)
+            {
+                Func<double, double> h = (x) =>
+                {
+                    double maths = Math.Tan(x);
+                    return maths;
+                };
+                this.GraphModel = new PlotModel
+                {
+                    Title = "Tan(x) Graph"
+                };
+                this.GraphModel.Series.Add(new FunctionSeries(h, min, max, 0.1, "Tan(x)"));
+
+                this.GraphModel.Axes.Add(new LinearAxis
+                {
+                    Position = AxisPosition.Bottom,
+                    Minimum = -5,
+                    Maximum = 5,
+                    MajorGridlineStyle = LineStyle.Dot
+                });
+                this.GraphModel.Axes.Add(new LinearAxis
+                {
+                    Position = AxisPosition.Left,
+                    Minimum = -5,
+                    Maximum = 5,
+                    MajorGridlineStyle = LineStyle.Dot
+                });
+            }
         }
 
         public string Title
@@ -150,10 +257,11 @@ namespace Frontend
             private set;
         }
 
-        public PlotModel MyModel
+        public PlotModel GraphModel
         {
             get;
             private set;
         }
+
     }
 }
