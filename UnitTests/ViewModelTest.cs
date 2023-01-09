@@ -103,9 +103,11 @@ namespace UnitTests
             return new string[] { iw.Text, cw.Text, pwText };
         }
 
-        [TestCase("x:=1", "x", "1", false, ExpectedResult = new bool[] { true, true, true })]
-        [TestCase("x:=1", "y", "5", true, ExpectedResult = new bool[] { true, true, true })]
-        public bool[] UpdateWorkstation(string testInput, string name, string value, bool changeValue)
+        [TestCase("x:=1", "x", "1", false, "null", ExpectedResult = new bool[] { true, true, true })]
+        [TestCase("x:=1", "y", "5", true, "10", ExpectedResult = new bool[] { true, true, true })]
+        [TestCase("index:=10000", "index", "10000", false, "null", ExpectedResult = new bool[] { true, true, true })]
+        [TestCase("location:=1", "location", "1", true, "999", ExpectedResult = new bool[] { true, true, true })]
+        public bool[] UpdateWorkstation(string testInput, string name, string value, bool changeValue, string newValue)
         {
             TextBox iw = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
             ListBox varNames = (ListBox)Application.Current.MainWindow.FindName("varNames");
@@ -117,9 +119,9 @@ namespace UnitTests
             // Check for if updating values is also functioning correctly
             if (changeValue)
             {
-                iw.AppendText(name + ":=10");
+                iw.AppendText(name + ":=" + newValue);
                 _viewModel.ReturnCommand.Execute(null);
-                value = "10";
+                value = newValue;
             }
 
             bool indexTest = varNames.Items.IndexOf(name) == varValues.Items.IndexOf(value);
