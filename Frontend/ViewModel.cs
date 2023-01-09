@@ -376,7 +376,8 @@ namespace Frontend
                     TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
                     if (inputSave == "" && historyIndex == -1)      // saves current input to return to if necessary
                     {
-                        inputSave = inputWindow.GetLineText(inputWindow.LineCount - 1);
+                        inputSave = GetPrompt(inputWindow);
+
                     }
                     if (inputHistory[0] != null)                    // checks the array has content
                     {
