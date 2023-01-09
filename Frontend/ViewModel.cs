@@ -92,18 +92,27 @@ namespace Frontend
             TextBox cursorWindow = (TextBox)Application.Current.MainWindow.FindName("cursorWindow");
             RichTextBox printWindow = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
 
-            // constructs a string and inserts it into the textrange at the end of the textbox
-            string resultString = prompt + '\r' + "    " + result + Environment.NewLine;
-            TextRange resultRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
-            resultRange.Text = resultString;
-
-            RemoveCurrentLineText(inputWindow);
-
-            int lineCount = CountRichLines(resultString);
-            for (int i = 0; i <= lineCount; i++)
+            if (prompt == "")
             {
-                inputWindow.AppendText(Environment.NewLine);
-                cursorWindow.AppendText(Environment.NewLine);
+                RemoveCurrentLineText(inputWindow);
+                TextRange blankRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
+                blankRange.Text = "\r\n";
+                inputWindow.AppendText("\r\n\r\n");
+                cursorWindow.AppendText("\r\n\r\n");
+            }
+            else
+            {
+                // constructs a string and inserts it into the textrange at the end of the textbox
+                string resultString = prompt + '\r' + "    " + result + Environment.NewLine;
+                TextRange resultRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
+                resultRange.Text = resultString;
+                RemoveCurrentLineText(inputWindow);
+                int lineCount = CountRichLines(resultString);
+                for (int i = 0; i <= lineCount; i++)
+                {
+                    inputWindow.AppendText(Environment.NewLine);
+                    cursorWindow.AppendText(Environment.NewLine);
+                }
             }
             inputWindow.Select(inputWindow.Text.Length, 0);
 
@@ -119,6 +128,7 @@ namespace Frontend
         /// <param name="prompt"></param> the prompt which the user entered
         public void PrintError(string error, string prompt)
         {
+            System.Diagnostics.Debug.WriteLine("ERROR PRINTING");
             TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
             TextBox cursorWindow = (TextBox)Application.Current.MainWindow.FindName("cursorWindow");
             RichTextBox printWindow = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
