@@ -122,6 +122,11 @@ namespace Frontend
             this.Close();
         }
 
+        /// <summary>
+        /// Method <c>RadioButton_Checked</c> is bound to the radiobuttons in the settings page, firing when checked
+        /// </summary>
+        /// <param name="sender"><c>sender</c> provides information about the sender button</param>
+        /// <param name="e"><c>e</c> provides event arguments</param>
         public void RadioButton_Checked(object sender, RoutedEventArgs e)
         {            
             Ellipse ellipse = FindInputs<Ellipse>((RadioButton)sender).FirstOrDefault();

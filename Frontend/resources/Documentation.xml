@@ -241,6 +241,13 @@
             <param name="sender"><c>sender</c> provides information about the sender button</param>
             <param name="e"><c>e</c> provides event arguments</param>
         </member>
+        <member name="M:Frontend.Settings.RadioButton_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Method <c>RadioButton_Checked</c> is bound to the radiobuttons in the settings page, firing when checked
+            </summary>
+            <param name="sender"><c>sender</c> provides information about the sender button</param>
+            <param name="e"><c>e</c> provides event arguments</param>
+        </member>
         <member name="M:Frontend.Settings.FindInputs``1(System.Windows.DependencyObject)">
             <summary>
             Method <c>FindElements</c> returns a list of the chosen elements found on the popup

@@ -8,4 +8,6 @@
     <SolidColorBrush x:Key="FontBrush"          Color="Black"           />
     <SolidColorBrush x:Key="ErrorBrush"         Color="Red"             />
     <SolidColorBrush x:Key="CaretBrush"         Color="Black"           />
+    <BitmapImage     x:Key="helpImageSource"        UriSource="/resources/help.png"       />
+    <BitmapImage     x:Key="settingsImageSource"     UriSource="/resources/settings.png"   />
 </ResourceDictionary>
