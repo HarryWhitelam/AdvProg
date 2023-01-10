@@ -45,7 +45,7 @@ namespace Frontend
             }
             set
             {
-                search = value;
+                search = value.ToLower();
                 OnPropertyChanged("SearchText");
                 OnPropertyChanged("SearchResults");
             }
@@ -59,9 +59,9 @@ namespace Frontend
         {
             get
             {
-                if (Search == null) return methods.Descendants("method").Select(x => (string)x.Element("opName")).ToList();
+                if (Search == null || Search == "") return methods.Descendants("method").Select(x => (string)x.Element("opName")).ToList();
 
-                return methods.Descendants("method").Where(x => x.Attribute("tags").ToString().Contains(search)).Select(x => (string)x.Element("opName")).ToList();
+                return methods.Descendants("method").Where(x => x.Attribute("tags").ToString().Contains(Search)).Select(x => (string)x.Element("opName")).ToList();
             }
         }
 
@@ -113,11 +113,15 @@ namespace Frontend
             {
                 WorkstationTextBlock.Text = "Help Menu";
                 HelpMenu.Visibility = Visibility.Visible;
+                varNames.Visibility = Visibility.Collapsed;
+                varValues.Visibility = Visibility.Collapsed;
             }
             else
             {
                 WorkstationTextBlock.Text = "Workstation";
                 HelpMenu.Visibility = Visibility.Collapsed;
+                varNames.Visibility = Visibility.Visible;
+                varValues.Visibility = Visibility.Visible;
             }
         }
 
@@ -152,7 +156,6 @@ namespace Frontend
         /// <param name="element"><c>element</c> gives thee name of the xaml element which has changed</param>
         void OnPropertyChanged(string element)
         {
-            Debug.WriteLine("Value: " + element);
             if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(element));
         }
 
@@ -173,6 +176,19 @@ namespace Frontend
                 inputWindow.ScrollToVerticalOffset(e.VerticalOffset);
                 printWindow.ScrollToVerticalOffset(e.VerticalOffset);
             }
+        }
+
+        private void resultsListBox_Selected(object sender, RoutedEventArgs e)
+        {
+            string helpName = resultsListBox.SelectedItem.ToString();
+            XElement result = methods.Descendants("method").Where(x => x.Element("opName").ToString().Contains(helpName)).Select(x => x).FirstOrDefault();
+
+            string name = result.Attribute("name").Value;
+            string op = result.Attribute("operator").Value;
+            string description = result.Element("description").Value;
+            string example = result.Element("example").Value;
+
+            helpTextBox.Text = name + "        Operator: " + op + "\r\n" + description + "\r\n\r\nExample:\r\n" + example;
         }
     }
 }

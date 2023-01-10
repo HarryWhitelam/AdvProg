@@ -8,7 +8,6 @@ using System.Windows.Media;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using static Microsoft.FSharp.Core.LanguagePrimitives;
 
 namespace Frontend
 {

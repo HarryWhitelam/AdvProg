@@ -109,15 +109,15 @@
                 </Button>
             </StackPanel>
 
-            <!--Listbox for variable names and values respectively-->
+                <!--Listbox for variable names and values respectively-->
             <ListBox Grid.Row="1" Grid.Column="0" x:Name="varNames" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
             <ListBox Grid.Row="1" Grid.Column="1" x:Name="varValues" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
 
             <!--Collapsible Help Menu-->
-            <StackPanel Grid.Row="1" Grid.ColumnSpan="2" x:Name="HelpMenu" Visibility="Collapsed" Background="{DynamicResource ResourceKey=BackgroundBrush}">
-                <Grid>
+            <DockPanel Grid.Row="1" Grid.ColumnSpan="2" x:Name="HelpMenu" Visibility="Collapsed" Background="{DynamicResource ResourceKey=BackgroundBrush}" LastChildFill="True">
+                <Grid DockPanel.Dock="Top">
                     <!--Search bar with dynamic results display via listbox-->
-                    <TextBox x:Name="helpSearch" VerticalAlignment="Center" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StackPanel}},Path=ActualWidth}" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+                    <TextBox x:Name="helpSearch" VerticalAlignment="Center" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}},Path=ActualWidth}" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
                     <!--TextBlock to display prompt (hidden when user begins typing)-->
                     <TextBlock IsHitTestVisible="False" Text="Search for a Term/Operator" Margin="5,0,0,0" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">
                         <TextBlock.Style>
@@ -132,8 +132,9 @@
                         </TextBlock.Style>
                     </TextBlock>
                 </Grid>
-                <ListBox x:Name="resultsListBox" Height="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StackPanel}},Path=ActualHeight}" ItemsSource="{Binding SearchResults}" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
-            </StackPanel>
+                <ListBox x:Name="resultsListBox" DockPanel.Dock="Top" ItemsSource="{Binding SearchResults}" Height="{Binding ActualHeight, Converter={StaticResource thirdConverter}, ElementName=HelpMenu}" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" SelectionChanged="resultsListBox_Selected" />
+                <TextBox x:Name="helpTextBox" DockPanel.Dock="Top" TextWrapping="Wrap" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+            </DockPanel>
         </Grid>
     </Grid>
 </Window>
