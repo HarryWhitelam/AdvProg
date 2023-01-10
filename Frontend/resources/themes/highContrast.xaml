@@ -8,6 +8,7 @@
     <SolidColorBrush x:Key="FontBrush"          Color="Yellow"          />
     <SolidColorBrush x:Key="ErrorBrush"         Color="Cyan"            />
     <SolidColorBrush x:Key="CaretBrush"         Color="White"           />
-    <BitmapImage     x:Key="helpImageSource"        UriSource="/resources/helpInvert.png"       />
+    
+    <BitmapImage     x:Key="helpImageSource"         UriSource="/resources/helpInvert.png"       />
     <BitmapImage     x:Key="settingsImageSource"     UriSource="/resources/settingsInvert.png"   />
 </ResourceDictionary>
