@@ -23,7 +23,7 @@ namespace Frontend
         /// <summary>
         /// Method <c>CountRichLines</c> is used to count the number of lines the print will require
         /// </summary>
-        /// <param name="resultString"></param> the string to be measured
+        /// <param name="resultString">resultString the string to be measured</param>
         /// <returns>Number of lines</returns>
         public int CountRichLines(String resultString)
         {
@@ -180,6 +180,30 @@ namespace Frontend
             }
         }
 
+        /// <summary>
+        /// Method <c>DeleteFromWorkstation</c> is used to remove a variable from the workstation
+        /// </summary>
+        public void DeleteFromWorkstation(string input)
+        {
+            ListBox varNames = (ListBox)Application.Current.MainWindow.FindName("varNames");
+            ListBox varValues = (ListBox)Application.Current.MainWindow.FindName("varValues");
+
+            string variable = input.Split('(', ')')[1];
+            if (varNames.Items.Contains(variable))
+            {
+                int index = varNames.Items.IndexOf(variable);
+                Interpreter.removeVarStore((string)varNames.Items[index]);
+                varNames.Items.Remove(varNames.Items.GetItemAt(index));
+                varValues.Items.Remove(varValues.Items.GetItemAt(index));
+
+                PrintResult(String.Format("Variable {0} deleted", variable), input);
+            }
+            else
+            {
+                PrintError(String.Format("Variable {0} not found", variable), input);
+            }
+        }
+
         private ICommand returnCommand;
         /// <summary>
         /// Method <c>ReturnCommand</c> is used with the return keybind to send prompts to the backend
@@ -205,6 +229,10 @@ namespace Frontend
                     if (input == "exit")        // checks for specific inputs which don't require the F# backend
                     {
                         Application.Current.Shutdown();
+                    }
+                    else if (Regex.Match(input, @"del\((?s).*\)", RegexOptions.IgnoreCase).Success)
+                    {
+                        DeleteFromWorkstation(input);
                     }
                     else if (input.Contains("plot"))
                     {
