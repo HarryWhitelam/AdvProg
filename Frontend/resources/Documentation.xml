@@ -335,6 +335,7 @@
             <summary>
             Method <c>DeleteFromWorkstation</c> is used to remove a variable from the workstation
             </summary>
+            <param name="input">input: the input string from the gui</param>
         </member>
         <member name="P:Frontend.ViewModel.ReturnCommand">
             <summary>
