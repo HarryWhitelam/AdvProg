@@ -8,11 +8,14 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace Frontend
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        private XDocument methods;
         /// <summary>
         /// Constructor <c>MainWindow</c> instantiates the main display, specifying Data Contexts (controllers) and preparing the user's settings
         /// </summary>
@@ -22,7 +25,12 @@ namespace Frontend
             DataContext = new ViewModel();
             HelpMenu.DataContext = this;
             PrepSettings();
-            SearchList = new List<string>() { "TEST", "TEST2", "TEST3", "TEST4" };  //PLACEHOLDER
+            methods = ReadHelpDocs();
+        }
+
+        private XDocument ReadHelpDocs()
+        {
+            return XDocument.Load("../../../../Frontend/resources/HelpDocs.xml");
         }
 
         private string search;
@@ -51,9 +59,9 @@ namespace Frontend
         {
             get
             {
-                if (Search == null) return SearchList;
+                if (Search == null) return methods.Descendants("method").Select(x => (string)x.Element("opName")).ToList();
 
-                return SearchList.Where(x => x.ToLower().StartsWith(Search.ToLower()));
+                return methods.Descendants("method").Where(x => x.Attribute("tags").ToString().Contains(search)).Select(x => (string)x.Element("opName")).ToList();
             }
         }
 

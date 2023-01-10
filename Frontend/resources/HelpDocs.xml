@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<HelpDocs>
+	<method id="1" name="+" tags="+ plus add addition sum">
+		<opName>Addition</opName>
+		<description>The + operator adds elements together, elements most be of the same dimensionality.</description>
+		<example>10 + 5\n	= 15</example>
+	</method>
+
+	<method id="2" name="-" tags="- minus subtract subtraction">
+		<opName>Subtraction</opName>
+		<description>The - operator subtracts the successive element from the preceding element, elements must be of the same dimensionality.</description>
+		<example>10 - 2\n	= 8</example>
+	</method>
+
+	<!--<method id="" name="" tags="">
+		<opName>
+
+		</opName>
+		<description>
+
+		</description>
+		<example>
+
+		</example>
+	</method>
+
+	<method id="" name="" tags="">
+		<opName>
+
+		</opName>
+		<brief>
+
+		</brief>
+		<description>
+
+		</description>
+		<example>
+
+		</example>
+	</method>
+
+	<method id="" name="" tags="">
+		<opName>
+
+		</opName>
+		<brief>
+
+		</brief>
+		<description>
+
+		</description>
+		<example>
+
+		</example>
+	</method>
+
+	<method id="" name="" tags="">
+		<opName>
+
+		</opName>
+		<brief>
+
+		</brief>
+		<description>
+
+		</description>
+		<example>
+
+		</example>
+	</method>
+
+	<method id="" name="" tags="">
+		<opName>
+
+		</opName>
+		<brief>
+
+		</brief>
+		<description>
+
+		</description>
+		<example>
+
+		</example>
+	</method>
+
+	<method id="" name="" tags="">
+		<opName>
+
+		</opName>
+		<brief>
+
+		</brief>
+		<description>
+
+		</description>
+		<example>
+
+		</example>
+	</method>
+
+	<method id="" name="" tags="">
+		<opName>
+
+		</opName>
+		<brief>
+
+		</brief>
+		<description>
+
+		</description>
+		<example>
+
+		</example>
+	</method>
+
+	<method id="" name="" tags="">
+		<opName>
+
+		</opName>
+		<brief>
+
+		</brief>
+		<description>
+
+		</description>
+		<example>
+
+		</example>
+	</method>
+
+	<method id="" name="" tags="">
+		<opName>
+
+		</opName>
+		<brief>
+
+		</brief>
+		<description>
+
+		</description>
+		<example>
+
+		</example>
+	</method>
+
+	<method id="" name="" tags="">
+		<opName>
+
+		</opName>
+		<brief>
+
+		</brief>
+		<description>
+
+		</description>
+		<example>
+
+		</example>
+	</method>-->
+</HelpDocs>
