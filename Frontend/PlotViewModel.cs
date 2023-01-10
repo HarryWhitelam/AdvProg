@@ -28,7 +28,7 @@ namespace Frontend
             if (modelnum == 1)
             {
                 //string[] equation = { "5x^4", "4x^3", "3x^2", "2x", "1" };
-                string[] equation = { "5x^3", "+", "4x^2", "-", "3x", "+", "2" };
+                string[] equation = { "5x^3", "+", "4x^2", "-", "3x", "+", "2", "+", "6x^4"};
                 //string[] equation = { "6x", "-" ,"3" };
                 int totalLength = equation.Length;
                 bool plus;
@@ -83,32 +83,33 @@ namespace Frontend
                 {
                     string splitpattern = @"x\^|x";
                     double[] calcValues = new double[numOfTerms];
-                    string[] operands = new string[numOperations];
+                    /*string[] operands = new string[numOperations];
                     //I think I can re-write this better
                     for (int k = 0; k < numOperations; k++)
                     {
-                        for (int j = 0; j < numOfTerms; j++)
+                        
+                    }*/
+                    for (int j = 0; j < numOfTerms; j++)
+                    {
+                        if (newEq[j].Contains("^"))
                         {
-                            if (newEq[j].Contains("^"))
-                            {
-                                string[] inputSplit = Regex.Split(newEq[j], splitpattern);
-                                double ax = Math.Pow(x, Double.Parse(inputSplit[1]));
-                                double a2 = (Double.Parse(inputSplit[0]) * ax);
-                                calcValues[j] = a2;
-                            }
-                            else if (newEq[j].Contains("x"))
-                            {
-                                string[] inputSplit = Regex.Split(newEq[j], splitpattern);
-                                double d = (Double.Parse(inputSplit[0]) * x);
-                                calcValues[j] = d;
-
-                            }
-                            else
-                            {
-                                calcValues[j] = Double.Parse(newEq[j]);
-                            }
+                            string[] inputSplit = Regex.Split(newEq[j], splitpattern);
+                            double ax = Math.Pow(x, Double.Parse(inputSplit[1]));
+                            double a2 = (Double.Parse(inputSplit[0]) * ax);
+                            calcValues[j] = a2;
+                        }
+                        else if (newEq[j].Contains("x"))
+                        {
+                            string[] inputSplit = Regex.Split(newEq[j], splitpattern);
+                            double d = (Double.Parse(inputSplit[0]) * x);
+                            calcValues[j] = d;
 
                         }
+                        else
+                        {
+                            calcValues[j] = Double.Parse(newEq[j]);
+                        }
+
                     }
 
                     double add(double a, double b)
@@ -141,11 +142,11 @@ namespace Frontend
                 this.GraphModel = new PlotModel
                 {
                     //Title = "y = 5x^4 + 4x^3 + 3x^2 + 2x + 1",
-                    Title = "y = 5x^3 + 4x^2 - 3x + 2",
+                    Title = "y = 5x^3 + 4x^2 - 3x + 2 + 6x^4",
                     //Title = "y = 6x - 3",
                     TitleColor = OxyColor.Parse("#036ffc")
                 };
-                this.GraphModel.Series.Add(new FunctionSeries(i, min, max, 0.1, "y = 5x^3 + 4x^2 - 3x + 2"));
+                this.GraphModel.Series.Add(new FunctionSeries(i, min, max, 0.1, "y = 5x^3 + 4x^2 - 3x + 2 + 6x^4"));
 
                 this.GraphModel.Axes.Add(new LinearAxis
                 {
