@@ -49,7 +49,7 @@ type Token =
                           | Assign -> 2
                           | _ -> 1
                 buffer <- buffer + String.replicate len " "
-        "\n   " + Token.printTokens(tokens) + "\n   " + buffer + "^"
+        "\r   " + Token.printTokens(tokens) + "\r   " + buffer + "^"
 
 
 module Lexer =
@@ -60,7 +60,7 @@ module Lexer =
         let mutable buffer = ""
         if position > 0 then
             buffer <- buffer + String.replicate position " "
-        "\n   " + input + "\n   " + buffer + "^"
+        "\r   " + input + "\r   " + buffer + "^"
 
     let rec catchNum(rest, finVal) = 
         match rest with

@@ -4,114 +4,71 @@
         <name>Frontend</name>
     </assembly>
     <members>
-        <member name="T:AdvProg.MainWindow">
+        <member name="T:Frontend.ActionCommand">
             <summary>
-            MainWindow
+            Class <c>ActionCommand</c> is an implementation of ICommand
             </summary>
         </member>
-        <member name="M:AdvProg.MainWindow.InitializeComponent">
+        <member name="M:Frontend.ActionCommand.#ctor(System.Action)">
             <summary>
-            InitializeComponent
+            Method <c>ActionCommand</c> defines an action from XAML to be handled by C# methods
+            </summary>
+            <param name="action"><c>action</c> is the action to take place</param>
+        </member>
+        <member name="M:Frontend.ActionCommand.Execute(System.Object)">
+            <summary>
+            Method <c>Execute</c> causes the action to occur
+            </summary>
+            <param name="parameter"><c>parameter</c> allows execute to take a parameter if needed</param>
+        </member>
+        <member name="M:Frontend.ActionCommand.CanExecute(System.Object)">
+            <summary>
+            Method <c>CanExecute</c> defines a commands ability to be executed
+            </summary>
+            <param name="parameter"><c>parameter</c> allows execute to take a parameter if needed</param>
+            <returns>Returns true if executable, or false if not</returns>
+        </member>
+        <member name="E:Frontend.ActionCommand.CanExecuteChanged">
+            <summary>
+            Establishes if the value of CanExecute has changed
             </summary>
         </member>
-        <member name="T:AdvProg.PopUp">
+        <member name="T:Frontend.Theme">
             <summary>
-            PopUp
+            Enum <c>Themee</c> defines the possible themes within the system
             </summary>
         </member>
-        <member name="M:AdvProg.PopUp.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:AdvProg.ViewModel">
-            <summary>
-            Class <c>ViewModel</c> is used to control various elements of the GUI
-            </summary>
-        </member>
-        <member name="M:AdvProg.ViewModel.CountRichLines(System.String)">
-            <summary>
-            Method <c>CountRichLines</c> is used to count the number of lines the print will require
-            </summary>
-            <param name="resultString"></param> the string to be measured
-            <returns>Number of lines</returns>
-        </member>
-        <member name="M:AdvProg.ViewModel.GetPriorChar(System.Windows.Controls.TextBox,System.Int32)">
-            <summary>
-            Method <c>GetPriorChar</c> returns the character in the textbox one index before the cursor. 
-            </summary>
-            <param name="textbox"></param> the textbox to be addressed
-            <param name="curIndex"></param> the current index of the cursor/selection
-            <returns></returns>
-        </member>
-        <member name="M:AdvProg.ViewModel.RemoveCurrentLineText(System.Windows.Controls.TextBox)">
-            <summary>
-            Method <c>RemoveCurrentLineText</c> removes the current entered line text in a given TextBox
-            </summary>
-            <param name="textbox"></param> the textbox that will be affected
-        </member>
-        <member name="M:AdvProg.ViewModel.PrintResult(System.String,System.String)">
-            <summary>
-            Method <c>PrintResults</c> takes the input string and moves it to the PrintWindow along with the result
-            </summary>
-            <param name="result"></param> the result string to be printed
-            <param name="prompt"></param> the prompt which the user entered
-        </member>
-        <member name="M:AdvProg.ViewModel.PrintError(System.String,System.String)">
-            <summary>
-            Method <c>PrintError</c> is used when an error is printed, this is done in red with some formatting
-            </summary>
-            <param name="error"></param> the error message to be printed
-            <param name="prompt"></param> the prompt which the user entered
-        </member>
-        <member name="M:AdvProg.ViewModel.UpdateWorkstation">
-            <summary>
-            Method <c>UpdateWorkstation</c> is used to synchronise the GUI workstation with the backend VariableStore
-            </summary>
-        </member>
-        <member name="P:AdvProg.ViewModel.ReturnCommand">
-            <summary>
-            Method <c>ReturnCommand</c> is used with the return keybind to send prompts to the backend
-            </summary>
-        </member>
-        <member name="P:AdvProg.ViewModel.BackCommand">
-            <summary>
-            Method <c>BackCommand</c> is used with the backspace keybind to handle character deletion. This ensures the user cannot delete previous prompts/move lines
-            </summary>
-        </member>
-        <member name="P:AdvProg.ViewModel.LeftCommand">
-            <summary>
-            Method <c>LeftCommand</c> is used with the left-arrow keybind to handle line-selection. This ensures the user cannot ascend/descend lines incorrectly. 
-            </summary>
-        </member>
-        <member name="P:AdvProg.ViewModel.DelVarCommand">
-            <summary>
-            Method <c>DelVarCommand</c> is used to delete a variable from the Workstation and hence the VariableStore
-            </summary>
-        </member>
-        <member name="P:AdvProg.ViewModel.UpHistoryCommand">
-            <summary>
-            Method <c>UpHistoryCommand</c> is used with the up-arrow keybind to handle history viewing (ascends through the history array). 
-            </summary>
-        </member>
-        <member name="P:AdvProg.ViewModel.DownHistoryCommand">
-            <summary>
-            Method <c>DownHistoryCommand</c> is used to descend through the history array using the down-arrow keybind. 
-            </summary>
-        </member>
-        <member name="T:AdvProg.App">
+        <member name="T:Frontend.App">
             <summary>
             App
             </summary>
         </member>
-        <member name="M:AdvProg.App.InitializeComponent">
+        <member name="M:Frontend.App.InitializeComponent">
             <summary>
             InitializeComponent
             </summary>
         </member>
-        <member name="M:AdvProg.App.Main">
+        <member name="M:Frontend.App.Main">
             <summary>
             Application Entry Point.
+            </summary>
+        </member>
+        <member name="T:Frontend.HalfSideConverter">
+            <summary>
+            Converter for XAML bindings: returns 1/2 the requested value
+            Includes method to convert back
+            </summary>
+        </member>
+        <member name="T:Frontend.ThirdSideConverter">
+            <summary>
+            Converter for XAML bindings: returns 1/3 the requested value
+            Includes method to convert back
+            </summary>
+        </member>
+        <member name="T:Frontend.FifthSideConverter">
+            <summary>
+            Converter for XAML bindings: returns 1/5 the requested value
+            Includes method to convert back
             </summary>
         </member>
         <member name="T:Frontend.GraphWindow">
@@ -123,6 +80,63 @@
             </summary>
         </member>
         <member name="M:Frontend.GraphWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Frontend.MainWindow">
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="M:Frontend.MainWindow.#ctor">
+            <summary>
+            Constructor <c>MainWindow</c> instantiates the main display, specifying Data Contexts (controllers) and preparing the user's settings
+            </summary>
+        </member>
+        <member name="P:Frontend.MainWindow.Search">
+            <summary>
+            Search get and set methods for the help menu
+            </summary>
+        </member>
+        <member name="P:Frontend.MainWindow.SearchResults">
+            <summary>
+            Method <c>SearchResults</c> returns an Enumerable of the filtered results from the SearchList
+            </summary>
+        </member>
+        <member name="M:Frontend.MainWindow.PrepSettings">
+            <summary>
+            Method <c>PrepSettings</c> loads and establishes the user's settings from a saved file
+            </summary>
+        </member>
+        <member name="M:Frontend.MainWindow.SettingsButton_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Method <c>SettingsButton_Click</c> opens the settings menu popup
+            </summary>
+            <param name="sender"><c>sender</c> provides information about the sender button</param>
+            <param name="e"><c>e</c> provides event arguments</param>
+        </member>
+        <member name="M:Frontend.MainWindow.HelpButton_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Method <c>HelpButton_Click</c> opens the help menu or closes it
+            </summary>
+            <param name="sender"><c>sender</c> provides information about the sender button</param>
+            <param name="e"><c>e</c> provides event arguments</param>
+        </member>
+        <member name="M:Frontend.MainWindow.Shortcut_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Method <c>ShortCut_Click</c> opens the relevant maths visualiser popup 
+            </summary>
+            <param name="sender"><c>sender</c> provides information about the sender button</param>
+            <param name="e"><c>e</c> provides event arguments</param>
+        </member>
+        <member name="M:Frontend.MainWindow.OnPropertyChanged(System.String)">
+            <summary>
+            Method <c>OnPropertyChanged</c> triggered when search help menu is changed
+            </summary>
+            <param name="element"><c>element</c> gives thee name of the xaml element which has changed</param>
+        </member>
+        <member name="M:Frontend.MainWindow.InitializeComponent">
             <summary>
             InitializeComponent
             </summary>
@@ -140,6 +154,55 @@
             InitializeComponent
             </summary>
         </member>
+        <member name="T:Frontend.PopUp">
+            <summary>
+            PopUp
+            </summary>
+        </member>
+        <member name="M:Frontend.PopUp.#ctor(System.Int32,Frontend.Theme)">
+            <summary>
+            Constructor <c>PopUp</c> establishes themes, data contexts and the layout of the popup
+            </summary>
+            <param name="type"><c>type</c> the variant of popup window (which operation it facilitates)</param>
+            <param name="theme"><c>theme</c> the current theme of the system</param>
+        </member>
+        <member name="M:Frontend.PopUp.SetTheme(Frontend.Theme)">
+            <summary>
+            Method <c>SetTheme</c> changes the current theme to the theme specified by the parameter given
+            </summary>
+            <param name="newTheme"><c>newTheme</c> the new theme to be applied</param>
+        </member>
+        <member name="M:Frontend.PopUp.ConstructFields">
+            <summary>
+            Method <c>ConstructFields</c> adjusts the layout to suit the type of the popup
+            </summary>
+        </member>
+        <member name="M:Frontend.PopUp.FindElements``1(System.Windows.DependencyObject)">
+            <summary>
+            Method <c>FindElements</c> returns a list of the chosen elements found on the popup
+            </summary>
+            <typeparam name="T">TypeParameter <c>T</c> providees the type of element to search for</typeparam>
+            <param name="obj"><c>obj</c> provides the object to search</param>
+            <returns>An Enumerable of the requested elements</returns>
+        </member>
+        <member name="M:Frontend.PopUp.ProcessShortcut(System.Double[])">
+            <summary>
+            Method <c>ProcessShortcut</c> converts the values from the popup into a function call for the interpreter
+            </summary>
+            <param name="values"><c>values</c> is an array of the values taken form the inputs</param> 
+        </member>
+        <member name="M:Frontend.PopUp.ShortCutSubmit_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Method <c>ShortCutSubmit_Click</c> gathers the users inputs and passes them to a list. <see cref="M:Frontend.PopUp.ProcessShortcut(System.Double[])"/>
+            </summary>
+            <param name="sender"><c>sender</c> provides information about the sender button</param>
+            <param name="e"><c>e</c> provides event arguments</param>
+        </member>
+        <member name="M:Frontend.PopUp.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
         <member name="T:Frontend.Settings">
             <summary>
             Interaction logic for Settings.xaml
@@ -148,39 +211,147 @@
             Settings
             </summary>
         </member>
+        <member name="M:Frontend.Settings.#ctor(Frontend.Theme)">
+            <summary>
+            Constructor <c>Settings</c> instantiates a Settings window with the relevant theme and prefills
+            </summary>
+            <param name="theme"><c>theme</c> the current theme of the system</param>
+        </member>
+        <member name="M:Frontend.Settings.SetTheme(Frontend.Theme)">
+            <summary>
+            Method <c>SetTheme</c> changes the current theme to the theme specified by the parameter given
+            </summary>
+            <param name="newTheme"><c>newTheme</c> the new theme to be applied</param>
+        </member>
+        <member name="M:Frontend.Settings.LoadSettings">
+            <summary>
+            Method <c>LoadSettings</c> imports the user's saved settings from an external file. <see href="resources/UserSettings.xml" />
+            </summary>
+        </member>
+        <member name="M:Frontend.Settings.GetSettings">
+            <summary>
+            Method <c>GetSettings</c> is a static method for getting the current settings. <see href="resources/UserSettings.xml" />
+            </summary>
+            <returns>An instance of UserSettings, populated by the XML file</returns>
+        </member>
+        <member name="M:Frontend.Settings.SaveSettings_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Method <c>SaveSettings_Click</c> saves any changes the user has made to their settings file. <see href="resources/UserSettings.xml" />
+            </summary>
+            <param name="sender"><c>sender</c> provides information about the sender button</param>
+            <param name="e"><c>e</c> provides event arguments</param>
+        </member>
+        <member name="M:Frontend.Settings.FindInputs``1(System.Windows.DependencyObject)">
+            <summary>
+            Method <c>FindElements</c> returns a list of the chosen elements found on the popup
+            </summary>
+            <typeparam name="T">TypeParameter <c>T</c> providees the type of element to search for</typeparam>
+            <param name="obj"><c>obj</c> provides the object to search</param>
+            <returns>An Enumerable of the requested elements</returns>
+        </member>
         <member name="M:Frontend.Settings.InitializeComponent">
             <summary>
             InitializeComponent
             </summary>
         </member>
-        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+        <member name="T:Frontend.UserSettings">
             <summary>
-            GeneratedInternalTypeHelper
+            Class <c>UserSettings</c> is used to save and read user-preferences from an XML file. 
             </summary>
         </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+        <member name="M:Frontend.UserSettings.Save(System.String)">
             <summary>
-            CreateInstance
+            Method <c>Save</c> serialises and saves any user settings in the XML file. 
+            </summary>
+            <param name="filename"><c>filename</c> provides a path to the XML file</param>
+        </member>
+        <member name="M:Frontend.UserSettings.Read(System.String)">
+            <summary>
+            Method <c>Read</c> reads and deserialises the data from the XML file
+            </summary>
+            <param name="filename"><c>filename</c> provides a path to the XML file</param>
+            <returns>An instance of UserSettings with the user's preferences</returns>
+        </member>
+        <member name="T:Frontend.ViewModel">
+            <summary>
+            Class <c>ViewModel</c> is used to control various elements of the GUI
             </summary>
         </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+        <member name="M:Frontend.ViewModel.CountRichLines(System.String)">
             <summary>
-            GetPropertyValue
+            Method <c>CountRichLines</c> is used to count the number of lines the print will require
+            </summary>
+            <param name="resultString"></param> the string to be measured
+            <returns>Number of lines</returns>
+        </member>
+        <member name="M:Frontend.ViewModel.GetPriorChar(System.Windows.Controls.TextBox,System.Int32)">
+            <summary>
+            Method <c>GetPriorChar</c> returns the character in the textbox one index before the cursor. 
+            </summary>
+            <param name="textbox"></param> the textbox to be addressed
+            <param name="curIndex"></param> the current index of the cursor/selection
+            <returns></returns>
+        </member>
+        <member name="M:Frontend.ViewModel.RemoveCurrentLineText(System.Windows.Controls.TextBox)">
+            <summary>
+            Method <c>RemoveCurrentLineText</c> removes the current entered line text in a given TextBox
+            </summary>
+            <param name="textbox"></param> the textbox that will be accessed
+        </member>
+        <member name="M:Frontend.ViewModel.GetPrompt(System.Windows.Controls.TextBox)">
+            <summary>
+            Method <c>GetPrompt</c> is used to get the current line code (which is always the final line)
+            </summary>
+            <param name="textbox"></param> the textbox to be accessed
+            <returns></returns>
+        </member>
+        <member name="M:Frontend.ViewModel.PrintResult(System.String,System.String)">
+            <summary>
+            Method <c>PrintResults</c> takes the input string and moves it to the PrintWindow along with the result
+            </summary>
+            <param name="result"></param> the result string to be printed
+            <param name="prompt"></param> the prompt which the user entered
+        </member>
+        <member name="M:Frontend.ViewModel.PrintError(System.String,System.String)">
+            <summary>
+            Method <c>PrintError</c> is used when an error is printed, this is done in red with some formatting, thus very similar to <c>PrintResult</c>
+            </summary>
+            <param name="error"></param> the error message to be printed
+            <param name="prompt"></param> the prompt which the user entered
+        </member>
+        <member name="M:Frontend.ViewModel.UpdateWorkstation">
+            <summary>
+            Method <c>UpdateWorkstation</c> is used to synchronise the GUI workstation with the backend VariableStore
             </summary>
         </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+        <member name="P:Frontend.ViewModel.ReturnCommand">
             <summary>
-            SetPropertyValue
+            Method <c>ReturnCommand</c> is used with the return keybind to send prompts to the backend
             </summary>
         </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+        <member name="P:Frontend.ViewModel.BackCommand">
             <summary>
-            CreateDelegate
+            Method <c>BackCommand</c> is used with the backspace keybind to handle character deletion. This ensures the user cannot delete previous prompts/move lines
             </summary>
         </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+        <member name="P:Frontend.ViewModel.LeftCommand">
             <summary>
-            AddEventHandler
+            Method <c>LeftCommand</c> is used with the left-arrow keybind to handle line-selection. This ensures the user cannot ascend/descend lines incorrectly. 
+            </summary>
+        </member>
+        <member name="P:Frontend.ViewModel.DelVarCommand">
+            <summary>
+            Method <c>DelVarCommand</c> is used to delete a variable from the Workstation and hence the VariableStore
+            </summary>
+        </member>
+        <member name="P:Frontend.ViewModel.UpHistoryCommand">
+            <summary>
+            Method <c>UpHistoryCommand</c> is used with the up-arrow keybind to handle history viewing (ascends through the history array). 
+            </summary>
+        </member>
+        <member name="P:Frontend.ViewModel.DownHistoryCommand">
+            <summary>
+            Method <c>DownHistoryCommand</c> is used to descend through the history array using the down-arrow keybind. 
             </summary>
         </member>
     </members>

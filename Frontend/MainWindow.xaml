@@ -1,18 +1,15 @@
-﻿<Window x:Class="AdvProg.MainWindow"
+﻿<Window x:Class="Frontend.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AdvProg"
         xmlns:frontend="clr-namespace:Frontend"
         mc:Ignorable="d"
         Title="Baltam" Height="750" Width="1000"
         Foreground="{DynamicResource ResourceKey=FontBrush}"
         Background="{DynamicResource ResourceKey=BackgroundBrush}">
 
-    
-    
-
+    <!--Resources for the page (for dynamic themes and sizing)-->
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -24,11 +21,12 @@
         </ResourceDictionary>
     </Window.Resources>
 
+    <!--INPUT BINDINGS-->
     <Window.InputBindings>
-        <KeyBinding Command="{Binding ReturnCommand}" Key="Return" />
         <KeyBinding Command="{Binding DelVarCommand}" Key="Delete" />
     </Window.InputBindings>
 
+    <!--Definition of main grid: page uses grid system for placement-->
     <Grid Name="MainGrid" Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -49,26 +47,24 @@
             <TextBlock Grid.Row="0" Height="15pt" Name="iwTextBlock">Input Window</TextBlock>
 
             <Border Grid.Row="1" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" BorderThickness="1, 1, 1, 1">
-                <!--INPUT CURSOR AND FIELD-->
+                <!--INPUT FIELDS-->
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="20pt" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" Name="cursorWindow" BorderBrush="{x:Null}" IsReadOnly="True" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">>></TextBox>
-                    <RichTextBox Grid.Column="1" Height ="auto" Name="printWindow" VerticalAlignment="Top" BorderBrush="{x:Null}" IsReadOnly="True" IsHitTestVisible="False" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">
-                        <!--<RichTextBox.Resources>
-                            <Style TargetType="{x:Type Paragraph}">
-                                <Setter Property="Margin" Value="0"/>
-                            </Style>
-                        </RichTextBox.Resources>-->
+                    <!--Input fields use three textboxes: 1) cursor window, input window for the user to interact with, print window to display results-->
+                    <TextBox Grid.Column="0" Name="cursorWindow" VerticalScrollBarVisibility="Hidden" ScrollViewer.ScrollChanged="input_ScrollChanged" BorderBrush="{x:Null}" IsReadOnly="True" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">>></TextBox>
+                    <!--RichTextBox to allow colour adjustment-->
+                    <RichTextBox Grid.Column="1" Height ="auto" Name="printWindow" VerticalScrollBarVisibility="Hidden" ScrollViewer.ScrollChanged="input_ScrollChanged" VerticalAlignment="Top" BorderBrush="{x:Null}" IsReadOnly="True" IsHitTestVisible="False" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">
                         <FlowDocument>
                             <Paragraph></Paragraph>
                         </FlowDocument>
                     </RichTextBox>
-                    <TextBox Grid.Column="1" Name="inputWindow" BorderBrush="{x:Null}" TextWrapping="Wrap" Height="auto" KeyboardNavigation.ControlTabNavigation="None" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}" CaretBrush="{DynamicResource ResourceKey=CaretBrush}">
+                    <TextBox Grid.Column="1" Name="inputWindow" VerticalScrollBarVisibility="Auto" ScrollViewer.ScrollChanged="input_ScrollChanged" BorderBrush="{x:Null}" TextWrapping="Wrap" Height="auto" KeyboardNavigation.ControlTabNavigation="None" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}" CaretBrush="{DynamicResource ResourceKey=CaretBrush}">
                         <TextBox.InputBindings>
+                            <KeyBinding Command="{Binding ReturnCommand}" Key="Return" />
                             <KeyBinding Command="{Binding BackCommand}" Key="Backspace" />
                             <KeyBinding Command="{Binding UpHistoryCommand}" Key="Up" />
                             <KeyBinding Command="{Binding DownHistoryCommand}" Key="Down" />
@@ -78,11 +74,12 @@
                 </Grid>
             </Border>
         </Grid>
+        <!--Expander for method visualisers-->
         <Expander Header="Function Shortcuts" Width="{Binding ActualWidth, Converter={StaticResource halfConverter}, ElementName=iwTextBlock}" VerticalAlignment="Top" HorizontalAlignment="Right" Background="{DynamicResource ResourceKey=ExpanderBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}">
             <StackPanel Grid.Row="0" Height="60pt">
-                <Button Name="rootButton" Content="ROOT" Click="RootShortcut_Click" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
-                <Button Name="powerButton" Content="POWER" Click="RootShortcut_Click" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
-                <Button Name="logButton" Content="LOGARITHM" Click="RootShortcut_Click" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+                <Button Name="rootButton" Content="ROOT" Click="Shortcut_Click" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+                <Button Name="powerButton" Content="POWER" Click="Shortcut_Click" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+                <Button Name="logButton" Content="LOGARITHM" Click="Shortcut_Click" Foreground="{DynamicResource ResourceKey=FontBrush}" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
             </StackPanel>
         </Expander>
 
@@ -97,14 +94,44 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0">Workstation</TextBlock>
-            <Button Grid.Row="0" Grid.Column="1" x:Name="settingsButton" Height="15pt" Width="30pt" Click="SettingsButton_Click" Background="{DynamicResource ResourceKey=ControlBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" HorizontalAlignment="Right">
-                <Image Source="/resources/settings.png"></Image>
-            </Button>
+            <!--Workstation/Help menu-->
+            <!--Uses collapsible panels to swap displays, text edited with C#-->
+            <TextBlock Grid.Row="0" x:Name="WorkstationTextBlock" Margin="5,0,0,0">Workstation</TextBlock>
+            <!--Button display-->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Grid.Column="1" x:Name="helpButton" Height="15pt" Width="30pt" Click="HelpButton_Click" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" HorizontalAlignment="Right">
+                    <Image Source="/resources/help.png"></Image>
+                </Button>
+                <Button Grid.Column="1" x:Name="settingsButton" Height="15pt" Width="30pt" Click="SettingsButton_Click" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" HorizontalAlignment="Right">
+                    <Image Source="/resources/settings.png"></Image>
+                </Button>
+            </StackPanel>
 
+            <!--Listbox for variable names and values respectively-->
             <ListBox Grid.Row="1" Grid.Column="0" x:Name="varNames" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
             <ListBox Grid.Row="1" Grid.Column="1" x:Name="varValues" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+
+            <!--Collapsible Help Menu-->
+            <StackPanel Grid.Row="1" Grid.ColumnSpan="2" x:Name="HelpMenu" Visibility="Collapsed" Background="{DynamicResource ResourceKey=BackgroundBrush}">
+                <Grid>
+                    <!--Search bar with dynamic results display via listbox-->
+                    <TextBox x:Name="helpSearch" VerticalAlignment="Center" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StackPanel}},Path=ActualWidth}" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+                    <!--TextBlock to display prompt (hidden when user begins typing)-->
+                    <TextBlock IsHitTestVisible="False" Text="Search for a Term/Operator" Margin="5,0,0,0" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=helpSearch}" Value="">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+                <ListBox x:Name="resultsListBox" Height="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StackPanel}},Path=ActualHeight}" ItemsSource="{Binding SearchResults}" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+            </StackPanel>
         </Grid>
     </Grid>
-
 </Window>

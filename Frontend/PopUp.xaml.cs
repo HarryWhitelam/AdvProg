@@ -7,14 +7,21 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Frontend;
 
-namespace AdvProg
+namespace Frontend
 {
     public partial class PopUp : Window
     {
+        // type: the variant of popup window (which operation it facilitates)
         // 1 - root
         // 2 - power
         // 3 - log
         int type;
+
+        /// <summary>
+        /// Constructor <c>PopUp</c> establishes themes, data contexts and the layout of the popup
+        /// </summary>
+        /// <param name="type"><c>type</c> the variant of popup window (which operation it facilitates)</param>
+        /// <param name="theme"><c>theme</c> the current theme of the system</param>
         public PopUp(int type, Theme theme)
         {
             InitializeComponent();
@@ -26,6 +33,10 @@ namespace AdvProg
 
         public Theme Theme { get; set; }
 
+        /// <summary>
+        /// Method <c>SetTheme</c> changes the current theme to the theme specified by the parameter given
+        /// </summary>
+        /// <param name="newTheme"><c>newTheme</c> the new theme to be applied</param>
         public void SetTheme(Theme newTheme)
         {
             this.Theme = newTheme;
@@ -33,6 +44,9 @@ namespace AdvProg
                 new Uri($"/resources/themes/{Theme}.xaml", UriKind.Relative);
         }
 
+        /// <summary>
+        /// Method <c>ConstructFields</c> adjusts the layout to suit the type of the popup
+        /// </summary>
         public void ConstructFields()
         {
             switch (type)
@@ -71,7 +85,13 @@ namespace AdvProg
             }
         }
 
-        public IEnumerable<T> FindInputs<T>(DependencyObject obj) where T:DependencyObject
+        /// <summary>
+        /// Method <c>FindElements</c> returns a list of the chosen elements found on the popup
+        /// </summary>
+        /// <typeparam name="T">TypeParameter <c>T</c> providees the type of element to search for</typeparam>
+        /// <param name="obj"><c>obj</c> provides the object to search</param>
+        /// <returns>An Enumerable of the requested elements</returns>
+        public IEnumerable<T> FindElements<T>(DependencyObject obj) where T:DependencyObject
         {
             if (obj == null) yield return (T)Enumerable.Empty<T>();
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
@@ -79,17 +99,20 @@ namespace AdvProg
                 DependencyObject child = VisualTreeHelper.GetChild(obj, i);
                 if (child == null) continue;
                 if (child is T t) yield return t;
-                foreach (T childOfChild in FindInputs<T>(child)) yield return childOfChild;
+                foreach (T childOfChild in FindElements<T>(child)) yield return childOfChild;
             }
         }
 
+        /// <summary>
+        /// Method <c>ProcessShortcut</c> converts the values from the popup into a function call for the interpreter
+        /// </summary>
+        /// <param name="values"><c>values</c> is an array of the values taken form the inputs</param> 
         public void ProcessShortcut(double[] values)
         {
             TextBox inputWindow = (TextBox) Application.Current.MainWindow.FindName("inputWindow");
 
             switch (type)
             {
-                // ROOT
                 case 1:
                     inputWindow.AppendText("root(" + values[1] + ", " + values[0] + ")");
                     break;
@@ -104,6 +127,11 @@ namespace AdvProg
             }
         }
 
+        /// <summary>
+        /// Method <c>ShortCutSubmit_Click</c> gathers the users inputs and passes them to a list. <see cref="ProcessShortcut"/>
+        /// </summary>
+        /// <param name="sender"><c>sender</c> provides information about the sender button</param>
+        /// <param name="e"><c>e</c> provides event arguments</param>
         private void ShortCutSubmit_Click(object sender, RoutedEventArgs e)
         {
             bool errorBool = false;
@@ -111,10 +139,10 @@ namespace AdvProg
             double doubleInput;
             double[] inputs = new double[numInputs];
 
-            IEnumerable<TextBox> tbList = FindInputs<TextBox>(this);
+            IEnumerable<TextBox> tbList = FindElements<TextBox>(this);
 
             int count = 0;
-            foreach (TextBox textBox in FindInputs<TextBox>(this))
+            foreach (TextBox textBox in FindElements<TextBox>(this))
             {
                 if ((double.TryParse(textBox.Text, out doubleInput)) && (doubleInput != 0))
                 {

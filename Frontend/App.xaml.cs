@@ -8,6 +8,9 @@ using System.Windows;
 
 namespace Frontend
 {
+    /// <summary>
+    /// Enum <c>Themee</c> defines the possible themes within the system
+    /// </summary>
     public enum Theme
     {
         Light,

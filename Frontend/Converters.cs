@@ -8,6 +8,10 @@ using System.Windows.Data;
 
 namespace Frontend
 {
+    /// <summary>
+    /// Converter for XAML bindings: returns 1/2 the requested value
+    /// Includes method to convert back
+    /// </summary>
     public partial class HalfSideConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -21,6 +25,10 @@ namespace Frontend
         }
     }
 
+    /// <summary>
+    /// Converter for XAML bindings: returns 1/3 the requested value
+    /// Includes method to convert back
+    /// </summary>
     public partial class ThirdSideConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -34,6 +42,10 @@ namespace Frontend
         }
     }
 
+    /// <summary>
+    /// Converter for XAML bindings: returns 1/5 the requested value
+    /// Includes method to convert back
+    /// </summary>
     public partial class FifthSideConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
