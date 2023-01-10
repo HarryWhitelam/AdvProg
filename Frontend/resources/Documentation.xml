@@ -247,6 +247,13 @@
             <param name="sender"><c>sender</c> provides information about the sender button</param>
             <param name="e"><c>e</c> provides event arguments</param>
         </member>
+        <member name="M:Frontend.Settings.RadioButton_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Method <c>RadioButton_Checked</c> is bound to the radiobuttons in the settings page, firing when checked
+            </summary>
+            <param name="sender"><c>sender</c> provides information about the sender button</param>
+            <param name="e"><c>e</c> provides event arguments</param>
+        </member>
         <member name="M:Frontend.Settings.FindInputs``1(System.Windows.DependencyObject)">
             <summary>
             Method <c>FindElements</c> returns a list of the chosen elements found on the popup
@@ -287,7 +294,7 @@
             <summary>
             Method <c>CountRichLines</c> is used to count the number of lines the print will require
             </summary>
-            <param name="resultString"></param> the string to be measured
+            <param name="resultString">resultString the string to be measured</param>
             <returns>Number of lines</returns>
         </member>
         <member name="M:Frontend.ViewModel.GetPriorChar(System.Windows.Controls.TextBox,System.Int32)">
@@ -329,6 +336,12 @@
             <summary>
             Method <c>UpdateWorkstation</c> is used to synchronise the GUI workstation with the backend VariableStore
             </summary>
+        </member>
+        <member name="M:Frontend.ViewModel.DeleteFromWorkstation(System.String)">
+            <summary>
+            Method <c>DeleteFromWorkstation</c> is used to remove a variable from the workstation
+            </summary>
+            <param name="input">input: the input string from the gui</param>
         </member>
         <member name="P:Frontend.ViewModel.ReturnCommand">
             <summary>

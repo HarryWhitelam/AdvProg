@@ -80,7 +80,8 @@ namespace Frontend
                         popUpImg.Source = new BitmapImage(new Uri("/resources/logInvert.png", UriKind.Relative));
                     popUpImg.Margin = new Thickness(-93, 97, 93, 97);
                     input2.Margin = new Thickness(185, 107, 75, 127);
-                    input1.Margin = new Thickness(135, 142, 165, 90);
+                    input1.Visibility = Visibility.Hidden;
+                    input1.Text = "0";
                     break;
             }
         }
@@ -114,13 +115,13 @@ namespace Frontend
             switch (type)
             {
                 case 1:
-                    inputWindow.AppendText("root(" + values[1] + ", " + values[0] + ")");
+                    inputWindow.AppendText("nroot(" + values[1] + ", " + values[0] + ")");
                     break;
                 case 2:
                     inputWindow.AppendText(values[1] + "^" + values[0]);
                     break;
                 case 3:
-                    inputWindow.AppendText("log(" + values[1] + ", " + values[0] + ")");
+                    inputWindow.AppendText("log(" + values[0] + ")");
                     break;
                 default:
                     break;
@@ -144,7 +145,7 @@ namespace Frontend
             int count = 0;
             foreach (TextBox textBox in FindElements<TextBox>(this))
             {
-                if ((double.TryParse(textBox.Text, out doubleInput)) && (doubleInput != 0))
+                if (double.TryParse(textBox.Text, out doubleInput))
                 {
                     inputs[count] = doubleInput;
                     count++;

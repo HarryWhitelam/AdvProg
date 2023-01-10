@@ -8,7 +8,6 @@ using System.Windows.Media;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using static Microsoft.FSharp.Core.LanguagePrimitives;
 
 namespace Frontend
 {
@@ -24,7 +23,7 @@ namespace Frontend
         /// <summary>
         /// Method <c>CountRichLines</c> is used to count the number of lines the print will require
         /// </summary>
-        /// <param name="resultString"></param> the string to be measured
+        /// <param name="resultString">resultString the string to be measured</param>
         /// <returns>Number of lines</returns>
         public int CountRichLines(String resultString)
         {
@@ -103,11 +102,17 @@ namespace Frontend
             else
             {
                 // constructs a string and inserts it into the textrange at the end of the textbox
-                string resultString = prompt + '\r' + "    " + result + Environment.NewLine;
+                string promptString = prompt + '\r';
+                TextRange promptRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
+                promptRange.Text = promptString;
+
+                string resultString = "    " + result + Environment.NewLine;
                 TextRange resultRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
                 resultRange.Text = resultString;
+
                 RemoveCurrentLineText(inputWindow);
-                int lineCount = CountRichLines(resultString);
+
+                int lineCount = CountRichLines(promptString + resultString);
                 for (int i = 0; i <= lineCount; i++)
                 {
                     inputWindow.AppendText(Environment.NewLine);
@@ -128,14 +133,13 @@ namespace Frontend
         /// <param name="prompt"></param> the prompt which the user entered
         public void PrintError(string error, string prompt)
         {
-            System.Diagnostics.Debug.WriteLine("ERROR PRINTING");
             TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
             TextBox cursorWindow = (TextBox)Application.Current.MainWindow.FindName("cursorWindow");
             RichTextBox printWindow = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
 
-            string resultString = prompt + '\r';
-            TextRange resultRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
-            resultRange.Text = resultString;
+            string promptString = prompt + '\r';
+            TextRange promptRange = new TextRange(printWindow.Document.ContentEnd, printWindow.Document.ContentEnd);
+            promptRange.Text = promptString;
 
             // constructs a similar string and textrange, then applies a style brush for red font
             string errorString = "Error: " + error + Environment.NewLine;
@@ -145,7 +149,7 @@ namespace Frontend
 
             RemoveCurrentLineText(inputWindow);
 
-            int lineCount = CountRichLines(resultString + errorString);
+            int lineCount = CountRichLines(promptString + errorString);
             for (int i = 0; i <= lineCount; i++)
             {
                 inputWindow.AppendText(Environment.NewLine);
@@ -181,6 +185,43 @@ namespace Frontend
             }
         }
 
+        /// <summary>
+        /// Method <c>DeleteFromWorkstation</c> is used to remove a variable from the workstation
+        /// </summary>
+        /// <param name="input">input: the input string from the gui</param>
+        public void DeleteFromWorkstation(string input)
+        {
+            ListBox varNames = (ListBox)Application.Current.MainWindow.FindName("varNames");
+            ListBox varValues = (ListBox)Application.Current.MainWindow.FindName("varValues");
+
+            string variable = input.Split('(', ')')[1];
+            if (varNames.Items.Contains(variable))
+            {
+                int index = varNames.Items.IndexOf(variable);
+                Interpreter.removeVarStore((string)varNames.Items[index]);
+                varNames.Items.Remove(varNames.Items.GetItemAt(index));
+                varValues.Items.Remove(varValues.Items.GetItemAt(index));
+
+                PrintResult(String.Format("Variable {0} deleted", variable), input);
+            }
+            else
+            {
+                PrintError(String.Format("Variable {0} not found / not valid", variable), input);
+            }
+        }
+
+        public void ClearGUI()
+        {
+            TextBox inputWindow = (TextBox)Application.Current.MainWindow.FindName("inputWindow");
+            TextBox cursorWindow = (TextBox)Application.Current.MainWindow.FindName("cursorWindow");
+            RichTextBox printWindow = (RichTextBox)Application.Current.MainWindow.FindName("printWindow");
+
+            inputWindow.Text = "";
+            cursorWindow.Text = ">>";
+            printWindow.Document.Blocks.Clear();
+            System.Diagnostics.Debug.WriteLine(new TextRange(printWindow.Document.ContentStart, printWindow.Document.ContentEnd).Text);
+        }
+
         private ICommand returnCommand;
         /// <summary>
         /// Method <c>ReturnCommand</c> is used with the return keybind to send prompts to the backend
@@ -206,6 +247,14 @@ namespace Frontend
                     if (input == "exit")        // checks for specific inputs which don't require the F# backend
                     {
                         Application.Current.Shutdown();
+                    }
+                    else if (input == "clear")
+                    {
+                        ClearGUI();
+                    }
+                    else if (Regex.Match(input, @"del\((?s).*\)", RegexOptions.IgnoreCase).Success)
+                    {
+                        DeleteFromWorkstation(input);
                     }
                     else if (input.Contains("plot"))
                     {

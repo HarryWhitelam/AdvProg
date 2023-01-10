@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:frontend="clr-namespace:Frontend"
         mc:Ignorable="d"
+        
         Title="Baltam" Height="750" Width="1000"
         Foreground="{DynamicResource ResourceKey=FontBrush}"
         Background="{DynamicResource ResourceKey=BackgroundBrush}">
@@ -18,6 +19,7 @@
             <frontend:HalfSideConverter x:Key="halfConverter" />
             <frontend:ThirdSideConverter x:Key="thirdConverter" />
             <frontend:FifthSideConverter x:Key="fifthConverter" />
+            <frontend:ImageConverter x:Key="imageConverter" />
         </ResourceDictionary>
     </Window.Resources>
 
@@ -100,22 +102,22 @@
             <!--Button display-->
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Grid.Column="1" x:Name="helpButton" Height="15pt" Width="30pt" Click="HelpButton_Click" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" HorizontalAlignment="Right">
-                    <Image Source="/resources/help.png"></Image>
+                    <Image Source="{DynamicResource helpImageSource}" />
                 </Button>
                 <Button Grid.Column="1" x:Name="settingsButton" Height="15pt" Width="30pt" Click="SettingsButton_Click" Background="{DynamicResource ResourceKey=ControlBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" HorizontalAlignment="Right">
-                    <Image Source="/resources/settings.png"></Image>
+                    <Image Source="{DynamicResource settingsImageSource}" />
                 </Button>
             </StackPanel>
 
-            <!--Listbox for variable names and values respectively-->
+                <!--Listbox for variable names and values respectively-->
             <ListBox Grid.Row="1" Grid.Column="0" x:Name="varNames" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
             <ListBox Grid.Row="1" Grid.Column="1" x:Name="varValues" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
 
             <!--Collapsible Help Menu-->
-            <StackPanel Grid.Row="1" Grid.ColumnSpan="2" x:Name="HelpMenu" Visibility="Collapsed" Background="{DynamicResource ResourceKey=BackgroundBrush}">
-                <Grid>
+            <DockPanel Grid.Row="1" Grid.ColumnSpan="2" x:Name="HelpMenu" Visibility="Collapsed" Background="{DynamicResource ResourceKey=BackgroundBrush}" LastChildFill="True">
+                <Grid DockPanel.Dock="Top">
                     <!--Search bar with dynamic results display via listbox-->
-                    <TextBox x:Name="helpSearch" VerticalAlignment="Center" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StackPanel}},Path=ActualWidth}" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+                    <TextBox x:Name="helpSearch" VerticalAlignment="Center" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}},Path=ActualWidth}" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
                     <!--TextBlock to display prompt (hidden when user begins typing)-->
                     <TextBlock IsHitTestVisible="False" Text="Search for a Term/Operator" Margin="5,0,0,0" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">
                         <TextBlock.Style>
@@ -130,8 +132,9 @@
                         </TextBlock.Style>
                     </TextBlock>
                 </Grid>
-                <ListBox x:Name="resultsListBox" Height="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StackPanel}},Path=ActualHeight}" ItemsSource="{Binding SearchResults}" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
-            </StackPanel>
+                <ListBox x:Name="resultsListBox" DockPanel.Dock="Top" ItemsSource="{Binding SearchResults}" Height="{Binding ActualHeight, Converter={StaticResource thirdConverter}, ElementName=HelpMenu}" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" SelectionChanged="resultsListBox_Selected" />
+                <TextBox x:Name="helpTextBox" DockPanel.Dock="Top" TextWrapping="Wrap" Background="{DynamicResource ResourceKey=BackgroundBrush}" Foreground="{DynamicResource ResourceKey=FontBrush}" BorderBrush="{DynamicResource ResourceKey=BorderBrush}" />
+            </DockPanel>
         </Grid>
     </Grid>
 </Window>

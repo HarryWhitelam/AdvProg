@@ -1,20 +1,21 @@
 ﻿using Backend;
 using Frontend;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Media;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace Frontend
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        private XDocument methods;
         /// <summary>
         /// Constructor <c>MainWindow</c> instantiates the main display, specifying Data Contexts (controllers) and preparing the user's settings
         /// </summary>
@@ -24,7 +25,12 @@ namespace Frontend
             DataContext = new ViewModel();
             HelpMenu.DataContext = this;
             PrepSettings();
-            SearchList = new List<string>() { "TEST", "TEST2", "TEST3", "TEST4" };  //PLACEHOLDER
+            methods = ReadHelpDocs();
+        }
+
+        private XDocument ReadHelpDocs()
+        {
+            return XDocument.Load("../../../../Frontend/resources/HelpDocs.xml");
         }
 
         /// <summary>
@@ -48,7 +54,7 @@ namespace Frontend
             }
             set
             {
-                search = value;
+                search = value.ToLower();
                 OnPropertyChanged("SearchText");
                 OnPropertyChanged("SearchResults");
             }
@@ -62,9 +68,9 @@ namespace Frontend
         {
             get
             {
-                if (Search == null) return SearchList;
+                if (Search == null || Search == "") return methods.Descendants("method").Select(x => (string)x.Element("opName")).ToList();
 
-                return SearchList.Where(x => x.ToLower().StartsWith(Search.ToLower()));
+                return methods.Descendants("method").Where(x => x.Attribute("tags").ToString().Contains(Search)).Select(x => (string)x.Element("opName")).ToList();
             }
         }
 
@@ -116,11 +122,15 @@ namespace Frontend
             {
                 WorkstationTextBlock.Text = "Help Menu";
                 HelpMenu.Visibility = Visibility.Visible;
+                varNames.Visibility = Visibility.Collapsed;
+                varValues.Visibility = Visibility.Collapsed;
             }
             else
             {
                 WorkstationTextBlock.Text = "Workstation";
                 HelpMenu.Visibility = Visibility.Collapsed;
+                varNames.Visibility = Visibility.Visible;
+                varValues.Visibility = Visibility.Visible;
             }
         }
 
@@ -155,7 +165,6 @@ namespace Frontend
         /// <param name="element"><c>element</c> gives thee name of the xaml element which has changed</param>
         void OnPropertyChanged(string element)
         {
-            Debug.WriteLine("Value: " + element);
             if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(element));
         }
 
@@ -176,6 +185,19 @@ namespace Frontend
                 inputWindow.ScrollToVerticalOffset(e.VerticalOffset);
                 printWindow.ScrollToVerticalOffset(e.VerticalOffset);
             }
+        }
+
+        private void resultsListBox_Selected(object sender, RoutedEventArgs e)
+        {
+            string helpName = resultsListBox.SelectedItem.ToString();
+            XElement result = methods.Descendants("method").Where(x => x.Element("opName").ToString().Contains(helpName)).Select(x => x).FirstOrDefault();
+
+            string name = result.Attribute("name").Value;
+            string op = result.Attribute("operator").Value;
+            string description = result.Element("description").Value;
+            string example = result.Element("example").Value;
+
+            helpTextBox.Text = name + "        Operator: " + op + "\r\n" + description + "\r\n\r\nExample:\r\n" + example;
         }
     }
 }

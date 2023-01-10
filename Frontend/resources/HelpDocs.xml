@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<HelpDocs>
+	<method id="1" name="Addition" operator="+" tags="+ plus add addition sum">
+		<opName>[+] Addition</opName>
+		<description>The + operator adds elements together, elements must be of the same dimensionality.</description>
+		<example>10 + 5&#xA;    = 15</example>
+	</method>
+
+	<method id="2" name="Subtraction" operator="-" tags="- minus subtract subtraction">
+		<opName>[-] Subtraction</opName>
+		<description>The - operator subtracts the successive element from the preceding element, elements must be of the same dimensionality.</description>
+		<example>10 - 2&#xA;    = 8</example>
+	</method>
+
+	<method id="3" name="Multiplication" operator="*" tags="* times multiply multiplication">
+		<opName>[*] Multiplication</opName>
+		<description>The * operator multiplies elements together, elements must be of the same dimensionality.</description>
+		<example>10 * 4&#xA;    = 40</example>
+	</method>
+
+	<method id="4" name="Division" operator="/" tags="/ divide division">
+		<opName>[/] Division</opName>
+		<description>The / operator divides the preceding element by the successive element, elements must be of the same dimensionality.</description>
+		<example>10 / 5&#xA;    = 2</example>
+	</method>
+
+	<method id="5" name="Square Root" operator="sqrt" tags="square root">
+		<opName>[sqrt] Square Root</opName>
+		<description>sqrt returns the square root of the provided value, using the following format: sqrt(x); where the result will be the square root of x. &#xA;Note: not case sensitive.</description>
+		<example>sqrt(25)&#xA;    = 5</example>
+	</method>
+
+	<method id="6" name="nth Root" operator="nroot" tags="nth root cube root">
+		<opName>[nroot] nth Root</opName>
+		<description>nroot returns the nth root of the provided value, using the following format: nroot(x, n); where the result will be the nth root of x. &#xA;Note: not case sensitive.</description>
+		<example>nroot(25, 2)&#xA;    = 5</example>
+	</method>
+
+	<method id="7" name="Log Natural" operator="log" tags="natural log natural logarithmic natural">
+		<opName>[log] Natural Logarithm</opName>
+		<description>log returns the natural (base e) logarithm of the given value, using the following format: log(x); where the result will be the natural logarithm of x. &#xA;Note: not case sensitive.</description>
+		<example>log(e)&#xA;    = 1</example>
+	</method>
+
+	<method id="8" name="Log Base n" operator="logn" tags="">
+		<opName>[logn] Logarithm Base n</opName>
+		<description>logn returns the base n logarithm of the given value, using the following format: logn(x, n); where the result will be the base n logarithm of x. &#xA;Note: not case sensitive.</description>
+		<example>logn(100, 10)&#xA;    = 2</example>
+	</method>
+
+	<method id="9" name="Euler's Number" operator="e" tags="e eulers number euler's">
+		<opName>[e] Euler's Number</opName>
+		<description>e returns the value of Euler's number, which is approximately 2.718281828459045. &#xA;Note: not case sensitive.</description>
+		<example>e&#xA;    = 2.718281828459045</example>
+	</method>
+
+	<method id="10" name="Pi" operator="pi" tags="pi">
+		<opName>[pi] Pi</opName>
+		<description>pi returns the value of pi, which is approximately 3.141592653589793. &#xA;Note: not case sensitive.</description>
+		<example>pi&#xA;    = 3.141592653589793</example>
+	</method>
+
+	<method id="11" name="Assign Variable" operator=":=" tags="assign variable value declare variable value let state">
+		<opName>[:=] Assign Variable</opName>
+		<description>:= assigns the preceding element to the successive element, using the following format: x:=y; where the identifier x will be assigned the value of y. &#xA;These values will be saved in the workstation and can be queried using the identifier. </description>
+		<example>index := 10&#xA;    x:=10&#xA;&#xA;index&#xA;    = 10</example>
+	</method>
+
+	<method id="12" name="Power" operator="^" tags="power of exponent raise">
+		<opName>[^] Power</opName>
+		<description>^ returns the value of the preceding element to the power of the successive element, using the following format: x^y; where the result will be the value of x raised to the power of the exponent y. </description>
+		<example>5^3&#xA;    = 125</example>
+	</method>
+</HelpDocs>
