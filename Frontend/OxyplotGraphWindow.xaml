@@ -6,11 +6,23 @@
         xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:local="clr-namespace:Frontend"
         mc:Ignorable="d"
-        Title="Baltam" Height="750" Width="800">
+        Title="Baltam" Height="750" Width="800"
+        Foreground="{DynamicResource ResourceKey=FontBrush}"
+        Background="{DynamicResource ResourceKey=BackgroundBrush}">
+
+    <!--Resources for this window-->
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="resources/themes/dark.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
     <Window.DataContext>
         <local:PlotViewModel/>
     </Window.DataContext>
     <Grid>
-        <oxy:PlotView Model="{Binding GraphModel}"/>
+        <oxy:PlotView Model="{Binding GraphModel}" Background="{DynamicResource ResourceKey=BackgroundBrush}" />
     </Grid>
 </Window>

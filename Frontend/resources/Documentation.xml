@@ -241,6 +241,13 @@
             <param name="sender"><c>sender</c> provides information about the sender button</param>
             <param name="e"><c>e</c> provides event arguments</param>
         </member>
+        <member name="M:Frontend.Settings.RadioButton_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Method <c>RadioButton_Checked</c> is bound to the radiobuttons in the settings page, firing when checked
+            </summary>
+            <param name="sender"><c>sender</c> provides information about the sender button</param>
+            <param name="e"><c>e</c> provides event arguments</param>
+        </member>
         <member name="M:Frontend.Settings.FindInputs``1(System.Windows.DependencyObject)">
             <summary>
             Method <c>FindElements</c> returns a list of the chosen elements found on the popup
@@ -352,6 +359,36 @@
         <member name="P:Frontend.ViewModel.DownHistoryCommand">
             <summary>
             Method <c>DownHistoryCommand</c> is used to descend through the history array using the down-arrow keybind. 
+            </summary>
+        </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
             </summary>
         </member>
     </members>

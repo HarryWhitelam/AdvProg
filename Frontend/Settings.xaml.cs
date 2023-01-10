@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Frontend;
 using System.Collections;
+using System.Windows.Shapes;
 
 namespace Frontend
 {
@@ -54,18 +55,25 @@ namespace Frontend
         public void LoadSettings()
         {
             userSettings = UserSettings.Read(this.settingsFile);
+            Ellipse ellipse = null;
             switch (userSettings.settings[0])
             {
                 case "Light":
                     lightRadio.IsChecked = true;
+                    ellipse = FindInputs<Ellipse>((RadioButton)lightRadio).FirstOrDefault();
                     break;
                 case "Dark":
                     darkRadio.IsChecked = true;
+                    ellipse = FindInputs<Ellipse>((RadioButton)darkRadio).FirstOrDefault();
                     break;
                 case "High Contrast":
                     hcRadio.IsChecked = true;
+                    ellipse = FindInputs<Ellipse>((RadioButton)hcRadio).FirstOrDefault();
                     break;
             }
+            if (ellipse != null)
+                ellipse.SetResourceReference(Shape.FillProperty, "CaretBrush");
+
             FontSizeBox.Text = userSettings.settings[1];
             FontSizeSlider.Value = Convert.ToDouble(userSettings.settings[1]);
             FontComboBox.SelectedValue = userSettings.settings[2];
@@ -112,6 +120,19 @@ namespace Frontend
             Application.Current.MainWindow.FontFamily = new FontFamily(Convert.ToString(userSettings.settings[2]));
 
             this.Close();
+        }
+
+        /// <summary>
+        /// Method <c>RadioButton_Checked</c> is bound to the radiobuttons in the settings page, firing when checked
+        /// </summary>
+        /// <param name="sender"><c>sender</c> provides information about the sender button</param>
+        /// <param name="e"><c>e</c> provides event arguments</param>
+        public void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {            
+            Ellipse ellipse = FindInputs<Ellipse>((RadioButton)sender).FirstOrDefault();
+            if (ellipse != null)
+                ellipse.SetResourceReference(Shape.FillProperty, "CaretBrush");
+
         }
 
         /// <summary>

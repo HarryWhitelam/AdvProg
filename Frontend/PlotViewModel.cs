@@ -15,7 +15,6 @@ namespace Frontend
     {
         public PlotViewModel()
         {
-
             /* modelnum 1 = polynomial
              * modelnum 2 = cos(x)
              * modelnum 3 = sin(x)
@@ -145,6 +144,7 @@ namespace Frontend
                     Title = "y = 5x^3 + 4x^2 - 3x + 2 + 6x^4",
                     //Title = "y = 6x - 3",
                     TitleColor = OxyColor.Parse("#036ffc")
+
                 };
                 this.GraphModel.Series.Add(new FunctionSeries(i, min, max, 0.1, "y = 5x^3 + 4x^2 - 3x + 2 + 6x^4"));
 
@@ -227,6 +227,7 @@ namespace Frontend
                 {
                     Title = "Tan(x) Graph"
                 };
+                this.GraphModel.TextColor = OxyColors.Red;
                 this.GraphModel.Series.Add(new FunctionSeries(h, min, max, 0.1, "Tan(x)"));
 
                 this.GraphModel.Axes.Add(new LinearAxis
