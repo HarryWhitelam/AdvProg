@@ -1,13 +1,9 @@
 // Executor.fs
 //
 // Author:      Irie Railton
-// Description: 
-
-//*************************************************************************
+// Description: Shunting yard algorithm for Baltam and helper functions
 
 namespace Backend
-
-//*************************************************************************
 
 module Executor =
 
@@ -22,16 +18,15 @@ module Executor =
     let outputStack = Stack<string>()
     let operatorStack = Stack<Token>()
 
+    /// <summary>Converts a vector in string form into a double list representing the vector</summary>
+    /// <param name="input">The vector in string form</param>
+    /// <returns>double list representing the vector</returns>
     let stringToVec (input:string) =
-        if input.Contains(";") then
-            let mutable out:list<double> = []
-            out
-        else
-            let stringVec = input.Substring(1, input.Length-2).Split(",")
-            let mutable out:list<double> = []
-            for s in stringVec do
-                out <- out@[double (s)]
-            out
+        let stringVec = input.Substring(1, input.Length-2).Split(",")
+        let mutable out:list<double> = []
+        for s in stringVec do
+            out <- out@[double (s)]
+        out
 
     let vecToString (input:list<double>) =
         System.Diagnostics.Debug.WriteLine($"vecToString input: {input}")
@@ -147,9 +142,10 @@ module Executor =
                                 | Token.Times ->    outputStack.Push(operateOnVecs(value2, value, (fun a b -> a*b)))
                                 | Token.Plus ->     outputStack.Push(operateOnVecs(value2, value, (fun a b -> a+b)))
                                 | Token.Minus ->    outputStack.Push(operateOnVecs(value2, value, (fun a b -> a-b)))
+                                //| Token.Dot ->      outputStack.Push(operateOnVecs()
                                 | _ ->              failwith $"Invalid {operator.ToString()} here"
                             else 
-                                raise (ExecError "I'll figure this out later")
+                                raise (ExecError "Can't add matrix to real number")
                     else
                         if operator = Token.Minus && (outputStack.Count = 0 || (operatorStack.Count <> 0 && operatorStack.Peek() = Token.L_Parenth)) then
                             outputStack.Push(string (0.0 - double value))

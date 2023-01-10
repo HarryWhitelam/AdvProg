@@ -1,4 +1,10 @@
-﻿namespace Backend
+﻿// Interpreter.fs
+//
+// Author:      Irie Railton
+// Description: Interface for interpreter and c# frontend
+//
+
+namespace Backend
 
 module Interpreter =
     let interpret(expression) = 
