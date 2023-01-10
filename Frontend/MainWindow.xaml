@@ -55,14 +55,14 @@
                     </Grid.ColumnDefinitions>
 
                     <!--Input fields use three textboxes: 1) cursor window, input window for the user to interact with, print window to display results-->
-                    <TextBox Grid.Column="0" Name="cursorWindow" BorderBrush="{x:Null}" IsReadOnly="True" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">>></TextBox>
+                    <TextBox Grid.Column="0" Name="cursorWindow" VerticalScrollBarVisibility="Hidden" ScrollViewer.ScrollChanged="input_ScrollChanged" BorderBrush="{x:Null}" IsReadOnly="True" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">>></TextBox>
                     <!--RichTextBox to allow colour adjustment-->
-                    <RichTextBox Grid.Column="1" Height ="auto" Name="printWindow" VerticalAlignment="Top" BorderBrush="{x:Null}" IsReadOnly="True" IsHitTestVisible="False" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">
+                    <RichTextBox Grid.Column="1" Height ="auto" Name="printWindow" VerticalScrollBarVisibility="Hidden" ScrollViewer.ScrollChanged="input_ScrollChanged" VerticalAlignment="Top" BorderBrush="{x:Null}" IsReadOnly="True" IsHitTestVisible="False" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}">
                         <FlowDocument>
                             <Paragraph></Paragraph>
                         </FlowDocument>
                     </RichTextBox>
-                    <TextBox Grid.Column="1" Name="inputWindow" BorderBrush="{x:Null}" TextWrapping="Wrap" Height="auto" KeyboardNavigation.ControlTabNavigation="None" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}" CaretBrush="{DynamicResource ResourceKey=CaretBrush}">
+                    <TextBox Grid.Column="1" Name="inputWindow" VerticalScrollBarVisibility="Auto" ScrollViewer.ScrollChanged="input_ScrollChanged" BorderBrush="{x:Null}" TextWrapping="Wrap" Height="auto" KeyboardNavigation.ControlTabNavigation="None" Background="{x:Null}" Foreground="{DynamicResource ResourceKey=FontBrush}" CaretBrush="{DynamicResource ResourceKey=CaretBrush}">
                         <TextBox.InputBindings>
                             <KeyBinding Command="{Binding ReturnCommand}" Key="Return" />
                             <KeyBinding Command="{Binding BackCommand}" Key="Backspace" />

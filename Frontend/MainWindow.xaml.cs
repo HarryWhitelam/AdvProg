@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 
@@ -147,6 +148,25 @@ namespace Frontend
         {
             Debug.WriteLine("Value: " + element);
             if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(element));
+        }
+
+        public void input_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (sender == inputWindow)
+            {
+                printWindow.ScrollToVerticalOffset(e.VerticalOffset);
+                cursorWindow.ScrollToVerticalOffset(e.VerticalOffset);
+            }
+            else if (sender == printWindow)
+            {
+                inputWindow.ScrollToVerticalOffset(e.VerticalOffset);
+                cursorWindow.ScrollToVerticalOffset(e.VerticalOffset);
+            }
+            else
+            {
+                inputWindow.ScrollToVerticalOffset(e.VerticalOffset);
+                printWindow.ScrollToVerticalOffset(e.VerticalOffset);
+            }
         }
     }
 }
