@@ -135,7 +135,7 @@ module Parser =
     //Final Grammar in LL(1) BNF
     //<assign>      ::= <mat_expr>              | Variable:=<mat_expr>
     //<mat_expr>    ::= <mat_term><mat_expr'>
-    //<mat_expr'>   ::= +<mat_term><mat_expr'> | -<mat_term><mat_expr'>    | ∅
+    //<mat_expr'>   ::= +<mat_term><mat_expr'>  | -<mat_term><mat_expr'>    | ∅
     //<mat_term>    ::= <mat_index><mat_term'>
     //<mat_term'>   ::= *<mat_index><mat_term'> | .<mat_index><mat_term'>   | ∅
     //<mat_index>   ::= <func><mat_index'>
@@ -143,7 +143,7 @@ module Parser =
     //<func>        ::= <matrix>                | Function(<func_arg>)      | (<mat_expr>)
     //<func_arg>    ::= <matrix><func_arg'>
     //<func_arg'>   ::= ,<func><func_arg'>      | ∅
-    //<matrix>      ::= [<mat_arg>]             | <mat_arg>
+    //<matrix>      ::= [<mat_arg>]             | <mat_arg>                 | -[<mat_arg>]
     //<mat_arg>     ::= <scl_expr>><mat_arg'>
     //<mat_arg'>    ::= ,<scl_expr><mat_arg'>   | ;<scl_expr><mat_arg'>     | ∅
     //<scl_expr>    ::= <scl_unary><scl_expr'>

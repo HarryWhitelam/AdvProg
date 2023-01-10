@@ -13,7 +13,7 @@ module Executor =
 
     open System.Collections.Generic
     
-    exception ExecError of string
+    type ExecError (message:string) = inherit System.Exception(message)
 
     let funcException(funcName, noArgs) =
         $"No function, {funcName}() with {noArgs} arguments"
@@ -63,17 +63,26 @@ module Executor =
         | _ -> raise (ExecError "How on earth did you raise this")
 
     let handleFunc(funcName) =
-        let args = stringToVec(outputStack.Pop())
-        match args.Length with
-        | 1 ->  match funcName with
-                | "LOG" ->  log(args.[0])
-                | "SQRT" -> sqrt(args.[0])
-                | _ -> raise (ExecError (funcException(funcName, 1)))
-        | 2 ->  match funcName with
-                | "NROOT"-> args.[0] ** (1.0/ args.[1])
-                | "LOGN" -> System.Math.Log(args.[0], args.[1])
-                | _ -> raise (ExecError (funcException(funcName, 2)))
-        | any -> raise (ExecError (funcException(funcName, any)))
+        System.Diagnostics.Debug.WriteLine($"outstackpeek = {outputStack.Peek()}")
+        let mutable value = outputStack.Pop()
+        if isVar value then
+            replaceVariable &value
+        if isVector value then
+            let args = stringToVec(value)
+            match args.Length with
+            | 2 ->  match funcName with
+                    | "NROOT"-> args.[0] ** (1.0/ args.[1])
+                    | "LOGN" -> System.Math.Log(args.[0], args.[1])
+                    | _ -> raise (ExecError (funcException(funcName, 2)))
+            | any -> raise (ExecError (funcException(funcName, any)))
+        else
+            match funcName with
+            | "LOG" ->  log(double(value))
+            | "SQRT" -> sqrt(double(value))
+            | "SIN" ->  sin(double(value))
+            | "COS" ->  cos(double(value))
+            | "TAN" ->  tan(double(value))
+            | _ -> raise (ExecError (funcException(funcName, 1)))
 
     let handleAssign(value:byref<string>, value2:byref<string>) =
         System.Diagnostics.Debug.WriteLine($"value = {value}, value2 = {value2}")
@@ -90,7 +99,7 @@ module Executor =
         let mutable newVal = outputStack.Pop()
         if isVar newVal then replaceVariable &newVal
         let mutable out = newVal + "," + value
-        while operatorStack.Count <> 0 && operatorStack.Peek() <> Token.L_Bracket do
+        while operatorStack.Count <> 0 && (operatorStack.Peek() = Token.Comma || operatorStack.Peek() = Token.SemiColon) do
             let mutable newVal = outputStack.Pop()
             if isVar newVal then replaceVariable &newVal
             out <- newVal + (if operatorStack.Pop() = Token.Comma then "," else ";") + out

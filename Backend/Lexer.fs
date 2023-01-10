@@ -55,7 +55,7 @@ type Token =
 
 module Lexer =
     
-    exception LexerError of string
+    type LexerError (message:string) = inherit System.Exception(message)
 
     let showExceptionPosition((input: string), position) =
         let mutable buffer = ""
@@ -103,6 +103,9 @@ module Lexer =
                                                             | "NROOT" ->Token.Function finStrUp :: consume rest
                                                             | "LOG" ->  Token.Function finStrUp :: consume rest
                                                             | "LOGN" -> Token.Function finStrUp :: consume rest
+                                                            | "SIN" ->  Token.Function finStrUp :: consume rest
+                                                            | "COS" ->  Token.Function finStrUp :: consume rest
+                                                            | "TAN" ->  Token.Function finStrUp :: consume rest
                                                             | "E" ->    Token.Reserved finStrUp :: consume rest
                                                             | "PI" ->   Token.Reserved finStrUp :: consume rest
                                                             | _ ->      Token.Variable finStr   :: consume rest
